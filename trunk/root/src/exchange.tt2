@@ -13,8 +13,8 @@ And tell us what the answer to your question is.
 <H3> There are three courses of action: </H3>
 
 <ul>
-<li>Course 1: If you write [% config.WH.win %] correct WH-question(s) and the correct answer(s) to that/those question(s), the name of a person or thing, you are a WINNER.
-<li>Course 2: If you write [% config.YN.win %] correct YN-questions with the correct answers, either Yes or No, you are also a WINNER.
+<li>Course 1: If you write [% config.WH.win %] correct WH-question(s) and you answer your question(s) correctly with the name of a person or thing, you are a WINNER.
+<li>Course 2: If you write [% config.YN.win %] correct YN-questions with the correct answers, either YES or NO, you are also a WINNER.
 <li>Course 3: If you write [% config.S.win %] correct sentences (True-False questions) with the correct answers, TRUE or FALSE, you are also a WINNER.
 </ul>
 
@@ -26,11 +26,13 @@ Otherwise, you are a LOSER and you must do the Dictation Exercise.
 [% YNchances = config.YN.chances.question + config.YN.chances.answer %]
 [% WHchances = config.WH.chances.question + config.WH.chances.answer %]
 
+In each course, you can only attempt to write a question a certain number of times.
+
 <ul>
-<li>If you chose Course 3, and [% Schances %] sentence(s) is/are not grammatically correct, then GAME OVER. In that case, you have to fill in all the blanks in the listening to get a FULL SCORE. If however, your ANSWER is not correct (for example, you answered TRUE but the answer is FALSE), you get [% config.S.chances.answer %] more chance(s) with a new sentence.
+<li>If you chose Course 3, and [% Schances %] sentence(s) is/are not grammatically correct, then GAME OVER. In that case, you have to fill in all the blanks in the Dictation Exercise to get a FULL SCORE. If however, your ANSWER is not correct (for example, you answered TRUE but the answer is FALSE), you get [% config.S.chances.answer %] more chance(s) to attempt another sentence.
 
 <li>If you chose Course 2, you get [% YNchances %] chances, [% config.YN.chances.question %] for the question and [% config.YN.chances.answer %] for the answer. If you make a mistake in either the grammar of the YN question, OR if the answer (TRUE or FALSE) is wrong, you can try again with a new question, for a maximum of [% YNchances %] extra tries before GAME OVER.
 
-<li>If you chose Course 1, you get [% WHchances %] chances, [% config.YN.chances.question %] for incorrect grammar and [% config.YN.chances.answer %] for incorrect answers. If you make a mistake in either the grammar of the WH-question, or the correct answer, the name of a person/thing, you can try again with a new question, for a maximum of [% WHchances %] extra tries before GAME OVER.
+<li>If you chose Course 1, you get [% WHchances %] chances, [% config.WH.chances.question %] for incorrect grammar and [% config.WH.chances.answer %] for incorrect answers. If you make a mistake in either the grammar of the WH-question, or the correct answer, the name of a person/thing, you can try again with a new question, for a maximum of [% WHchances %] extra tries before GAME OVER.
 
 </ul>
