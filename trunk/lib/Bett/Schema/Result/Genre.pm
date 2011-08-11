@@ -61,9 +61,39 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 questions
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-08-05 14:10:06
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:QmQHJ9rc2vbQKJifYfpyJA
+Type: has_many
+
+Related object: L<Bett::Schema::Result::Question>
+
+=cut
+
+__PACKAGE__->has_many(
+  "questions",
+  "Bett::Schema::Result::Question",
+  { "foreign.genre" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 plays
+
+Type: has_many
+
+Related object: L<Bett::Schema::Result::Play>
+
+=cut
+
+__PACKAGE__->has_many(
+  "plays",
+  "Bett::Schema::Result::Play",
+  { "foreign.genre" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-08-11 07:21:25
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9EVFw9X+wN3+eQ2x0KB8Mw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
