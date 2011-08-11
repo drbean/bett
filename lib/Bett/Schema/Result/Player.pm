@@ -86,7 +86,27 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-08-05 14:10:06
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Zdff8WQzaEEJ6E89hRViGg
 
+=head2 leagues
 
+Type: many_many
+
+Related object: L<Bett::Schema::Result::League>
+
+=cut
+
+__PACKAGE__->many_to_many( "leagues" => 'members', 'league' );
+  
+
+=head2 getrole
+
+Type: many_many
+
+Related object: L<Bett::Schema::Result::Role>
+
+=cut
+
+__PACKAGE__->many_to_many( "getrole" => 'rolebearers', 'role' );
+  
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
 1;

@@ -93,7 +93,16 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-08-05 14:10:06
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:BjDYLyoLAt9q8bs7fHS7nA
 
+=head2 players
 
+Type: many_many
+
+Related object: L<Bett::Schema::Result::Player>
+
+=cut
+
+__PACKAGE__->many_to_many( "players" => 'members', 'player' );
+  
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
 1;

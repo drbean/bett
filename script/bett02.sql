@@ -44,12 +44,37 @@ CREATE TABLE leaguegenre (
         PRIMARY KEY (league, genre)
 );
 
-CREATE TABLE text (
-        id   TEXT
-	description TEXT,
-	genre TEXT,
-	target TEXT,
-        PRIMARY KEY (id, target)
+CREATE TABLE character (
+        identity   TEXT PRIMARY KEY,
+	string TEXT
+);
+
+CREATE TABLE question (
+        player TEXT REFERENCES member(player) ON DELETE CASCADE ON UPDATE CASCADE,
+        genre TEXT REFERENCES genre(id) ON DELETE CASCADE ON UPDATE CASCADE,
+        text   TEXT,
+	league TEXT,
+	exercise TEXT,
+	course TEXT,
+	quoted TEXT,
+	grammar BOOL,
+	answer TEXT,
+        PRIMARY KEY (text, exercise, genre, league)
+		);
+
+CREATE TABLE play (
+        question TEXT,
+	answer TEXT,
+        player TEXT REFERENCES member(player) ON DELETE CASCADE ON UPDATE CASCADE,
+        genre TEXT REFERENCES genre(id) ON DELETE CASCADE ON UPDATE CASCADE,
+	league TEXT,
+	course TEXT,
+	try INT,
+	score INT,
+	questionchance INT,
+	answerchance INT,
+	exercise TEXT,
+        PRIMARY KEY (player, genre, league, course, question, exercise)
 		);
 
 
