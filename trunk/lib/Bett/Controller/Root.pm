@@ -45,6 +45,27 @@ sub default :Path {
     $c->response->status(404);
 }
 
+=head2 auto
+
+Check if there is a user and, if not, forward to login pa
+
+=cut
+
+sub auto :Private {
+    my ($self, $c) = @_;
+    if ($c->controller eq $c->controller('Login')) {
+        return 1;
+    }
+    if (!$c->user_exists) {
+        $c->log->debug(
+	'***Root::auto User not found, forwarding to /login');
+        $c->response->redirect($c->uri_for('/login'));
+        return 0;
+    }
+    return 1;
+}
+
+
 =head2 end
 
 Attempt to render a view, if needed.
