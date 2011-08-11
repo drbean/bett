@@ -49,6 +49,23 @@ __PACKAGE__->config(
     disable_component_resolution_regex_fallback => 1,
 );
 
+__PACKAGE__->config->{'Plugin::Authentication'} = {
+   default => {
+       class           => 'SimpleDB',
+       user_model      => 'DB::Player',
+       password_type   => 'clear',
+   },
+};
+
+__PACKAGE__->config(
+    'View::HTML' => {
+        #Set the location for TT files
+        INCLUDE_PATH => [
+            __PACKAGE__->path_to( 'root', 'src' ),
+        ],
+    },
+);
+ 
 # Start the application
 __PACKAGE__->setup();
 
