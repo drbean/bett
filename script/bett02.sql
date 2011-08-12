@@ -44,6 +44,11 @@ CREATE TABLE leaguegenre (
         PRIMARY KEY (league, genre)
 );
 
+CREATE TABLE word (
+	exercise TEXT PRIMARY KEY,
+	string TEXT
+);
+
 CREATE TABLE character (
         entity   TEXT,
 	string TEXT,
