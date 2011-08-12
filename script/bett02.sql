@@ -45,8 +45,10 @@ CREATE TABLE leaguegenre (
 );
 
 CREATE TABLE character (
-        identity   TEXT PRIMARY KEY,
-	string TEXT
+        entity   TEXT,
+	string TEXT,
+	exercise TEXT,
+	PRIMARY KEY (entity,exercise)
 );
 
 CREATE TABLE question (
