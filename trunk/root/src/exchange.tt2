@@ -97,3 +97,10 @@ In each course, you can only attempt to write a question a certain number of tim
 <input type="submit" name="Submit" value="Submit">
 </form>
 
+<h2>Words you can use</h2>
+
+Choose words only from this list.
+
+<pre>
+[% words %]
+</pre>
