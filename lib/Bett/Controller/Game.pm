@@ -50,11 +50,22 @@ sub base :Chained('/') :PathPart('game') :CaptureArgs(1) {
 
 =cut
 
-sub url_create :Chained('base') :PathPart('') :Args(0) {
-
+sub exchange :Chained('words') :PathPart('') :Args(0) {
     my ( $self, $c ) = @_;
     $c->stash( config => $c->config );
     $c->stash( template => 'exchange.tt2' );
+}
+
+=head2 words
+
+=cut
+
+sub words :Chained('base') :PathPart('') :CaptureArgs(0) {
+	my ( $self, $c ) = @_;
+	my $exercise = $c->stash->{exercise};
+	$c->stash(words => 
+		$c->model('DB::Word')->find(
+		{exercise => $exercise})->string );
 }
 
 =head1 AUTHOR
