@@ -1,6 +1,8 @@
 [% META title = "Knowledge exchange" %] You listened to the soundfile.
 
-Now make up a question or a sentence about the people you heard about, using the words from the <a href="#list">list</a>. For example, say:
+<H1>Welcome to the game for the [% exercise %] Exercise.</H1>
+
+Make up a question or a sentence about the people you heard about, using the words from the <a href="#list">list</a>. For example, say:
 
 <ul>
 <li>how they were related to each other.
@@ -59,12 +61,9 @@ In each course, you can only attempt to write a question a certain number of tim
 <tr><td>Answer:
     <SELECT name="answer">
        <OPTION selected value="--">No answer</OPTION>
-       <OPTION value="rebia">Rebia</OPTION>
-       <OPTION>Component_3</OPTION>
-       <OPTION>Component_4</OPTION>
-       <OPTION>Component_5</OPTION>
-       <OPTION>Component_6</OPTION>
-       <OPTION>Component_7</OPTION>
+[% FOREACH char IN characters %]
+       <OPTION value="[% char %]">[% char %]</OPTION>
+[% END %]
     </SELECT>
 </table>
 <input type="submit" name="Submit" value="Submit">
