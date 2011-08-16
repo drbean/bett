@@ -39,12 +39,6 @@ __PACKAGE__->table("play");
   is_foreign_key: 1
   is_nullable: 0
 
-=head2 genre
-
-  data_type: 'text'
-  is_foreign_key: 1
-  is_nullable: 0
-
 =head2 league
 
   data_type: 'text'
@@ -89,8 +83,6 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "player",
   { data_type => "text", is_foreign_key => 1, is_nullable => 0 },
-  "genre",
-  { data_type => "text", is_foreign_key => 1, is_nullable => 0 },
   "league",
   { data_type => "text", is_nullable => 0 },
   "course",
@@ -106,24 +98,9 @@ __PACKAGE__->add_columns(
   "exercise",
   { data_type => "text", is_nullable => 0 },
 );
-__PACKAGE__->set_primary_key("player", "genre", "league", "course", "question", "exercise");
+__PACKAGE__->set_primary_key("player", "league", "course", "question", "exercise");
 
 =head1 RELATIONS
-
-=head2 genre
-
-Type: belongs_to
-
-Related object: L<Bett::Schema::Result::Genre>
-
-=cut
-
-__PACKAGE__->belongs_to(
-  "genre",
-  "Bett::Schema::Result::Genre",
-  { id => "genre" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
-);
 
 =head2 player
 
@@ -141,8 +118,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-08-11 07:21:25
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Sn5VGKEZeAoScjERckgLnA
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-08-14 06:56:35
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:vmN12P01SjlxN1e9gJqrnw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
