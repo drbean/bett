@@ -51,7 +51,7 @@ perl script/characters.pl -x clay
 
 =head1 DESCRIPTION
 
-INSERT INTO characters (string, entity) VALUES (?, ?)
+INSERT INTO characters (exercise, string, entity) VALUES (?, ?)
 
 Actually UPDATE or INSERT. So it can be used when new players are added.
 
