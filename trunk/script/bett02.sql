@@ -69,11 +69,55 @@ CREATE TABLE question (
         PRIMARY KEY (text, exercise, genre, league)
 		);
 
+CREATE TABLE wh (
+        exercise TEXT,
+        player TEXT,
+	league TEXT,
+	try INT,
+	score INT,
+	questionchance INT,
+	answerchance INT,
+        PRIMARY KEY (player, league, exercise)
+		);
+
+
+CREATE TABLE yn (
+        exercise TEXT,
+        player TEXT,
+	league TEXT,
+	try INT,
+	score INT,
+	questionchance INT,
+	answerchance INT,
+        PRIMARY KEY (player, league, exercise)
+		);
+
+
+CREATE TABLE s (
+        exercise TEXT,
+        player TEXT,
+	league TEXT,
+	try INT,
+	score INT,
+	questionchance INT,
+	answerchance INT,
+        PRIMARY KEY (player, league, exercise)
+		);
+
+CREATE TABLE questioncourse (
+	question TEXT,
+	player	TEXT,
+	league	TEXT,
+	exercise	TEXT,
+	course	TEXT,
+	PRIMARY KEY (question, player, league, exercise)
+	);
+
+
 CREATE TABLE play (
         question TEXT,
 	answer TEXT,
         player TEXT REFERENCES member(player) ON DELETE CASCADE ON UPDATE CASCADE,
-        genre TEXT REFERENCES genre(id) ON DELETE CASCADE ON UPDATE CASCADE,
 	league TEXT,
 	course TEXT,
 	try INT,
@@ -81,7 +125,7 @@ CREATE TABLE play (
 	questionchance INT,
 	answerchance INT,
 	exercise TEXT,
-        PRIMARY KEY (player, genre, league, course, question, exercise)
+        PRIMARY KEY (player, league, course, question, exercise)
 		);
 
 
