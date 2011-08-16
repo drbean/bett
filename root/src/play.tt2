@@ -1,0 +1,62 @@
+[% META title = "Play" %]
+
+
+<h1>Course 1: WH-question</h1>
+<form method="post" action="[% c.uri_for('/play') %]">
+<input type="hidden" name="course" value="WH">
+<table>
+<th>[% WH.tries %] question(s) attempted. [% WH.score %] question(s) completed.<br>
+[% WH.questions %] more question, [% WH.answers %] more answer chance(s) left.
+<tr><td>Question:<input type="text" size=85 name="question">
+<tr><td>Answer:
+    <SELECT name="answer">
+       <OPTION selected value="--">No answer</OPTION>
+[% FOREACH char IN characters %]
+       <OPTION value="[% char %]">[% char %]</OPTION>
+[% END %]
+    </SELECT>
+</table>
+<input type="submit" name="Submit" value="Submit">
+</form>
+
+<h1>Course 2: YN-question</h1>
+<form method="post" action="[% c.uri_for('/play') %]">
+<input type="hidden" name="course" value="YN">
+<table>
+<th>[% YN.tries %] question(s) attempted. [% YN.score %] question(s) completed.<br>
+[% YN.questions %] more question, [% YN.answers %] more answer chance(s) left.
+<tr><td>Question:<input type="text" size=85 name="question">
+<tr><td>Answer:
+    <SELECT name="answer">
+       <OPTION selected value="--">No answer</OPTION>
+       <OPTION value="yes">Yes</OPTION>
+       <OPTION value="no">No</OPTION>
+    </SELECT>
+</table>
+<input type="submit" name="Submit" value="Submit">
+</form>
+
+<h1>Course 3: Statement (True/False-question)</h1>
+<form method="post" action="[% c.uri_for('/play') %]">
+<input type="hidden" name="course" value="S">
+<table>
+<th>[% S.tries %] question(s) attempted. [% S.score %] question(s) completed.<br>
+[% S.questions %] more question, [% S.answers %] more answer chance(s) left.
+<tr><td>Question:<input type="text" size=85 name="question">
+<tr><td>Answer:
+    <SELECT name="answer">
+       <OPTION selected value="--">No answer</OPTION>
+       <OPTION value="true">True</OPTION>
+       <OPTION value="false">False</OPTION>
+    </SELECT>
+</table>
+<input type="submit" name="Submit" value="Submit">
+</form>
+
+<h2>Words you can use</h2>
+
+Choose words only from this list.
+
+<pre>
+[% words %]
+</pre>
