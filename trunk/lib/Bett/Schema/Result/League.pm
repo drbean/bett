@@ -90,8 +90,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-08-05 14:10:06
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:BjDYLyoLAt9q8bs7fHS7nA
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-08-14 12:32:21
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ju2ZZuorbUVpojMyaFsAsw
 
 =head2 players
 
