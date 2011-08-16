@@ -25,12 +25,15 @@ sub index :Path :Args(0) {
 	my ( $self, $c ) = @_;
 	my $username = $c->request->params->{username};
 	my $password = $c->request->params->{password};
+	my $exercise = $c->request->query_params->{exercise};
+	$c->session->{exercise} = "clay";
+	$c->session->{league} = "GL00005";
 	if ($username && $password) {
 		if ($c->authenticate({ id => $username,
 				  password => $password  } )) {
+			$c->session->{player_id} = $username;
 			$c->response->redirect($c->uri_for(
-			   $c->controller('Game')
-				->action_for('index')));
+				"/game"));
 			return;
 		} else {
 			$c->stash(error_msg =>
@@ -43,6 +46,27 @@ sub index :Path :Args(0) {
 	}
 	$c->stash(template => 'login.tt2');
 }
+
+=head2 gameRedirect
+
+End of chain. Game or game list, depending on whether exercise session key set.
+
+=cut
+
+sub gameRedirect :Chained('index') :PathPart('') :Args(0) {
+	my ($self, $c) = @_;
+       # if ( defined $c->session->{exercise} ) {
+		my $exercise = $c->session->{exercise};
+		$c->response->redirect(
+			$c->uri_for("/game/$exercise"), 303 );
+	# }
+	#else {
+	#	$c->response->redirect( $c->uri_for("/game/list"),
+	#		303 );
+	#}
+	#return;
+}
+   
 
 =head2 logout
 
