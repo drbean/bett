@@ -57,16 +57,15 @@ CREATE TABLE character (
 );
 
 CREATE TABLE question (
-        player TEXT REFERENCES member(player) ON DELETE CASCADE ON UPDATE CASCADE,
-        genre TEXT REFERENCES genre(id) ON DELETE CASCADE ON UPDATE CASCADE,
-        text   TEXT,
+        player TEXT
+        lexed   TEXT,
 	league TEXT,
 	exercise TEXT,
 	course TEXT,
 	quoted TEXT,
 	grammar BOOL,
 	answer TEXT,
-        PRIMARY KEY (text, exercise, genre, league)
+        PRIMARY KEY (lexed, exercise, league)
 		);
 
 CREATE TABLE wh (
