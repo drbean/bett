@@ -1,0 +1,33 @@
+[% META title = "Play" %]
+
+[% courseno = {WH => 1, YN => 2, S => 3} %]
+[%	ynoptions = ['Yes', 'No']
+	tfoptions = ['True', 'False']
+	%]
+[% options = {
+	WH => characters, YN => ynoptions, S => tfoptions } %]
+<h1>Course [% courseno.$course %]: [% course %]-question</h1>
+<form method="post" action="[% c.uri_for(c.action_for('play'), course) %]">
+<input type="hidden" name="course" value="[% course %]">
+<table>
+<th>[% standing.tries %] question(s) attempted. [% standing.score %] question(s) completed.<br>
+[% standing.questions %] more question, [% standing.answers %] more answer chance(s) left.
+<tr><td>Question:<input type="text" size=85 name="question">
+<tr><td>Answer:
+    <SELECT name="answer">
+       <OPTION selected value="--">No answer</OPTION>
+[% FOREACH option IN options.$course %]
+       <OPTION value="[% option %]">[% option %]</OPTION>
+[% END %]
+    </SELECT>
+</table>
+<input type="submit" name="Submit" value="Submit">
+</form>
+
+<h2>Words you can use</h2>
+
+Choose words only from this list.
+
+<pre>
+[% words %]
+</pre>
