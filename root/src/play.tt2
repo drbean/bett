@@ -1,13 +1,12 @@
 [% META title = "Play" %]
 
 [% courseno = {WH => 1, YN => 2, S => 3} %]
-[%	whoptions = characters
-	ynoptions = ['Yes', 'No']
+[%	ynoptions = ['Yes', 'No']
 	tfoptions = ['True', 'False']
 	%]
 [% options = {
-	WH => $characters, YN => ynoptions, S => tfoptions } %]
-<h1>Course [% courseno.course %]: [% course %]-question</h1>
+	WH => characters, YN => ynoptions, S => tfoptions } %]
+<h1>Course [% courseno.$course %]: [% course %]-question</h1>
 <form method="post" action="[% c.uri_for(c.action_for('play'), course) %]">
 <input type="hidden" name="course" value="[% course %]">
 <table>
