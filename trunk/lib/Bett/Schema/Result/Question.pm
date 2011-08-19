@@ -26,16 +26,9 @@ __PACKAGE__->table("question");
 =head2 player
 
   data_type: 'text'
-  is_foreign_key: 1
   is_nullable: 1
 
-=head2 genre
-
-  data_type: 'text'
-  is_foreign_key: 1
-  is_nullable: 0
-
-=head2 text
+=head2 lexed
 
   data_type: 'text'
   is_nullable: 0
@@ -60,24 +53,17 @@ __PACKAGE__->table("question");
   data_type: 'text'
   is_nullable: 1
 
-=head2 grammar
+=head2 grammatical
 
   data_type: 'bool'
-  is_nullable: 1
-
-=head2 answer
-
-  data_type: 'text'
   is_nullable: 1
 
 =cut
 
 __PACKAGE__->add_columns(
   "player",
-  { data_type => "text", is_foreign_key => 1, is_nullable => 1 },
-  "genre",
-  { data_type => "text", is_foreign_key => 1, is_nullable => 0 },
-  "text",
+  { data_type => "text", is_nullable => 1 },
+  "lexed",
   { data_type => "text", is_nullable => 0 },
   "league",
   { data_type => "text", is_nullable => 0 },
@@ -87,31 +73,14 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "quoted",
   { data_type => "text", is_nullable => 1 },
-  "grammar",
+  "grammatical",
   { data_type => "bool", is_nullable => 1 },
-  "answer",
-  { data_type => "text", is_nullable => 1 },
 );
-__PACKAGE__->set_primary_key("text", "exercise", "genre", "league");
+__PACKAGE__->set_primary_key("lexed", "exercise", "league");
 
 =head1 RELATIONS
 
-=head2 genre
-
-Type: belongs_to
-
-Related object: L<Bett::Schema::Result::Genre>
-
-=cut
-
-__PACKAGE__->belongs_to(
-  "genre",
-  "Bett::Schema::Result::Genre",
-  { id => "genre" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
-);
-
-=head2 player
+=head2 played_by
 
 Type: belongs_to
 
@@ -120,9 +89,104 @@ Related object: L<Bett::Schema::Result::Member>
 =cut
 
 __PACKAGE__->belongs_to(
-  "player",
+  "played_by",
   "Bett::Schema::Result::Member",
-  { player => "player" },
+  {	"foreign.player" => "self.player",
+  	"foreign.league" => "self.league"
+  },
+  {
+    is_deferrable => 1,
+    join_type     => "LEFT",
+    on_delete     => "CASCADE",
+    on_update     => "CASCADE",
+  },
+);
+
+
+=head2 wh
+
+Type: belongs_to
+
+Related object: L<Bett::Schema::Result::Wh>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "wh",
+  "Bett::Schema::Result::Wh",
+  {	"foreign.player" => "self.player",
+  	"foreign.league" => "self.league",
+	"foreign.exercise" => "self.exercise"
+  },
+  {
+    is_deferrable => 1,
+    join_type     => "LEFT",
+    on_delete     => "CASCADE",
+    on_update     => "CASCADE",
+  },
+);
+
+
+=head2 yn
+
+Type: belongs_to
+
+Related object: L<Bett::Schema::Result::Yn>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "yn",
+  "Bett::Schema::Result::Yn",
+  {	"foreign.player" => "self.player",
+  	"foreign.league" => "self.league",
+	"foreign.exercise" => "self.exercise"
+  },
+  {
+    is_deferrable => 1,
+    join_type     => "LEFT",
+    on_delete     => "CASCADE",
+    on_update     => "CASCADE",
+  },
+);
+
+
+=head2 s
+
+Type: belongs_to
+
+Related object: L<Bett::Schema::Result::S>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "s",
+  "Bett::Schema::Result::S",
+  {	"foreign.player" => "self.player",
+  	"foreign.league" => "self.league",
+	"foreign.exercise" => "self.exercise"
+  },
+  {
+    is_deferrable => 1,
+    join_type     => "LEFT",
+    on_delete     => "CASCADE",
+    on_update     => "CASCADE",
+  },
+);
+
+
+=head2 of_league
+
+Type: belongs_to
+
+Related object: L<Bett::Schema::Result::League>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "of_league",
+  "Bett::Schema::Result::League",
+  "league",
   {
     is_deferrable => 1,
     join_type     => "LEFT",
