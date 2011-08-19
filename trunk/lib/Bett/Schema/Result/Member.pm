@@ -59,7 +59,7 @@ __PACKAGE__->belongs_to(
   "player",
   "Bett::Schema::Result::Player",
   { id => "player" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 0, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 =head2 league
@@ -74,7 +74,7 @@ __PACKAGE__->belongs_to(
   "league",
   "Bett::Schema::Result::League",
   { id => "league" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 0, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 =head2 questions
