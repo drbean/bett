@@ -79,7 +79,6 @@ sub wordschars :Chained('setup') :PathPart('') :CaptureArgs(0) {
 	$c->stash(words => 
 		$c->model('DB::Word')->find(
 		{exercise => $exercise})->string );
-	$c->stash->{exercise => $exercise};
 }
 
 =head2 exchange
