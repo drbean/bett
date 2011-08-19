@@ -36,22 +36,42 @@ Session and WH, YN, S standing.
 =cut
 
 sub setup :Chained('/') :PathPart('play') :CaptureArgs(1) {
-	my ($self, $c, $course) = @_;
+	my ($self, $c, $mycourse) = @_;
         my $player = $c->session->{player_id};
 	my $league = $c->session->{league};
 	my $exercise = $c->session->{exercise};
-	my $cOURSE = ucfirst ( lc $course );
-my $log = $c->log;
-$log->info("course: $cOURSE, $course");
-	my $standing = $c->model("DB::$cOURSE")
-		->find({ player => $player,
-		exercise => $exercise,
-		league => $league });
-	$c->stash(course => $course);
-	$c->stash($course => $standing);
+	for my $allcourse ( 'WH', 'YN', 'S' ) {
+		my $standing = $c->model("DB::$allcourse")
+			->find({ player => $player,
+			exercise => $exercise,
+			league => $league });
+		if ( $standing->questionchance < 0 or 
+			$standing->answerchance < 0 ) {
+			$c->response->body('GAME OVER');
+			$c->detach();
+		}
+		$c->stash($allcourse => $standing);
+	}
+	$c->stash(course => $mycourse);
 	$c->stash(player => $player);
 	$c->stash(exercise => $exercise);
 	$c->stash(league => $league);
+}
+
+=head2 wordschars
+
+=cut
+
+sub wordschars :Chained('setup') :PathPart('') :CaptureArgs(0) {
+	my ( $self, $c ) = @_;
+	my $exercise = $c->stash->{exercise};
+	my @chars = $c->model('DB::Character')->
+		search({ exercise => $exercise})->
+		get_column("string")->all;
+	$c->stash->{ characters } = \@chars;
+	$c->stash->{words} = 
+		$c->model('DB::Word')->find(
+		{exercise => $exercise})->string;
 }
 
 =head2 try
@@ -60,19 +80,20 @@ Course, question, answer and Questioner's course and answer.
 
 =cut
 
-sub try :Chained('setup') :PathPart('') :CaptureArgs(0) {
+sub try :Chained('wordschars') :PathPart('') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 	if ( $c->request->params ) {
 		my $course = $c->stash->{course};
 		my $question = $c->request->params->{question};
 		my $myanswer = $c->request->params->{answer};
-		unless ( $course or $question or $myanswer )
+		unless ( $question )
 		{
-			$c->stash->{error_msg} = "Missing question/answer?";
+			$c->stash->{error_msg} = "Enter a question and answer.";
 			$c->detach('exchange');
 		}
-		my $check = qx"echo $question | ../class/conversation/marriage/Questioner";
-		my ($unknown, $unhandled, $expectedcourse,
+		my $check =
+qx"echo $question | ../class/conversation/marriage/Questioner";
+		my ($unknown, $unhandled, $lexed, $expectedcourse,
 			$theanswer) = (undef)x4;
 		if ( $check =~ m/^Questioner: Unknown words: ["(.*)"]$/ ) {
 			$unknown = $1;
@@ -81,17 +102,16 @@ sub try :Chained('setup') :PathPart('') :CaptureArgs(0) {
 			$unhandled =1;
 		}
 		else {
-			($expectedcourse, $theanswer) =
+			($lexed, $expectedcourse, $theanswer) =
 						split /\n/, $check; 
-			$c->stash->{status_msg} =
-					"$course\n$theanswer.";
 		}
+		$c->stash( lexed => $lexed );
 		$c->stash( question => $question );
 		$c->stash( myanswer => $myanswer );
+		$c->stash( theanswer => $theanswer );
 		$c->stash( unknown => $unknown );
 		$c->stash( unhandled => $unhandled );
 		$c->stash( expectedcourse => $expectedcourse );
-		$c->stash( theanswer => $theanswer );
 	}
 }
 
@@ -107,31 +127,32 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 	my $course = $c->stash->{course};
 	my $expectedcourse = $c->stash->{expectedcourse};
 	my $question = $c->stash->{question};
-	if ( $course ne $expectedcourse ) {
+	my $theanswer = $c->stash->{theanswer};
+	my $myanswer = $c->stash->{myanswer};
+	my $unknown = $c->stash->{unknown};
+	my $unhandled = $c->stash->{unhandled};
+	if ( $course and $course ne $expectedcourse ) {
 		$c->stash->{error_msg} =
 "'$question' is not a $translate{$course}. It's a $translate{$expectedcourse}. Try again.";
-		$c->detach('exchange');
+		$c->stash->{err} = "question";
 	}
-	my $player = $c->stash->{ player };
-	my $exercise= $c->stash->{exercise };
-	my $league= $c->stash->{ league };
-	my $chances = $c->config->{$course}->{chances};
-	my $cOURSE = ucfirst ( lc $course );
-	my $standing = $c->stash->{$course};
-	my $try = $standing->try + 1;
-	my $score = $standing->score + 1;;
-	$standing->update({
-		try => $try,
-		score => $score,
-		questionchance => 0,
-		answerchance => 3
-		});
-	my %standing = (
-		tries => $try,
-		score => $score,
-		questions => $standing->questionchance,
-		answers => $standing->answerchance);
-	$c->stash( $course => \%standing );
+	elsif ( $theanswer and $myanswer ne $theanswer ) {
+		$c->stash->{error_msg} =
+"The answer to '$question' is not '$myanswer. It's '$theanswer'. Try again.";
+		$c->stash->{err} = "answer";
+	}
+	elsif ( $unknown ) {
+		$c->stash->{error_msg} = "'$unknown' are unknown words. Use only the words from the list."
+	}
+	elsif ( $unhandled ) {
+		$c->stash->{error_msg} = "The question, '$question' was a correct question, but Bett doesn't know the answer."
+	}
+	elsif ( $myanswer eq $theanswer ) {
+		$c->stash->{status_msg} = "The question, '$question' was a grammatical question, and the answer, $theanswer was the correct answer to that question."
+	}
+	else {
+		die "$question' and '$myanswer'?";
+	}
 }
 
 =head2 update
@@ -143,51 +164,104 @@ sub update :Chained('evaluate') :PathPart('') :CaptureArgs(0) {
 	my $player = $c->stash->{ player };
 	my $exercise= $c->stash->{exercise };
 	my $league= $c->stash->{ league };
-	for my $course ( "WH", "YN", "S" ) {
-		my $chances = $c->config->{$course}->{chances};
-		my $cOURSE = ucfirst ( lc $course );
-		my $standing = $c->stash->{$course};
-		my $try = $standing->try + 1;
-		my $score = $standing->score + 1;;
+	my $course = $c->stash->{course};
+	my $cOURSE = ucfirst ( lc $course );
+	my $standing = $c->stash->{$course};
+	my $err = $c->stash->{err};
+	my $unknown = $c->stash->{unknown};
+	my $unhandled = $c->stash->{unhandled};
+	my $tries = $c->stash->{tries};
+	my $score = $c->stash->{score};
+	if ( $err and $err eq 'question' ) {
 		$standing->update({
-			try => $try,
-			score => $score,
-			questionchance => 0,
-			answerchance => 3
+			try => ($tries + 1),
+			questionchance =>
+				($standing->questionchance - 1),
 			});
-		my %standing = (
-			tries => $try,
-			score => $score,
-			questions => $standing->questionchance,
-			answers => $standing->answerchance);
-		$c->stash( $course => \%standing );
+	}
+	elsif ( $err and $err eq 'answer' ) {
+		$standing->update({
+			try => ($tries + 1),
+			answerchance =>
+				($standing->answerchance - 1),
+			});
+	}
+	elsif ( $unknown or $unhandled ) {
+		1;
+	}
+	elsif ( $c->stash->{myanswer} eq $c->stash->{theanswer} ) {
+		$standing->update({
+			try => ($tries + 1),
+			score => ($score + 1),
+			});
+	}
+	else {
+		$c->stash->{error_msg} = "Impossible question, or answer!";
 	}
 }
 
-=head2 wordschars
+=head2 save
+
+New questions, answers
 
 =cut
 
-sub wordschars :Chained('setup') :PathPart('') :CaptureArgs(0) {
-	my ( $self, $c ) = @_;
-	my $exercise = $c->stash->{exercise};
-	my @chars = $c->model('DB::Character')->
-		search({ exercise => $exercise})->
-		get_column("string")->all;
-	$c->stash( characters => \@chars );
-	$c->stash(words => 
-		$c->model('DB::Word')->find(
-		{exercise => $exercise})->string );
+sub save :Chained('update') :PathPart('') :Args(0) {
+my ( $self, $c ) = @_;
+	my $course = $c->stash->{course};
+	my $player = $c->stash->{ player };
+	my $exercise= $c->stash->{exercise };
+	my $league= $c->stash->{ league };
+	my $standing = $c->stash->{$course};
+	$standing->questions->update_or_create({
+		player => $player,
+		league => $league,
+		exercise => $exercise,
+		lexed => $c->stash->{lexed},
+		quoted => $c->stash->{question},
+		course => $course,
+		grammatical => 1,
+		});
+	my %standing = (
+		tries => $standing->try,
+		score => $standing->score,
+		questions => $standing->questionchance,
+		answers => $standing->answerchance);
+	$c->stash({ standing => \%standing });
+	if ( $standing{questions} < 0 or 
+		$standing{answers} < 0 ) {
+		$c->response->body('GAME OVER');
+	}
+	else {
+		$c->stash->{ config } = $c->config;
+		$c->stash->{ template } = 'play.tt2';
+	}
 }
 
 =head2 exchange
 
+GAME OVER, or loop back to REPL.
+
 =cut
 
-sub exchange :Chained('update') :PathPart('') :Args(0) {
-    my ( $self, $c ) = @_;
-    $c->stash( config => $c->config );
-    $c->stash( template => 'play.tt2' );
+sub exchange :Chained('save') :PathPart('') :Args(0) {
+my ( $self, $c ) = @_;
+	my $course = $c->stash->{course};
+	my $standing = $c->stash->{$course};
+	my %standing = (
+		tries => $standing->try,
+		score => $standing->score,
+		questions => $standing->questionchance,
+		answers => $standing->answerchance);
+	$c->stash({ standing => \%standing });
+	if ( $standing{questions} < 0 or 
+		$standing{answers} < 0 ) {
+		$c->response->body('GAME OVER');
+	}
+	else {
+		$c->stash->{ config } = $c->config;
+		$c->stash->{ template } = 'play.tt2';
+	}
 }
 
 =head1 AUTHOR
