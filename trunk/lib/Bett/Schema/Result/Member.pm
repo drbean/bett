@@ -88,7 +88,9 @@ Related object: L<Bett::Schema::Result::Question>
 __PACKAGE__->has_many(
   "questions",
   "Bett::Schema::Result::Question",
-  { "foreign.player" => "self.player" },
+  {	"foreign.player" => "self.player",
+  	"foreign.league" => "self.league"
+  },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
