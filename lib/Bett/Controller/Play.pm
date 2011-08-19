@@ -213,7 +213,7 @@ my ( $self, $c ) = @_;
 	my $exercise= $c->stash->{exercise };
 	my $league= $c->stash->{ league };
 	my $standing = $c->stash->{$course};
-	$standing->questions->update_or_create({
+	$c->model('DB::Question')->update_or_create({
 		player => $player,
 		league => $league,
 		exercise => $exercise,
