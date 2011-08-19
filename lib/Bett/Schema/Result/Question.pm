@@ -62,7 +62,7 @@ __PACKAGE__->table("question");
 
 __PACKAGE__->add_columns(
   "player",
-  { data_type => "text", is_nullable => 1 },
+  { data_type => "text", is_nullable => 0 },
   "lexed",
   { data_type => "text", is_nullable => 0 },
   "league",
@@ -70,11 +70,11 @@ __PACKAGE__->add_columns(
   "exercise",
   { data_type => "text", is_nullable => 0 },
   "course",
-  { data_type => "text", is_nullable => 1 },
+  { data_type => "text", is_nullable => 0 },
   "quoted",
-  { data_type => "text", is_nullable => 1 },
+  { data_type => "text", is_nullable => 0 },
   "grammatical",
-  { data_type => "bool", is_nullable => 1 },
+  { data_type => "bool", is_nullable => 0 },
 );
 __PACKAGE__->set_primary_key("lexed", "exercise", "league");
 
@@ -95,7 +95,7 @@ __PACKAGE__->belongs_to(
   	"foreign.league" => "self.league"
   },
   {
-    is_deferrable => 1,
+    is_deferrable => 0,
     join_type     => "LEFT",
     on_delete     => "CASCADE",
     on_update     => "CASCADE",
@@ -119,7 +119,7 @@ Related object: L<Bett::Schema::Result::Wh>
 #        "foreign.exercise" => "self.exercise"
 #  },
 #  {
-#    is_deferrable => 1,
+#    is_deferrable => 0,
 #    join_type     => "LEFT",
 #    on_delete     => "CASCADE",
 #    on_update     => "CASCADE",
@@ -143,7 +143,7 @@ Related object: L<Bett::Schema::Result::Wh>
 #	"foreign.exercise" => "self.exercise"
 #  },
 #  {
-#    is_deferrable => 1,
+#    is_deferrable => 0,
 #    join_type     => "LEFT",
 #    on_delete     => "CASCADE",
 #    on_update     => "CASCADE",
@@ -167,7 +167,7 @@ Related object: L<Bett::Schema::Result::Wh>
 #	"foreign.exercise" => "self.exercise"
 #  },
 #  {
-#    is_deferrable => 1,
+#    is_deferrable => 0,
 #    join_type     => "LEFT",
 #    on_delete     => "CASCADE",
 #    on_update     => "CASCADE",
@@ -188,7 +188,7 @@ Related object: L<Bett::Schema::Result::Wh>
 #  "Bett::Schema::Result::League",
 #  "league",
 #  {
-#    is_deferrable => 1,
+#    is_deferrable => 0,
 #    join_type     => "LEFT",
 #    on_delete     => "CASCADE",
 #    on_update     => "CASCADE",
