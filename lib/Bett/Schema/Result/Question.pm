@@ -80,28 +80,50 @@ __PACKAGE__->set_primary_key("lexed", "exercise", "league");
 
 =head1 RELATIONS
 
-=head2 played_by
-
-Type: belongs_to
-
-Related object: L<Bett::Schema::Result::Member>
-
-=cut
-
-__PACKAGE__->belongs_to(
-  "played_by",
-  "Bett::Schema::Result::Member",
-  {	"foreign.player" => "self.player",
-  	"foreign.league" => "self.league"
-  },
-  {
-    is_deferrable => 0,
-    join_type     => "LEFT",
-    on_delete     => "CASCADE",
-    on_update     => "CASCADE",
-  },
-);
-
+#=head2 played_by
+#
+#Type: belongs_to
+#
+#Related object: L<Bett::Schema::Result::Member>
+#
+#=cut
+#
+#__PACKAGE__->belongs_to(
+#  "played_by",
+#  "Bett::Schema::Result::Member",
+#  {	"foreign.player" => "self.player",
+#  	"foreign.league" => "self.league"
+#  },
+#  {
+#    is_deferrable => 0,
+#    join_type     => "LEFT",
+#    on_delete     => "CASCADE",
+#    on_update     => "CASCADE",
+#  },
+#);
+#
+#=head2 yn
+#
+#Type: belongs_to
+#
+#Related object: L<Bett::Schema::Result::Yn>
+#
+#=cut
+#
+#__PACKAGE__->belongs_to(
+#  "yns",
+#  "Bett::Schema::Result::Yn",
+#  {   "foreign.player" => "self.player",
+#      "foreign.league" => "self.league",
+#      "foreign.exercise" => "self.exercise"
+#  },
+#  {
+#    is_deferrable => 0,
+#    join_type     => "LEFT",
+#    on_delete     => "CASCADE",
+#    on_update     => "CASCADE",
+#  },
+#);
 
 # Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-08-14 12:32:21
 # Modified by Dr Bean
