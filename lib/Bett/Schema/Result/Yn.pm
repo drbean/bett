@@ -88,15 +88,15 @@ Related object: L<Bett::Schema::Result::Question>
 
 =cut
 
-#__PACKAGE__->has_many(
-#  "questions",
-#  "Bett::Schema::Result::Question",
-#  {	"foreign.player" => "self.player",
-#  	"foreign.league" => "self.league",
-#	"foreign.exercise" => "self.exercise"
-#  },
-#  { cascade_copy => 0, cascade_delete => 0 },
-#);
+__PACKAGE__->has_many(
+  "questions",
+  "Bett::Schema::Result::Question",
+  {	"foreign.player" => "self.player",
+  	"foreign.league" => "self.league",
+	"foreign.exercise" => "self.exercise"
+  },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
 
 
 # Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-08-14 12:32:21
