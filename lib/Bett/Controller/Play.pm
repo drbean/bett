@@ -45,11 +45,6 @@ sub setup :Chained('/') :PathPart('play') :CaptureArgs(1) {
 			->find({ player => $player,
 			exercise => $exercise,
 			league => $league });
-		if ( $standing->questionchance < 0 or 
-			$standing->answerchance < 0 ) {
-			$c->response->body('GAME OVER');
-			$c->detach();
-		}
 		$c->stash($allcourse => $standing);
 	}
 	$c->stash(course => $mycourse);
@@ -85,17 +80,13 @@ sub try :Chained('wordschars') :PathPart('') :CaptureArgs(0) {
 	if ( $c->request->params ) {
 		my $course = $c->stash->{course};
 		my $question = $c->request->params->{question};
+		$question ||= '';
 		my $myanswer = $c->request->params->{answer};
-		unless ( $question )
-		{
-			$c->stash->{error_msg} = "Enter a question and answer.";
-			$c->detach('exchange');
-		}
 		my $check =
 qx"echo $question | ../class/conversation/marriage/Questioner";
-		my ($unknown, $unhandled, $lexed, $expectedcourse,
-			$theanswer) = (undef)x4;
-		if ( $check =~ m/^Questioner: Unknown words: ["(.*)"]$/ ) {
+		my ($unknown, $unhandled, $lexed,
+			$expectedcourse, $theanswer);
+		if ( $check =~ m/Unknown words: ["(.*)"]$/ ) {
 			$unknown = $1;
 		}
 		elsif ( $check =~ m/Non-exhaustive patterns in/ ) {
@@ -131,7 +122,24 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 	my $myanswer = $c->stash->{myanswer};
 	my $unknown = $c->stash->{unknown};
 	my $unhandled = $c->stash->{unhandled};
-	if ( $course and $course ne $expectedcourse ) {
+	if ( $question eq '' )
+	{
+		$c->stash->{error_msg} =
+			"Enter a question and answer.";
+		$c->stash->{nothing} = 1;
+	}
+	elsif ( $unknown ) {
+		$c->stash->{error_msg} = "'$unknown' are unknown words. Use only the words from the list."
+	}
+	elsif ( $unhandled ) {
+		$c->stash->{error_msg} = "The question, '$question' was a correct question, but Bett doesn't know the answer."
+	}
+	elsif ( $expectedcourse =~ m/Unparseable/ ) {
+		$c->stash->{err_msg} =
+"'$question' is not grammatical. Try again.";
+		$c->stash->{err} = "question";
+		}
+	elsif ( $course and $course ne $expectedcourse ) {
 		$c->stash->{error_msg} =
 "'$question' is not a $translate{$course}. It's a $translate{$expectedcourse}. Try again.";
 		$c->stash->{err} = "question";
@@ -140,12 +148,6 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 		$c->stash->{error_msg} =
 "The answer to '$question' is not '$myanswer. It's '$theanswer'. Try again.";
 		$c->stash->{err} = "answer";
-	}
-	elsif ( $unknown ) {
-		$c->stash->{error_msg} = "'$unknown' are unknown words. Use only the words from the list."
-	}
-	elsif ( $unhandled ) {
-		$c->stash->{error_msg} = "The question, '$question' was a correct question, but Bett doesn't know the answer."
 	}
 	elsif ( $myanswer eq $theanswer ) {
 		$c->stash->{status_msg} = "The question, '$question' was a grammatical question, and the answer, $theanswer was the correct answer to that question."
@@ -162,11 +164,14 @@ New/old questions, answers
 =cut
 
 sub question :Chained('evaluate') :PathPart('') :CaptureArgs(0) {
-my ( $self, $c ) = @_;
+	my ( $self, $c ) = @_;
 	my $exercise= $c->stash->{exercise };
 	my $league= $c->stash->{ league };
 	my $course = $c->stash->{course};
 	my $oldquestion = $c->stash->{question};
+	my $grammatical = $c->stash->{expectedcourse}
+				eq 'Unparseable'? 0: 1;
+	return if ($c->stash->{unknown} or not $oldquestion);
 	my $questions = $c->model('DB::Question')->search({
 		league => $league,
 		exercise => $exercise,
@@ -184,7 +189,7 @@ my ( $self, $c ) = @_;
 			quoted => $c->stash->{question},
 			course => $c->stash->{course},
 			player => $c->stash->{player},
-			grammatical => 1,
+			grammatical => $grammatical,
 		});
 	}
 }
@@ -208,7 +213,8 @@ sub update :Chained('question') :PathPart('') :CaptureArgs(0) {
 	my $score = $standing->score;
 	my $questions = $standing->questionchance;
 	my $answers = $standing->answerchance;
-	if ( $err and $err eq 'question' ) {
+	if ( $c->stash->{nothing} ) { 1 }
+	elsif ( $err and $err eq 'question' ) {
 		$standing->update({
 			try => ++$tries,
 			questionchance =>
@@ -233,6 +239,7 @@ sub update :Chained('question') :PathPart('') :CaptureArgs(0) {
 			});
 	}
 	else {
+		die "$questions' and '$err' and '$answers'?";
 		$c->stash->{error_msg} = "Impossible question, or answer!";
 	}
 	$c->stash( tries => $tries );
@@ -252,7 +259,11 @@ my ( $self, $c ) = @_;
 	my $course = $c->stash->{course};
 	if ( $c->stash->{questions} < 0 or 
 		$c->stash->{answers} < 0 ) {
-		$c->response->body('GAME OVER');
+		$c->stash->{ template } = 'gameover.tt2';
+	}
+	elsif ( $c->stash->{score} >= $c->config->{$course}->{win} )
+	{
+		$c->stash->{ template } = 'gameover.tt2';
 	}
 	else {
 		$c->stash->{ config } = $c->config;
