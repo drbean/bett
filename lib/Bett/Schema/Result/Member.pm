@@ -77,23 +77,23 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 0, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
-=head2 questions
-
-Type: has_many
-
-Related object: L<Bett::Schema::Result::Question>
-
-=cut
-
-__PACKAGE__->has_many(
-  "questions",
-  "Bett::Schema::Result::Question",
-  {	"foreign.player" => "self.player",
-  	"foreign.league" => "self.league"
-  },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
+#=head2 questions
+#
+#Type: has_many
+#
+#Related object: L<Bett::Schema::Result::Question>
+#
+#=cut
+#
+#__PACKAGE__->has_many(
+#  "questions",
+#  "Bett::Schema::Result::Question",
+#  {	"foreign.player" => "self.player",
+#  	"foreign.league" => "self.league"
+#  },
+#  { cascade_copy => 0, cascade_delete => 0 },
+#);
+#
 =head2 plays
 
 Type: has_many
