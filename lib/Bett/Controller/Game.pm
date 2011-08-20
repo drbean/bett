@@ -88,7 +88,7 @@ sub wordschars :Chained('setup') :PathPart('') :CaptureArgs(0) {
 sub exchange :Chained('wordschars') :PathPart('') :Args(0) {
     my ( $self, $c ) = @_;
     $c->stash( config => $c->config );
-    $c->stash( template => 'exchange.tt2' );
+    $c->stash( template => 'game.tt2' );
 }
 
 =head1 AUTHOR
