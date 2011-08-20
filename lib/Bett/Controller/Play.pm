@@ -155,11 +155,45 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 	}
 }
 
+=head2 question
+
+New/old questions, answers
+
+=cut
+
+sub question :Chained('evaluate') :PathPart('') :CaptureArgs(0) {
+my ( $self, $c ) = @_;
+	my $exercise= $c->stash->{exercise };
+	my $league= $c->stash->{ league };
+	my $course = $c->stash->{course};
+	my $oldquestion = $c->stash->{question};
+	my $questions = $c->model('DB::Question')->search({
+		league => $league,
+		exercise => $exercise,
+		});
+	my $question = $questions->find({
+		lexed => $c->stash->{lexed}
+		});
+	if ( $question ) {
+		$c->stash->{error_msg} = "But '$oldquestion' is already in the question database. Try again.";
+		$c->stash->{oldquestion} = $question
+	}
+	else {
+		$questions->create({
+			lexed => $c->stash->{lexed},
+			quoted => $c->stash->{question},
+			course => $c->stash->{course},
+			player => $c->stash->{player},
+			grammatical => 1,
+		});
+	}
+}
+
 =head2 update
 
 =cut
 
-sub update :Chained('evaluate') :PathPart('') :CaptureArgs(0) {
+sub update :Chained('question') :PathPart('') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 	my $player = $c->stash->{ player };
 	my $exercise= $c->stash->{exercise };
@@ -170,72 +204,41 @@ sub update :Chained('evaluate') :PathPart('') :CaptureArgs(0) {
 	my $err = $c->stash->{err};
 	my $unknown = $c->stash->{unknown};
 	my $unhandled = $c->stash->{unhandled};
-	my $tries = $c->stash->{tries};
-	my $score = $c->stash->{score};
+	my $tries = $standing->try;
+	my $score = $standing->score;
+	my $questions = $standing->questionchance;
+	my $answers = $standing->answerchance;
 	if ( $err and $err eq 'question' ) {
 		$standing->update({
-			try => ($tries + 1),
+			try => ++$tries,
 			questionchance =>
-				($standing->questionchance - 1),
+				--$questions,
 			});
 	}
 	elsif ( $err and $err eq 'answer' ) {
 		$standing->update({
-			try => ($tries + 1),
+			try => ++$tries,
 			answerchance =>
-				($standing->answerchance - 1),
+				--$answers,
 			});
 	}
-	elsif ( $unknown or $unhandled ) {
-		1;
+	elsif ( $unknown or $unhandled or $c->stash->{oldquestion})
+	{
+		$standing->update({ try => ++$tries });
 	}
 	elsif ( $c->stash->{myanswer} eq $c->stash->{theanswer} ) {
 		$standing->update({
-			try => ($tries + 1),
-			score => ($score + 1),
+			try => ++$tries,
+			score => ++$score,
 			});
 	}
 	else {
 		$c->stash->{error_msg} = "Impossible question, or answer!";
 	}
-}
-
-=head2 save
-
-New questions, answers
-
-=cut
-
-sub save :Chained('update') :PathPart('') :Args(0) {
-my ( $self, $c ) = @_;
-	my $course = $c->stash->{course};
-	my $player = $c->stash->{ player };
-	my $exercise= $c->stash->{exercise };
-	my $league= $c->stash->{ league };
-	my $standing = $c->stash->{$course};
-	$c->model('DB::Question')->update_or_create({
-		player => $player,
-		league => $league,
-		exercise => $exercise,
-		lexed => $c->stash->{lexed},
-		quoted => $c->stash->{question},
-		course => $course,
-		grammatical => 1,
-		});
-	my %standing = (
-		tries => $standing->try,
-		score => $standing->score,
-		questions => $standing->questionchance,
-		answers => $standing->answerchance);
-	$c->stash({ standing => \%standing });
-	if ( $standing{questions} < 0 or 
-		$standing{answers} < 0 ) {
-		$c->response->body('GAME OVER');
-	}
-	else {
-		$c->stash->{ config } = $c->config;
-		$c->stash->{ template } = 'play.tt2';
-	}
+	$c->stash( tries => $tries );
+	$c->stash( score => $score );
+	$c->stash( questions => $questions );
+	$c->stash( answers => $answers );
 }
 
 =head2 exchange
@@ -244,18 +247,11 @@ GAME OVER, or loop back to REPL.
 
 =cut
 
-sub exchange :Chained('save') :PathPart('') :Args(0) {
+sub exchange :Chained('update') :PathPart('') :Args(0) {
 my ( $self, $c ) = @_;
 	my $course = $c->stash->{course};
-	my $standing = $c->stash->{$course};
-	my %standing = (
-		tries => $standing->try,
-		score => $standing->score,
-		questions => $standing->questionchance,
-		answers => $standing->answerchance);
-	$c->stash({ standing => \%standing });
-	if ( $standing{questions} < 0 or 
-		$standing{answers} < 0 ) {
+	if ( $c->stash->{questions} < 0 or 
+		$c->stash->{answers} < 0 ) {
 		$c->response->body('GAME OVER');
 	}
 	else {
