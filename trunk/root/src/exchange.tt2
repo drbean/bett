@@ -56,9 +56,11 @@ In each course, you can only attempt to write a question a certain number of tim
 
 </ul>
 
-<a href="[% c.uri_for('/play/WH') %]">Course 1: WH-questions</a>
-<a href="[% c.uri_for('/play/YN') %]">Course 2: YN-questions</a>
-<a href="[% c.uri_for('/play/S') %]">Course 3: Sentences (TF-questions)</a>
+<ul>
+<li><a href="[% c.uri_for('/play/WH') %]">Course 1: WH-questions</a>
+<li><a href="[% c.uri_for('/play/YN') %]">Course 2: YN-questions</a>
+<li><a href="[% c.uri_for('/play/S') %]">Course 3: Sentences (TF-questions)</a>
+</ul>
 
 
 <h2>Words you can use</h2>
