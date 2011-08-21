@@ -40,17 +40,26 @@ sub setup :Chained('/') :PathPart('play') :CaptureArgs(1) {
         my $player = $c->session->{player_id};
 	my $league = $c->session->{league};
 	my $exercise = $c->session->{exercise};
+	my $gameover;
 	for my $allcourse ( 'WH', 'YN', 'S' ) {
 		my $standing = $c->model("DB::$allcourse")
 			->find({ player => $player,
 			exercise => $exercise,
 			league => $league });
 		$c->stash($allcourse => $standing);
+		$gameover++ if ( $standing->questionchance < 0 or
+			$standing->answerchance < 0 );
+		$gameover++ if ( $standing->score >=
+			$c->config->{$allcourse}->{win} );
 	}
 	$c->stash(course => $mycourse);
 	$c->stash(player => $player);
 	$c->stash(exercise => $exercise);
 	$c->stash(league => $league);
+	if ( $gameover ) {
+		$c->stash(gameover => $gameover);
+		$c->detach('exchange');
+	}
 }
 
 =head2 wordschars
@@ -153,7 +162,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 		$c->stash->{status_msg} = "The question, '$question' was a grammatical question, and the answer, $theanswer was the correct answer to that question."
 	}
 	else {
-		die "$question' and '$myanswer'?";
+		die "$expectedcourse' and '$theanswer'?";
 	}
 }
 
@@ -257,13 +266,17 @@ GAME OVER, or loop back to REPL.
 sub exchange :Chained('update') :PathPart('') :Args(0) {
 my ( $self, $c ) = @_;
 	my $course = $c->stash->{course};
+	my $win = $c->config->{$course}->{win};
+	$c->stash->{win} = $win;
 	if ( $c->stash->{questions} < 0 or 
 		$c->stash->{answers} < 0 ) {
-		$c->stash->{ template } = 'gameover.tt2';
+		$c->stash->{ template } = 'over.tt2';
 	}
-	elsif ( $c->stash->{score} >= $c->config->{$course}->{win} )
-	{
-		$c->stash->{ template } = 'gameover.tt2';
+	elsif ( $c->stash->{score} >= $win ) {
+		$c->stash->{ template } = 'over.tt2';
+	}
+	elsif ( $c->stash->{gameover} ) {
+		$c->stash->{ template } = 'over.tt2';
 	}
 	else {
 		$c->stash->{ config } = $c->config;
