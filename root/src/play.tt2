@@ -10,8 +10,8 @@
 <form method="post" action="[% c.uri_for(c.action_for('play'), course) %]">
 <input type="hidden" name="course" value="[% course %]">
 <table>
-<th>[% tries %] question(s) attempted. [% score %] question(s) completed.<br>
-[% questions %] more question, [% answers %] more answer chance(s) left.
+<th>[% tries %] question(s) attempted. [% score %] question(s) completed. [% win - score %] question(s) to go.<br>
+[% questions %] more question and [% answers %] more answer chances left.
 <tr><td>Question:<input type="text" size=85 name="question">
 <tr><td>Answer:
     <SELECT name="answer">
