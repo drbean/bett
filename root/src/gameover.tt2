@@ -1,9 +1,15 @@
 [% META title = "Play" %]
 
-[% courseno = {WH => 1, YN => 2, S => 3} %]
+[% coursename = [ "WH", "YN", "S" ] %]
 <h1>GAME OVER</h1>
-<h1>Course [% courseno.$course %]: [% course %]-question</h1>
-<input type="hidden" name="course" value="[% course %]">
+
+<h2>Record</h2>
+[% n = 0 %]
+[% FOREACH course IN [ WH, YN, S ] %]
+<h1>Course [% n %]: [%coursename.$n %]-questions</h1>
+
 <table>
-<th>[% tries %] question(s) attempted. [% score %] question(s) completed.<br>
-[% questions %] more question, [% answers %] more answer chance(s) left.
+<th>[% course.try %] question(s) attempted. [% course.score %] question(s) completed. [% c.config.${coursename.$n}.win - course.score %] question(s) unfinished.<br>
+[% course.questionchance %] question and [% course.answerchance %] answer chances remained.
+[% n = n+1 %]
+[% END %]
