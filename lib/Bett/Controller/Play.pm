@@ -52,6 +52,11 @@ sub setup :Chained('/') :PathPart('play') :CaptureArgs(1) {
 		$gameover++ if ( $standing->score >=
 			$c->config->{$allcourse}->{win} );
 	}
+	my $questions = $c->model('DB::Question')->search({
+		league => $league,
+		exercise => $exercise,
+		});
+	$c->stash(questions => $questions);
 	$c->stash(course => $mycourse);
 	$c->stash(player => $player);
 	$c->stash(exercise => $exercise);
@@ -93,17 +98,14 @@ sub try :Chained('wordschars') :PathPart('') :CaptureArgs(0) {
 		my $myanswer = $c->request->params->{answer};
 		my $check =
 qx"echo $question | ../class/conversation/marriage/Questioner";
-		my ($unknown, $unhandled, $lexed,
-			$expectedcourse, $theanswer);
-		if ( $check =~ m/Unknown words: ["(.*)"]$/ ) {
-			$unknown = $1;
-		}
-		elsif ( $check =~ m/Non-exhaustive patterns in/ ) {
-			$unhandled =1;
-		}
-		else {
-			($lexed, $expectedcourse, $theanswer) =
+		my ($lexed, $expectedcourse, $theanswer) =
 						split /\n/, $check; 
+		my ($unknown, $unhandled);
+		if ( not $expectedcourse) {
+			$unknown = 1;
+		}
+		elsif ( not $theanswer ) {
+			$unhandled =1;
 		}
 		$c->stash( lexed => $lexed );
 		$c->stash( question => $question );
@@ -138,13 +140,13 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 		$c->stash->{nothing} = 1;
 	}
 	elsif ( $unknown ) {
-		$c->stash->{error_msg} = "'$unknown' are unknown words. Use only the words from the list."
+		$c->stash->{error_msg} = "The question '$question' contained unknown words. Use only the words from the list."
 	}
 	elsif ( $unhandled ) {
 		$c->stash->{error_msg} = "The question, '$question' was a correct question, but Bett doesn't know the answer."
 	}
-	elsif ( $expectedcourse =~ m/Unparseable/ ) {
-		$c->stash->{err_msg} =
+	elsif ( $expectedcourse eq 'Unparseable' ) {
+		$c->stash->{error_msg} =
 "'$question' is not grammatical. Try again.";
 		$c->stash->{err} = "question";
 		}
@@ -159,7 +161,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 		$c->stash->{err} = "answer";
 	}
 	elsif ( $myanswer eq $theanswer ) {
-		$c->stash->{status_msg} = "The question, '$question' was a grammatical question, and the answer, $theanswer was the correct answer to that question."
+		$c->stash->{status_msg} = "The question, '$question' was a grammatical question, and your answer, $myanswer was the correct answer to that question."
 	}
 	else {
 		die "$expectedcourse' and '$theanswer'?";
@@ -181,16 +183,13 @@ sub question :Chained('evaluate') :PathPart('') :CaptureArgs(0) {
 	my $grammatical = $c->stash->{expectedcourse}
 				eq 'Unparseable'? 0: 1;
 	return if ($c->stash->{unknown} or not $oldquestion);
-	my $questions = $c->model('DB::Question')->search({
-		league => $league,
-		exercise => $exercise,
-		});
+	my $questions = $c->stash->{questions};
 	my $question = $questions->find({
 		lexed => $c->stash->{lexed}
 		});
 	if ( $question ) {
 		$c->stash->{error_msg} = "But '$oldquestion' is already in the question database. Try again.";
-		$c->stash->{oldquestion} = $question
+		$c->stash->{oldquestion} = $question;
 	}
 	else {
 		$questions->create({
@@ -201,6 +200,8 @@ sub question :Chained('evaluate') :PathPart('') :CaptureArgs(0) {
 			grammatical => $grammatical,
 		});
 	}
+	$c->stash( questions => $questions );
+	
 }
 
 =head2 update
@@ -251,10 +252,6 @@ sub update :Chained('question') :PathPart('') :CaptureArgs(0) {
 		die "$questions' and '$err' and '$answers'?";
 		$c->stash->{error_msg} = "Impossible question, or answer!";
 	}
-	$c->stash( tries => $tries );
-	$c->stash( score => $score );
-	$c->stash( questions => $questions );
-	$c->stash( answers => $answers );
 }
 
 =head2 exchange
@@ -268,11 +265,18 @@ my ( $self, $c ) = @_;
 	my $course = $c->stash->{course};
 	my $win = $c->config->{$course}->{win};
 	$c->stash->{win} = $win;
-	if ( $c->stash->{questions} < 0 or 
-		$c->stash->{answers} < 0 ) {
+	my $standing = $c->stash->{$course};
+	my $questions = $c->stash->{questions};
+	my @goodqns = $questions->search({grammatical => 1})->all;
+	my @badqns = $questions->search({ grammatical => 0})->all;
+	$c->stash(goodqn => \@goodqns);
+	$c->stash(badqn => \@badqns);
+			#[{ quoted => "fdsfds", player => 'N9741065'}]);
+	if ( $standing->questionchance < 0 or 
+		$standing->answerchance < 0 ) {
 		$c->stash->{ template } = 'over.tt2';
 	}
-	elsif ( $c->stash->{score} >= $win ) {
+	elsif ( $standing->score >= $win ) {
 		$c->stash->{ template } = 'over.tt2';
 	}
 	elsif ( $c->stash->{gameover} ) {
