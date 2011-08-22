@@ -10,8 +10,8 @@
 <form method="post" action="[% c.uri_for(c.action_for('play'), course) %]">
 <input type="hidden" name="course" value="[% course %]">
 <table>
-<th>[% tries %] question(s) attempted. [% score %] question(s) completed. [% win - score %] question(s) to go.<br>
-[% questions %] more question and [% answers %] more answer chances left.
+<th>[% $course.try %] question(s) attempted. [% $course.score %] question(s) completed. [% win - score %] question(s) to go.<br>
+[% $course.questionchance %] more question and [% $course.answerchance %] more answer chances left.
 <tr><td>Question:<input type="text" size=85 name="question">
 <tr><td>Answer:
     <SELECT name="answer">
@@ -31,3 +31,5 @@ Choose words only from this list.
 <pre>
 [% words %]
 </pre>
+
+[% INCLUDE questions.tt2 %]
