@@ -1,4 +1,4 @@
-[% META title = "Play" %]
+[% META title = "Game over" %]
 
 [% coursename = [ "WH", "YN", "S" ] %]
 <h1>GAME OVER</h1>
@@ -29,3 +29,5 @@
 
 [% n = n+1 %]
 [% END %]
+
+[% INCLUDE questions.tt2 %]
