@@ -85,7 +85,7 @@ sub wordschars :Chained('setup') :PathPart('') :CaptureArgs(0) {
 
 =head2 try
 
-Course, question, answer and Questioner's course and answer.
+Course, question, answer and Questioner's course and answer. Useful messages on haskell's STDERR not returned. Use presence of course (for unknown) and answer (for unhandled) instead. But unknown words not identified.
 
 =cut
 
