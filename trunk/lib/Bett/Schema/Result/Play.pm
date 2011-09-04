@@ -113,7 +113,9 @@ Related object: L<Bett::Schema::Result::Member>
 __PACKAGE__->belongs_to(
   "player",
   "Bett::Schema::Result::Member",
-  { player => "player" },
+  {   "foreign.player" => "self.player",
+      "foreign.league" => "self.league",
+  },
   { is_deferrable => 0, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 

@@ -41,7 +41,7 @@ __PACKAGE__->add_columns(
   "league",
   { data_type => "text", is_foreign_key => 1, is_nullable => 0 },
   "genre",
-  { data_type => "text", is_foreign_key => 1, is_nullable => 0 },
+  { data_type => "tinyint", is_foreign_key => 1, is_nullable => 0 },
 );
 __PACKAGE__->set_primary_key("league", "genre");
 
