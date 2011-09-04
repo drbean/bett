@@ -23,49 +23,84 @@ Catalyst Controller.
 
 sub index :Path :Args(0) {
 	my ( $self, $c ) = @_;
-	my $username = $c->request->params->{username};
+	my $id = $c->request->params->{id};
 	my $password = $c->request->params->{password};
 	my $exercise = $c->request->query_params->{exercise};
-	$c->session->{exercise} = "clay";
-	$c->session->{league} = "GL00005";
-	if ($username && $password) {
-		if ($c->authenticate({ id => $username,
+	if ($id && $password) {
+		if ($c->authenticate({ id => $id,
 				  password => $password  } )) {
-			$c->session->{player_id} = $username;
-			$c->response->redirect($c->uri_for(
-				"/game"));
-			return;
+			$c->session->{player_id} = $id;
+			my @memberships = $c->model("DB::Member")->search
+				({player => $id});
+			my @leagues;
+			push @leagues, $_->league for @memberships;
+			if ( @leagues != 1 ) {
+				$c->stash->{id} = $id;
+				# $c->stash->{name} = $name;
+				$c->stash->{leagues} = \@leagues;
+				$c->stash->{template} = 'membership.tt2';
+				return;
+			}
+			else {
+				$c->session->{league} = $leagues[0]->id;
+				$c->session->{exercise} ||= $exercise;
+				$c->response->redirect($c->uri_for(
+					"/game"));
+			}
 		} else {
 			$c->stash(error_msg =>
-				"Bad username or password.");
+				"Bad id or password.");
 		}
 	} else {
 		$c->stash(error_msg =>
-			"Empty username or password.")
+			"Empty id or password.")
 		unless ($c->user_exists);
 	}
 	$c->stash(template => 'login.tt2');
 }
 
-=head2 gameRedirect
+=head2 membership
 
-End of chain. Game or game list, depending on whether exercise session key set.
+Set league multi-membership player is participating in.
 
 =cut
 
-sub gameRedirect :Chained('index') :PathPart('') :Args(0) {
+sub membership :Local {
 	my ($self, $c) = @_;
-       # if ( defined $c->session->{exercise} ) {
+	my $league = $c->request->params->{league} || '';
+	my $password = $c->request->params->{password} || '';
+	$c->session->{league} = $league;
+	if ( $c->session->{exercise} ) {
 		my $exercise = $c->session->{exercise};
 		$c->response->redirect(
-			$c->uri_for("/game/$exercise"), 303 );
-	# }
-	#else {
-	#	$c->response->redirect( $c->uri_for("/game/list"),
-	#		303 );
-	#}
-	#return;
+			$c->uri_for( "/game" ));
+	}
+	else {
+		$c->stash->{template} = 'membership.tt2';
+		return;
+	}
 }
+
+
+#=head2 gameRedirect
+#
+#End of chain. Game or game list, depending on whether exercise session key set.
+#
+#=cut
+#
+#sub gameRedirect :Chained('index') :PathPart('') :Args(0) {
+#	my ($self, $c) = @_;
+#       # if ( defined $c->session->{exercise} ) {
+#		my $exercise = $c->session->{exercise};
+#		$c->response->redirect(
+#			$c->uri_for("/game/$exercise"), 303 );
+#	# }
+#	#else {
+#	#	$c->response->redirect( $c->uri_for("/game/list"),
+#	#		303 );
+#	#}
+#	#return;
+#}
    
 
 =head2 logout
