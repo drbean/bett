@@ -17,7 +17,7 @@ my %config = Config::General->new( "bett.conf" )->getall;
 my $connect_info = Bett::Model::DB->config->{connect_info};
 my $schema = Bett::Schema->connect( $connect_info );
 
-my @leagueids = qw/GL00005 BMA0033 FLA0030/;
+my @leagueids = qw/GL00003 GL00016 BMA0031 FIA0012 MIA0015 FLA0015 FLA0019 FLA0023 FLA0028/;
 
 my ($leaguefile, $players);
 my $leagues = [ [ qw/id name field/ ] ];
@@ -36,13 +36,21 @@ uptodatepopulate( 'Genre', [
 			[ 1, "intermediate" ],
 			[ 2, "business" ],
 			[ 3, "friends" ],
+			[ 4, "intercultural" ],
+			[ 5, "speaking" ],
 			] );
 
 my $leaguegenres = [
 			[ qw/league genre/ ],
-			[ "GL00005",	1 ],
-			[ "FLA0030",	3 ],
+			[ "GL00003",	1 ],
+			[ "GL00016",	1 ],
+			[ "FLA0015",	1 ],
+			[ "FLA0023",	1 ],
 			[ "BMA0033",	2 ],
+			[ "FIA0012",	2 ],
+			[ "MIA0015",	2 ],
+			[ "FLA0019",	4 ],
+			[ "FLA0028",	5 ],
 		];
 
 uptodatepopulate( 'Leaguegenre', $leaguegenres );
