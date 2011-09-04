@@ -6,23 +6,23 @@
 	%]
 [% options = {
 	WH => characters, YN => ynoptions, S => tfoptions } %]
-<h1>Course [% courseno.$course %]: [% course %]-question</h1>
-<form method="post" action="[% c.uri_for(c.action_for('play'), course) %]">
-<input type="hidden" name="course" value="[% course %]">
-<table>
-<th>[% $course.try %] question(s) attempted. [% $course.score %] question(s) completed. [% win - score %] question(s) to go.<br>
+<H1>Course [% courseno.$course %]: [% course %]-question</H1>
+<FORM method="post" action="[% c.uri_for(c.action_for('play'), course) %]">
+<INPUT type="hidden" name="course" value="[% course %]">
+<TABLE>
+<TH>[% $course.try %] question(s) attempted. [% $course.score %] question(s) completed. [% win - score %] question(s) to go.<BR>
 [% $course.questionchance %] more question and [% $course.answerchance %] more answer chances left.
-<tr><td>Question:<input type="text" size=85 name="question">
-<tr><td>Answer:
+<TR><TD>Question:<INPUT type="text" size=85 name="question">
+<TR><TD>Answer:
     <SELECT name="answer">
        <OPTION selected value="--">No answer</OPTION>
 [% FOREACH option IN options.$course %]
        <OPTION value="[% option %]">[% option %]</OPTION>
 [% END %]
     </SELECT>
-</table>
-<input type="submit" name="Submit" value="Submit">
-</form>
+</TABLE>
+<INPUT type="submit" name="Submit" value="Submit">
+</FORM>
 
 <h2>Words you can use</h2>
 
