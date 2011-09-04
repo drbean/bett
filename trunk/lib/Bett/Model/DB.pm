@@ -3,11 +3,16 @@ package Bett::Model::DB;
 use strict;
 use base 'Catalyst::Model::DBIC::Schema';
 
+# use Bett;
+
+# my $name = Bett->config->{database};
+my $name = "bett001";
+
 __PACKAGE__->config(
     schema_class => 'Bett::Schema',
     
     connect_info => {
-        dsn => 'dbi:SQLite:bett.db',
+        dsn => "dbi:Pg:dbname=$name",
         user => '',
         password => '',
         on_connect_do => q{PRAGMA foreign_keys = ON},
