@@ -15,7 +15,6 @@ __PACKAGE__->config(
         dsn => "dbi:Pg:dbname=$name",
         user => '',
         password => '',
-        on_connect_do => q{PRAGMA foreign_keys = ON},
     }
 );
 
