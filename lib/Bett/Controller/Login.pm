@@ -23,9 +23,10 @@ Catalyst Controller.
 
 sub index :Path :Args(0) {
 	my ( $self, $c ) = @_;
+	my $name = $c->request->params->{name};
 	my $id = $c->request->params->{id};
 	my $password = $c->request->params->{password};
-	my $exercise = $c->request->query_params->{exercise};
+	my $exercise = "clay";
 	if ($id && $password) {
 		if ($c->authenticate({ id => $id,
 				  password => $password  } )) {
@@ -36,7 +37,7 @@ sub index :Path :Args(0) {
 			push @leagues, $_->league for @memberships;
 			if ( @leagues != 1 ) {
 				$c->stash->{id} = $id;
-				# $c->stash->{name} = $name;
+				$c->stash->{username} = $name;
 				$c->stash->{leagues} = \@leagues;
 				$c->stash->{template} = 'membership.tt2';
 				return;
@@ -71,12 +72,11 @@ sub membership :Local {
 	my $password = $c->request->params->{password} || '';
 	$c->session->{league} = $league;
 	if ( $c->session->{exercise} ) {
-		my $exercise = $c->session->{exercise};
 		$c->response->redirect(
 			$c->uri_for( "/game" ));
 	}
 	else {
-		$c->stash->{template} = 'membership.tt2';
+		$c->stash->{template} = 'login.tt2';
 		return;
 	}
 }
