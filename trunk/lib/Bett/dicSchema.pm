@@ -8,9 +8,9 @@ use lib "$Bin/../../dic/lib";
 
 use base 'DBIx::Class::Schema';
 
-__PACKAGE__->load_classes({
-	'dic::Schema' => [qw/Exercise League/]
-});
+__PACKAGE__->load_namespaces(
+	result_namespace => '+dic::Schema'
+	);
 
 
 # Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-09-22 15:03:53
