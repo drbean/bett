@@ -45,7 +45,7 @@ for my $league ( @leagueids ) {
 uptodatepopulate( 'League', $leagues );
 
 uptodatepopulate( 'Genre', [
-			[ qw/id genre/ ],
+			[ qw/id value/ ],
 			[ 1, "intermediate" ],
 			[ 2, "business" ],
 			[ 3, "friends" ],
