@@ -18,7 +18,7 @@ my $connect_info = Bett::Model::DB->config->{connect_info};
 my $schema = Bett::Schema->connect( $connect_info );
 
 my $ex = Grades::Script->new_with_options->exercise;
-my %characters = qx"../class/conversation/marriage/$ex/Characters";
+my %characters = qx"/home/drbean/class/conversation/marriage/$ex/Characters";
 chomp %characters;
 my %chars = reverse %characters;
 chomp %chars;
