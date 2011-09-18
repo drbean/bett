@@ -24,6 +24,7 @@ use Catalyst qw/
 	StackTrace
 
 	Authentication
+	Authorization::Roles
 
 	Session
 	Session::Store::FastMmap
@@ -52,7 +53,7 @@ __PACKAGE__->config(
 __PACKAGE__->config->{'Plugin::Authentication'} = {
    default => {
        class           => 'SimpleDB',
-       user_model      => 'DB::Player',
+       user_model      => 'dicDB::Player',
        password_type   => 'clear',
    },
 };
