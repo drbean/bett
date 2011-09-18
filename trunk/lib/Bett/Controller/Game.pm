@@ -91,6 +91,17 @@ sub exchange :Chained('wordschars') :PathPart('') :Args(0) {
     $c->stash( template => 'game.tt2' );
 }
 
+=head2 words
+
+=cut
+
+sub words :Global {
+    my ( $self, $c ) = @_;
+	my $exercise = $c->session->{exercise};
+	my $words = $c->model('DB::Word')->find({ exercise => $exercise })->string;
+    $c->response->body( '<pre>' . $words . '</pre>' );
+}
+
 =head1 AUTHOR
 
 Dr Bean
