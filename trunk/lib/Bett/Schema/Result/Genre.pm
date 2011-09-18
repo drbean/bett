@@ -39,7 +39,7 @@ __PACKAGE__->table("genre");
 __PACKAGE__->add_columns(
   "id",
   { data_type => "tinyint", is_auto_increment => 1, is_nullable => 0 },
-  "genre",
+  "value",
   { data_type => "text", is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("id");
