@@ -97,7 +97,7 @@ sub try :Chained('wordschars') :PathPart('') :CaptureArgs(0) {
 		$question ||= '';
 		my $myanswer = $c->request->params->{answer};
 		my $check =
-qx"echo $question | ../class/conversation/marriage/Questioner";
+qx"echo $question | ./script/Questioner";
 		my ($lexed, $expectedcourse, $theanswer) =
 						split /\n/, $check; 
 		my ($unknown, $unhandled);
