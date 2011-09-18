@@ -10,7 +10,7 @@ use base 'Catalyst::Model::DBIC::Schema';
 my $name = "dic001";
 
 __PACKAGE__->config(
-    schema_class => 'Bett::Schema',
+    schema_class => 'Bett::dicSchema',
     connect_info => {
         dsn => "dbi:Pg:dbname=$name",
         user => '',
