@@ -62,8 +62,7 @@ sub index :Path :Args(0) {
 				$c->session->{league} = $league;
 				my $exercise = $c->forward( 'get_exercise', [ $league ] );
 				$c->session->{exercise} = $exercise if $exercise;
-				$c->response->redirect($c->uri_for(
-					"/game"));
+				$c->response->redirect($c->uri_for( "/game"));
 			}
 		} else {
 			$c->stash(error_msg =>
@@ -89,13 +88,17 @@ sub official : Local {
 	my $jigsawrole = $c->request->params->{jigsawrole} || "";
 	my $password = lc $c->request->params->{password} || "";
 	my $username = $c->session->{player_id};
+$DB::single=1;
 	if ( $c->authenticate( {id =>$username, password=>$password} ) ) {
 		# my $officialrole = "official";
 		my $officialrole = 1;
 		if ( $c->check_user_roles($officialrole) ) {
 			$c->session->{league} = $league;
-			$c->model('DB::Jigsawrole')->update_or_create(
-				{ league => $league, player => $username, role => $jigsawrole } );
+			my $exercise = $c->forward( 'get_exercise', [ $league ] );
+			$c->session->{exercise} = $exercise if $exercise;
+			$c->model('dicDB::Jigsawrole')->update_or_create(
+				{	league => $league, player => $username,
+					role => $jigsawrole } );
 			$c->response->redirect($c->uri_for("/game"), 303);
 			return;
 		}
