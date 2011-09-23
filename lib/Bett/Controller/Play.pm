@@ -95,6 +95,7 @@ sub try :Chained('wordschars') :PathPart('') :CaptureArgs(0) {
 		my $course = $c->stash->{course};
 		my $question = $c->request->params->{question};
 		$question ||= '';
+		$question =~ s/'/\\\'/g;
 		my $myanswer = $c->request->params->{answer};
 		my $check =
 qx"echo $question | ./script/Questioner";
@@ -107,6 +108,7 @@ qx"echo $question | ./script/Questioner";
 		elsif ( not $theanswer ) {
 			$unhandled =1;
 		}
+$DB::single=1;
 		$c->stash( lexed => $lexed );
 		$c->stash( question => $question );
 		$c->stash( myanswer => $myanswer );
