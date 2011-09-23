@@ -35,7 +35,7 @@ In each course, you can only attempt to write a question a certain number of tim
 <ul>
 <li>In Course 3,
   <ul>
-  <li>If [% Schances %] of your sentences is/are not grammatically correct, then GAME OVER. In that case, you have to fill in all the blanks in the Dictation Exercise to get a FULL SCORE.
+  <li>If [% config.S.chances.question %] of your sentences is/are not grammatically correct, then GAME OVER. In that case, you have to fill in all the blanks in the Dictation Exercise to get a FULL SCORE.
   <li>If however, an ANSWER is not correct (for example, you answered TRUE but the answer is FALSE), you get [% config.S.chances.answer %] more chance(s) to attempt another sentence.
   <li> So in Course 3, the sentences are easier to write, but you have to write [% config.S.win %], a lot. Grammatical failure means you lose, and wrong answers are also penalized severely.
   </ul>
