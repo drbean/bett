@@ -95,10 +95,9 @@ sub try :Chained('wordschars') :PathPart('') :CaptureArgs(0) {
 		my $course = $c->stash->{course};
 		my $question = $c->request->params->{question};
 		$question ||= '';
-		$question =~ s/'/\\\'/g;
 		my $myanswer = $c->request->params->{answer};
 		my $check =
-qx"echo $question | ./script/Questioner";
+qx"echo \"$question\" | ./script/Questioner";
 		my ($lexed, $expectedcourse, $theanswer) =
 						split /\n/, $check; 
 		my ($unknown, $unhandled);
