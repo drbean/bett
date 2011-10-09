@@ -5,26 +5,40 @@ use warnings;
 use lib 'lib';
 
 use Config::General;
-use Cwd;
-use File::Spec;
-use Grades;
 use YAML qw/LoadFile/;
-
 use Bett::Model::DB;
 use Bett::Schema;
+
+package Script;
+
+use Moose;
+with 'MooseX::Getopt';
+
+has 'man'  => ( is => 'ro', isa => 'Bool' );
+has 'help' => ( is => 'ro', isa => 'Bool' );
+has 'area' => (
+    traits => ['Getopt'], is => 'ro', isa => 'Str', required => 1,
+    cmd_aliases => 'a',);
+has 'story' => (
+    traits => ['Getopt'], is => 'ro', isa => 'Str', required => 0,
+    cmd_aliases => 's',);
+
+package main;
 
 my %config = Config::General->new( "bett.conf" )->getall;
 my $connect_info = Bett::Model::DB->config->{connect_info};
 my $schema = Bett::Schema->connect( $connect_info );
 
-my $ex = Grades::Script->new_with_options->exercise;
-my %characters = qx"/home/drbean/class/conversation/marriage/$ex/Characters";
+my $script = Script->new_with_options;
+my $area = $script->area;
+my $story = $script->story;
+my %characters = qx"/home/drbean/class/conversation/$area/$story/Characters";
 chomp %characters;
 my %chars = reverse %characters;
 chomp %chars;
 
 my $chars = [ [ qw/exercise entity string/ ] ];
-push @$chars, [ $ex, $_, $chars{$_} ] for keys %chars;
+push @$chars, [ $story, $_, $chars{$_} ] for keys %chars;
 uptodatepopulate( 'Character', $chars );
 
 sub uptodatepopulate
@@ -47,7 +61,7 @@ script/characters.pl - populate character table from Model.hs
 
 =head1 SYNOPSIS
 
-perl script/characters.pl -x clay
+perl script/characters.pl -a marriage -s clay
 
 =head1 DESCRIPTION
 
