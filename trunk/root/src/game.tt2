@@ -43,7 +43,7 @@ In each course, you can only attempt to write a question a certain number of tim
 <li>In Course 2,
   <ul>
   <li>you get [% YNchances %] chances if you make a mistake, [% config.YN.chances.question %] for mistakes in the grammar of a question and [% config.YN.chances.answer %] for mistakes with an answer.
-  <li>If you make [% config.YN.chances.question %] mistake(s) in the grammar of the YN question, OR have [% config.YN.chances.answer %] wrong answer(s) (TRUE or FALSE), you can try again with a new question, for a maximum of [% YNchances %] extra tries before GAME OVER.
+  <li>If you make [% config.YN.chances.question %] mistake(s) in the grammar of the YN question, OR have [% config.YN.chances.answer %] wrong answer(s) (YES or NO), you can try again with a new question, for a maximum of [% YNchances %] extra tries before GAME OVER.
   <li>So writing questions in Course 2 is harder than in Course 3, but you only have to write [% config.YN.win %], not so many. And mistakes in grammar or in answers are not penalized so severely.
   </ul>
 
