@@ -85,7 +85,7 @@ sub wordschars :Chained('setup') :PathPart('') :CaptureArgs(0) {
 
 =head2 try
 
-Course, question, answer and Questioner's course and answer. Useful messages on haskell's STDERR not returned. Use presence of course (for unknown) and answer (for unhandled) instead. But unknown words not identified.
+Course, question, answer and Questioner's course and answer. Errors from haskell's Questioner: expectedcourse contains  unknown words and theanswer shows Questioner unhandles it.
 
 =cut
 
@@ -100,20 +100,10 @@ sub try :Chained('wordschars') :PathPart('') :CaptureArgs(0) {
 qx"echo \"$question\" | ./script/Questioner";
 		my ($lexed, $expectedcourse, $theanswer) =
 						split /\n/, $check; 
-		my ($unknown, $unhandled);
-		if ( not $expectedcourse) {
-			$unknown = 1;
-		}
-		elsif ( not $theanswer ) {
-			$unhandled =1;
-		}
-$DB::single=1;
 		$c->stash( lexed => $lexed );
 		$c->stash( question => $question );
 		$c->stash( myanswer => $myanswer );
 		$c->stash( theanswer => $theanswer );
-		$c->stash( unknown => $unknown );
-		$c->stash( unhandled => $unhandled );
 		$c->stash( expectedcourse => $expectedcourse );
 	}
 }
@@ -132,19 +122,20 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 	my $question = $c->stash->{question};
 	my $theanswer = $c->stash->{theanswer};
 	my $myanswer = $c->stash->{myanswer};
-	my $unknown = $c->stash->{unknown};
-	my $unhandled = $c->stash->{unhandled};
+	my $unknown;
 	if ( $question eq '' )
 	{
 		$c->stash->{error_msg} =
 			"Enter a question and answer.";
 		$c->stash->{nothing} = 1;
 	}
-	elsif ( $unknown ) {
-		$c->stash->{error_msg} = "The question '$question' contained unknown words. Use only the words from the list."
+	elsif ( ($unknown = $expectedcourse) =~ s/^Questioner: unknown words: \[(.*)\]$/$1/ ) {
+		$c->stash->{error_msg} = "The question '$question' contained unknown words, $unknown. Use only the words from the list.";
+		$c->stash->{unknown} = $unknown;
 	}
-	elsif ( $unhandled ) {
-		$c->stash->{error_msg} = "The question, '$question' was a correct question, but Bett doesn't know the answer."
+	elsif ( $theanswer =~ m/^Questioner: LogicalForm.* Non-exhaustive/ ) {
+		$c->stash->{error_msg} = "The question, '$question' was a correct question, but Bett doesn't know the answer. Sorry. Try an easier question.";
+		$c->stash->{unhandled} = $theanswer;
 	}
 	elsif ( $expectedcourse eq 'Unparseable' ) {
 		$c->stash->{error_msg} =
@@ -165,7 +156,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 		$c->stash->{status_msg} = "The question, '$question' was a grammatical question, and your answer, $myanswer was the correct answer to that question."
 	}
 	else {
-		die "$expectedcourse' and '$theanswer'?";
+		die "Expected course: $expectedcourse, answer: $theanswer,";
 	}
 }
 
@@ -250,7 +241,7 @@ sub update :Chained('question') :PathPart('') :CaptureArgs(0) {
 			});
 	}
 	else {
-		die "$questions' and '$err' and '$answers'?";
+		die "Questions left: $questions, error $err, answers left: $answers,";
 		$c->stash->{error_msg} = "Impossible question, or answer!";
 	}
 }
