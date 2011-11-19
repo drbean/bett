@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 use lib 'lib';
+use FindBin '$Bin';
 
 use Config::General;
 use YAML qw/LoadFile/;
@@ -17,9 +18,6 @@ with 'MooseX::Getopt';
 
 has 'man'  => ( is => 'ro', isa => 'Bool' );
 has 'help' => ( is => 'ro', isa => 'Bool' );
-has 'area' => (
-    traits => ['Getopt'], is => 'ro', isa => 'Str', required => 1,
-    cmd_aliases => 'a',);
 has 'story' => (
     traits => ['Getopt'], is => 'ro', isa => 'Str', required => 0,
     cmd_aliases => 's',);
@@ -31,9 +29,8 @@ my $connect_info = Bett::Model::DB->config->{connect_info};
 my $schema = Bett::Schema->connect( $connect_info );
 
 my $script = Script->new_with_options;
-my $area = $script->area;
 my $story = $script->story;
-my $words = qx"/home/drbean/class/conversation/$area/$story/Words";
+my $words = qx"$Bin/Words";
 chomp $words;
 
 my @words = ( [ qw/exercise string/ ] );
