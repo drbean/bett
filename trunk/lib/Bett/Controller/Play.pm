@@ -77,7 +77,7 @@ sub wordschars :Chained('setup') :PathPart('') :CaptureArgs(0) {
 	my @chars = $c->model('DB::Character')->
 		search({ exercise => $exercise})->
 		get_column("string")->all;
-	@chars = map s/\b(\w)/\u$1/g, @chars;
+	@chars = map { $_ =~ s/\b(\w)/\u$1/g} @chars;
 	# @chars = map s/_(\w)/ \u$1/g @chars;
 	$c->stash->{ characters } = \@chars;
 	$c->stash->{words} = 
