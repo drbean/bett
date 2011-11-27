@@ -2,6 +2,8 @@ package Bett::Controller::Play;
 use Moose;
 use namespace::autoclean;
 
+use List::MoreUtils qw/any/;
+
 BEGIN {extends 'Catalyst::Controller'; }
 
 =head1 NAME
@@ -124,6 +126,13 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 	my $question = $c->stash->{question};
 	my $theanswer = $c->stash->{theanswer};
 	my $myanswer = $c->stash->{myanswer};
+	my ($thewhanswers, @thewhanswers);
+	if ( $expectedcourse eq 'WH' ) {
+		@thewhanswers = split /\["|","|"\]/, $theanswer;
+		shift @thewhanswers;
+		$thewhanswers .= $_ . " " for @thewhanswers;
+		chop $thewhanswers;
+	}
 	my $unknown;
 	if ( $question eq '' )
 	{
@@ -146,8 +155,21 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 		}
 	elsif ( $course and $course ne $expectedcourse ) {
 		$c->stash->{error_msg} =
-"'$question' is not a $translate{$course}. It's a $translate{$expectedcourse}. Try again.";
+"'$question' is not a $translate{$course} question. It's a $translate{$expectedcourse} question. Try again.";
 		$c->stash->{err} = "question";
+	}
+	elsif ( @thewhanswers and not any { $_ eq $myanswer } @thewhanswers ) {
+		$c->stash->{error_msg} =
+"'$myanswer' is not the answer, nor one of the answers to '$question'. " .
+	"The answer(s) is/are: '$thewhanswers'.";
+		$c->stash->{err} = "answer";
+	}
+	elsif ( @thewhanswers and any { $_ eq $myanswer } @thewhanswers ) {
+
+		$c->stash->{status_msg} =
+"'$myanswer' is a/the answer to '$question'. " .
+	"The full list of answers is: '$thewhanswers'.";
+		$c->stash->{thewhanswers} = \@thewhanswers;
 	}
 	elsif ( $theanswer and $myanswer ne $theanswer ) {
 		$c->stash->{error_msg} =
@@ -217,6 +239,8 @@ sub update :Chained('question') :PathPart('') :CaptureArgs(0) {
 	my $score = $standing->score;
 	my $questions = $standing->questionchance;
 	my $answers = $standing->answerchance;
+	my $myanswer = $c->stash->{myanswer};
+	my $thewhanswers = $c->stash->{thewhanswers};
 	if ( $c->stash->{nothing} ) { 1 }
 	elsif ( $err and $err eq 'question' ) {
 		$standing->update({
@@ -237,6 +261,12 @@ sub update :Chained('question') :PathPart('') :CaptureArgs(0) {
 		$standing->update({ try => ++$tries });
 	}
 	elsif ( $c->stash->{myanswer} eq $c->stash->{theanswer} ) {
+		$standing->update({
+			try => ++$tries,
+			score => ++$score,
+			});
+	}
+	elsif ( @$thewhanswers and any { $_ eq $myanswer } @$thewhanswers ) {
 		$standing->update({
 			try => ++$tries,
 			score => ++$score,
