@@ -11,6 +11,7 @@
   </select>
 
 <p>
+  <input type=hidden name=exercise value="[% exercise %]">
   <INPUT type="submit" value="Submit">
 </p>
 
