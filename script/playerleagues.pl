@@ -10,6 +10,7 @@ use File::Spec;
 use List::MoreUtils qw/all/;
 use YAML qw/LoadFile/;
 
+use Bett;
 use Bett::Model::DB;
 use Bett::Schema;
 
