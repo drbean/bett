@@ -55,6 +55,7 @@ sub index :Path :Args(0) {
 				$c->stash->{id} = $id;
 				$c->stash->{username} = $name;
 				$c->stash->{leagues} = \@leagues;
+				$c->session->{exercise} = $exercise if $exercise;
 				$c->stash->{template} = 'membership.tt2';
 				return;
 			}
