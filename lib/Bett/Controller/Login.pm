@@ -27,6 +27,7 @@ sub index :Path :Args(0) {
 	my $id = $c->request->params->{id};
 	my $password = $c->request->params->{password};
 	my $exercise = $c->request->params->{exercise};
+$DB::single=1;
 	if ($id && $password) {
 		if ($c->authenticate({ id => $id,
 				  password => $password  } )) {
@@ -56,6 +57,7 @@ sub index :Path :Args(0) {
 				$c->stash->{username} = $name;
 				$c->stash->{leagues} = \@leagues;
 				$c->session->{exercise} = $exercise if $exercise;
+				$c->stash(exercise => $exercise);
 				$c->stash->{template} = 'membership.tt2';
 				return;
 			}
@@ -92,7 +94,6 @@ sub official : Local {
 	my $password = lc $c->request->params->{password} || "";
 	my $exercise = $c->request->params->{exercise};
 	my $username = $c->session->{player_id};
-$DB::single=1;
 	if ( $c->authenticate( {id =>$username, password=>$password} ) ) {
 		# my $officialrole = "official";
 		my $officialrole = 1;
@@ -109,6 +110,7 @@ $DB::single=1;
 		else {
 		# Set an error message
 		$c->stash->{error_msg} = "Bad username or password?";
+		$c->stash(exercise => $exercise);
 		$c->stash->{template} = 'login.tt2';
 		}
 	}
@@ -131,11 +133,13 @@ sub membership :Local {
 	$c->session->{league} = $league;
 	$exercise = $c->forward( 'get_exercise', [ $league ] ) unless $exercise;
 	$c->session->{exercise} = $exercise if $exercise;
+$DB::single=1;
 	if ( $exercise ) {
 		$c->response->redirect(
 			$c->uri_for( "/game" ));
 	}
 	else {
+		$c->stash(exercise => $exercise);
 		$c->stash->{template} = 'login.tt2';
 		return;
 	}
