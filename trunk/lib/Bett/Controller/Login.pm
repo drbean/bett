@@ -89,7 +89,7 @@ sub official : Local {
 	my $league = $c->request->params->{league} || "";
 	my $jigsawrole = $c->request->params->{jigsawrole} || "";
 	my $password = lc $c->request->params->{password} || "";
-	my $exercise = $c->request->password->{exercise};
+	my $exercise = $c->request->params->{exercise};
 	my $username = $c->session->{player_id};
 $DB::single=1;
 	if ( $c->authenticate( {id =>$username, password=>$password} ) ) {
@@ -126,7 +126,7 @@ sub membership :Local {
 	my ($self, $c) = @_;
 	my $league = $c->request->params->{league} || '';
 	my $password = $c->request->params->{password} || '';
-	my $exercise = $c->request->password->{exercise};
+	my $exercise = $c->request->params->{exercise};
 	$c->session->{league} = $league;
 	my $exercise = $c->forward( 'get_exercise', [ $league ] ) unless $exercise;
 	$c->session->{exercise} = $exercise if $exercise;
