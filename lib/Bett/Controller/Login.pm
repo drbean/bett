@@ -26,6 +26,7 @@ sub index :Path :Args(0) {
 	my $name = $c->request->params->{name};
 	my $id = $c->request->params->{id};
 	my $password = $c->request->params->{password};
+	my $exercise = $c->request->params->{exercise};
 	if ($id && $password) {
 		if ($c->authenticate({ id => $id,
 				  password => $password  } )) {
@@ -60,7 +61,7 @@ sub index :Path :Args(0) {
 			else {
 				my $league = $leagues[0]->id;
 				$c->session->{league} = $league;
-				my $exercise = $c->forward( 'get_exercise', [ $league ] );
+				my $exercise = $c->forward( 'get_exercise', [ $league ] ) unless $exercise;
 				$c->session->{exercise} = $exercise if $exercise;
 				$c->response->redirect($c->uri_for( "/game"));
 			}
@@ -72,6 +73,7 @@ sub index :Path :Args(0) {
 		$c->stash(error_msg =>
 			"Empty id or password.")
 		unless ($c->user_exists);
+		$c->stash(exercise => $exercise);
 	}
 	$c->stash(template => 'login.tt2');
 }
@@ -87,6 +89,7 @@ sub official : Local {
 	my $league = $c->request->params->{league} || "";
 	my $jigsawrole = $c->request->params->{jigsawrole} || "";
 	my $password = lc $c->request->params->{password} || "";
+	my $exercise = $c->request->password->{exercise};
 	my $username = $c->session->{player_id};
 $DB::single=1;
 	if ( $c->authenticate( {id =>$username, password=>$password} ) ) {
@@ -94,7 +97,7 @@ $DB::single=1;
 		my $officialrole = 1;
 		if ( $c->check_user_roles($officialrole) ) {
 			$c->session->{league} = $league;
-			my $exercise = $c->forward( 'get_exercise', [ $league ] );
+			my $exercise = $c->forward( 'get_exercise', [ $league ] ) unless $exercise;
 			$c->session->{exercise} = $exercise if $exercise;
 			$c->model('dicDB::Jigsawrole')->update_or_create(
 				{	league => $league, player => $username,
@@ -123,8 +126,9 @@ sub membership :Local {
 	my ($self, $c) = @_;
 	my $league = $c->request->params->{league} || '';
 	my $password = $c->request->params->{password} || '';
+	my $exercise = $c->request->password->{exercise};
 	$c->session->{league} = $league;
-	my $exercise = $c->forward( 'get_exercise', [ $league ] );
+	my $exercise = $c->forward( 'get_exercise', [ $league ] ) unless $exercise;
 	$c->session->{exercise} = $exercise if $exercise;
 	if ( $exercise ) {
 		$c->response->redirect(
