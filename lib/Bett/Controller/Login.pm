@@ -62,7 +62,7 @@ sub index :Path :Args(0) {
 			else {
 				my $league = $leagues[0]->id;
 				$c->session->{league} = $league;
-				my $exercise = $c->forward( 'get_exercise', [ $league ] ) unless $exercise;
+				$exercise = $c->forward( 'get_exercise', [ $league ] ) unless $exercise;
 				$c->session->{exercise} = $exercise if $exercise;
 				$c->response->redirect($c->uri_for( "/game"));
 			}
@@ -98,7 +98,7 @@ $DB::single=1;
 		my $officialrole = 1;
 		if ( $c->check_user_roles($officialrole) ) {
 			$c->session->{league} = $league;
-			my $exercise = $c->forward( 'get_exercise', [ $league ] ) unless $exercise;
+			$exercise = $c->forward( 'get_exercise', [ $league ] ) unless $exercise;
 			$c->session->{exercise} = $exercise if $exercise;
 			$c->model('dicDB::Jigsawrole')->update_or_create(
 				{	league => $league, player => $username,
@@ -129,7 +129,7 @@ sub membership :Local {
 	my $password = $c->request->params->{password} || '';
 	my $exercise = $c->request->params->{exercise};
 	$c->session->{league} = $league;
-	my $exercise = $c->forward( 'get_exercise', [ $league ] ) unless $exercise;
+	$exercise = $c->forward( 'get_exercise', [ $league ] ) unless $exercise;
 	$c->session->{exercise} = $exercise if $exercise;
 	if ( $exercise ) {
 		$c->response->redirect(
