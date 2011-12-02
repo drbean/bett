@@ -133,6 +133,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 		$thewhanswers .= $_ . " " for @thewhanswers;
 		chop $thewhanswers;
 		$myanswer =~ s/_/ /g;
+		s/_/ /g for @thewhanswers;
 	}
 	my $unknown;
 	if ( $question eq '' )
