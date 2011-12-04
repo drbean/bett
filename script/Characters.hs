@@ -1,5 +1,6 @@
 import Model
 import Parsing
+import Story_Parsing
 
 main = do
 	putStr $ concat $ map (\x ->
