@@ -175,7 +175,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 	}
 	elsif ( $theanswer and $myanswer ne $theanswer ) {
 		$c->stash->{error_msg} =
-"The answer to '$question' is not '$myanswer. It's '$theanswer'. Try again.";
+"The question, \'$question' was grammatical, but the answer to '$question' is not '$myanswer. It's '$theanswer'. Try again.";
 		$c->stash->{err} = "answer";
 	}
 	elsif ( $myanswer eq $theanswer ) {
