@@ -1,9 +1,24 @@
 import Parsing
-import Story_Parsing
+import Cats
+import Story_Cats
 import Data.Char
 import Data.List
 
 characters = sort $ map toupper $ map (phon . head) proper_names
+
+collect_lex = [
+        ("auxiliary verbs",     aux),
+        ("interesting verbs",   story_verbs),
+        ("intransitive verbs",  intransitives),
+        ("transitive verbs",    transitives),
+        ("ditransitive verbs",  ditransitives),
+        ("object_names",        object_names),
+        ("class_names", class_names),
+        ("prepositions",        preps),
+        ("determiners", determiners),
+        ("possessives", possessives)
+        ]
+
 
 otherwords = map (phon . head) $
 	object_names ++ class_names ++
