@@ -20,23 +20,23 @@ collect_lex = [
         ("possessives", possessives)
         ]
 
+classifieds = unlines $ 
+	map ( \x -> fst x ++ ":\t" ++ (unwords $ map ( phon . head ) (snd x)) )
+	collect_lex
+
 
 otherwords = map (phon . head) $
-	object_names ++ class_names ++
+	object_names ++ class_names ++ story_verbs ++ story_adj ++ story_aux
 --	prons ++ reflexives ++ interrogatives ++
 	aux ++ intransitives ++ transitives ++ ditransitives ++
 	preps ++ determiners ++ possessives
---	++ conjuncts
+	++ conjuncts
 
 sortedwords = unlines $ map (
 	\i -> unwords $ [(toUpper i) : ":"] ++
 	[ (l:ls) | (l:ls) <- otherwords, i==l ]
 	) ['a'..'z']
 
-
-classifieds = unlines $ 
-	map ( \x -> fst x ++ ":\t" ++ (unwords $ map ( phon . head ) (snd x)) )
-	collect_lex
 
 main = do
 	putStrLn "Names:"
