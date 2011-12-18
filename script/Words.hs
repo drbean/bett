@@ -8,6 +8,7 @@ characters = sort $ map toupper $ map (phon . head) proper_names
 
 collect_lex = [
         ("auxiliary verbs",     aux),
+        ("adjectives",   story_adjs),
         ("interesting verbs",   story_verbs),
         ("intransitive verbs",  intransitives),
         ("transitive verbs",    transitives),
@@ -42,5 +43,5 @@ main = do
 	putStrLn $ unwords characters
 	putStrLn "\nOther words (classified):"
 	putStr classifieds
-	putStrLn "\nOther words (in alphabetical order):"
+	putStrLn "\nWords (in alphabetical order):"
 	putStr sortedwords
