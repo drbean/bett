@@ -36,20 +36,10 @@ chomp %chars;
 
 my $chars = [ [ qw/exercise entity string/ ] ];
 push @$chars, [ $story, $_, $chars{$_} ] for keys %chars;
-uptodatepopulate( 'Character', $chars );
 
-sub uptodatepopulate
-{
-	my $class = $schema->resultset(shift);
-	my $entries = shift;
-	my $columns = shift @$entries;
-	foreach my $row ( @$entries )
-	{
-		my %hash;
-		@hash{@$columns} = @$row;
-		$class->update_or_create(\%hash);
-	}
-}
+my $class = $schema->resultset('Character');
+$class->delete;
+$class->populate($chars);
 
 
 =head1 NAME
@@ -64,7 +54,7 @@ perl script/characters.pl -a marriage -s clay
 
 INSERT INTO characters (exercise, string, entity) VALUES (?, ?)
 
-Actually UPDATE or INSERT. So it can be used when new players are added.
+Actually DELETE and INSERT. So it can be used to remove and add players.
 
 =head1 AUTHOR
 

@@ -35,20 +35,10 @@ chomp $words;
 
 my @words = ( [ qw/exercise string/ ] );
 push @words, [ $story, $words ];
-uptodatepopulate( 'Word', \@words );
 
-sub uptodatepopulate
-{
-	my $class = $schema->resultset(shift);
-	my $entries = shift;
-	my $columns = shift @$entries;
-	foreach my $row ( @$entries )
-	{
-		my %hash;
-		@hash{@$columns} = @$row;
-		$class->update_or_create(\%hash);
-	}
-}
+my $class = $schema->resultset('Word');
+$class->delete;
+$class->populate(\@words);
 
 
 =head1 NAME
@@ -63,7 +53,7 @@ perl script/words.pl -a marriage -s clay
 
 INSERT INTO word (exercise, string) VALUES (?, ?)
 
-Actually UPDATE or INSERT. So it can be used to change words.
+Actually DELETE and INSERT. So it can be used to remove words.
 
 =head1 AUTHOR
 
