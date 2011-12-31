@@ -6,24 +6,28 @@
 <h2>Record</h2>
 [% n = 0 %]
 [% FOREACH course IN [ WH, YN, S ] %]
-<h1>Course [% n+1 %]: [%coursename.$n %]-questions</h1>
+<h1>Course [% n+1 %]: [% coursename.$n %]-questions</h1>
 
 <table>
-<caption>Questions</caption>
+<caption><h3>Questions</caption>
 <tr>
-<th>Attempted <td>[% course.try %]
+<th>Attempted: <td>[% course.try %]
 <tr>
-<th>Completed <td>[% course.score %]
+<th>Grammatical: <td>[% course.score + c.config.${coursename.$n}.chances.answer - course.answerchance %]
 <tr>
-<th>Unfinished <td>[% c.config.${coursename.$n}.win - course.score %]
+<th>With correct answers: <td>[% course.score %]
+<tr>
+<th>Completed: <td>[% course.score %]
+<tr>
+<th>Unfinished: <td>[% c.config.${coursename.$n}.win - course.score %]
 </table>
 
 <table>
-<caption>Unused Chances</caption>
+<caption><h3>Unused Chances</caption>
 <tr>
-<th>Questions <td>[% course.questionchance %]
+<th>Questions: <td>[% course.questionchance %]
 <tr>
-<th>Answers <td>[% course.answerchance %]
+<th>Answers: <td>[% course.answerchance %]
 </table>
 
 
