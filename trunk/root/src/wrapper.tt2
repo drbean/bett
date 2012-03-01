@@ -16,14 +16,6 @@
 </div>
 
 <div id="bodyblock">
-<div id="menu">
-    Navigation:
-    <ul>
-        <li><a href="[% c.uri_for('/books/list') %]">Home</a></li>
-        <li><a href="[% c.uri_for('/') %]" title="Catalyst Welcome Page">Welcome</a></li>
-    </ul>
-</div><!-- end menu -->
-
 <div id="content">
     [%# Status and error messages %]
     <span class="message">[% status_msg %]</span>
@@ -31,6 +23,18 @@
     [%# This is where TT will stick all of your template's contents. -%]
     [% content %]
 </div><!-- end content -->
+
+<div id="menu">
+    Navigation:
+    <ul>
+    <ul>
+	<li><a href="http://web.nuu.edu.tw/~greg/DictationExercises.html">DictationExercises</a></li>
+        <li><a href="[% c.uri_for('/tournament/rounds') %]" title="All rounds">All Tournament Rounds</a></li>
+        <li><a href="[% c.uri_for('/') %]" title="Catalyst Welcome Page">Catalyst Framework</a></li>
+        <li><a href="mailto:drbean@freeshell.org" title="Contact Us">Contact Dr Bean</a></li>
+    </ul>
+</div><!-- end menu -->
+
 </div><!-- end bodyblock -->
 
 <div id="footer">Copyright (c) your name goes here</div>
