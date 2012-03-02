@@ -27,7 +27,6 @@ sub index :Path :Args(0) {
 	my $id = $c->request->params->{id};
 	my $password = $c->request->params->{password};
 	my $exercise = $c->request->params->{exercise};
-$DB::single=1;
 	if ($id && $password) {
 		if ($c->authenticate({ id => $id,
 				  password => $password  } )) {
@@ -133,7 +132,6 @@ sub membership :Local {
 	$c->session->{league} = $league;
 	$exercise = $c->forward( 'get_exercise', [ $league ] ) unless $exercise;
 	$c->session->{exercise} = $exercise if $exercise;
-$DB::single=1;
 	if ( $exercise ) {
 		$c->response->redirect(
 			$c->uri_for( "/game" ));
@@ -148,15 +146,15 @@ $DB::single=1;
 
 =head2 get_exercise
 
-dicDB::Exercise code used by both membership, login actions
+DB::Exercise code used by both membership, login actions
 
 =cut
 
 sub get_exercise :Private {
 	my ($self, $c, $league) = @_;
-	my $leaguegenre = $c->model("dicDB::Leaguegenre")->search({league => $league})->next;
+	my $leaguegenre = $c->model("DB::Leaguegenre")->search({league => $league})->next;
 	my $genre = $leaguegenre->get_column('genre');
-	my $exercises = $c->model("dicDB::Exercise")->search({ genre =>
+	my $exercises = $c->model("DB::Exercise")->search({ genre =>
 			$genre });
 	my $exercise = $exercises->next;
 	if ( $exercise ) { return $exercise->id; }

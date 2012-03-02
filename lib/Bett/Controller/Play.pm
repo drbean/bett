@@ -95,13 +95,15 @@ Course, question, answer and Questioner's course and answer. Errors from haskell
 
 sub try :Chained('wordschars') :PathPart('') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
+	my $ex = $c->stash->{exercise};
 	if ( $c->request->params ) {
 		my $course = $c->stash->{course};
 		my $question = $c->request->params->{question};
 		$question ||= '';
 		my $myanswer = $c->request->params->{answer};
+$DB::single=1;
 		my $check =
-qx"echo \"$question\" | ./script/Questioner";
+qx"echo \"$question\" | ./script/Questioner_$ex";
 		my ($lexed, $expectedcourse, $theanswer) =
 						split /\n/, $check; 
 		$c->stash( lexed => $lexed );
@@ -118,6 +120,7 @@ qx"echo \"$question\" | ./script/Questioner";
 
 sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
+	my $ex = $c->stash->{exercise};
 	my %translate = ( WH => 'WH-question',
 		YN	=> 'YN-question',
 		S	=> 'True/False question' );
@@ -142,11 +145,11 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 			"Enter a question and answer.";
 		$c->stash->{nothing} = 1;
 	}
-	elsif ( ($unknown = $expectedcourse) =~ s/^Questioner: unknown words: \[(.*)\]$/$1/ ) {
+	elsif ( ($unknown = $expectedcourse) =~ s/^Questioner_$ex: unknown words: \[(.*)\]$/$1/ ) {
 		$c->stash->{error_msg} = "The question '$question' contained unknown words, $unknown. Use only the words from the list.";
 		$c->stash->{unknown} = $unknown;
 	}
-	elsif ( $theanswer =~ m/^Questioner: LogicalForm.* Non-exhaustive/ ) {
+	elsif ( $theanswer =~ m/^Questioner_$ex: LogicalForm.* Non-exhaustive/ ) {
 		$c->stash->{error_msg} = "The question, '$question' was a correct question, but Bett doesn't know the answer. Sorry. Try an easier question.";
 		$c->stash->{unhandled} = $theanswer;
 	}
