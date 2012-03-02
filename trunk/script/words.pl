@@ -30,16 +30,12 @@ my $schema = Bett::Schema->connect( $connect_info );
 
 my $script = Script->new_with_options;
 my $story = $script->story;
-my $words = qx"$Bin/Words";
+my $words = qx"$Bin/Words_$story";
 chomp $words;
 
-my @words = ( [ qw/exercise string/ ] );
-push @words, [ $story, $words ];
+my $wordstring = { exercise => $story, string =>  $words };
 
-my $class = $schema->resultset('Word');
-$class->delete;
-$class->populate(\@words);
-
+my $class = $schema->resultset('Word')->update_or_create($wordstring);
 
 =head1 NAME
 

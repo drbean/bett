@@ -29,18 +29,14 @@ my $schema = Bett::Schema->connect( $connect_info );
 
 my $script = Script->new_with_options;
 my $story = $script->story;
-my %characters = qx"$Bin/Characters";
+my %characters = qx"$Bin/Characters_$story";
 chomp %characters;
 my %chars = reverse %characters;
 chomp %chars;
 
-my $chars = [ [ qw/exercise entity string/ ] ];
-push @$chars, [ $story, $_, $chars{$_} ] for keys %chars;
-
 my $class = $schema->resultset('Character');
-$class->delete;
-$class->populate($chars);
-
+$class->update_or_create({ exercise => $story,
+		entity => $_, string => $chars{$_} }) for keys %chars;
 
 =head1 NAME
 
