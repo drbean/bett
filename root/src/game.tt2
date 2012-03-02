@@ -2,9 +2,9 @@
 
 <H1>Welcome, [% player %], to the game for the [% exercise %] Exercise in the [% league %] league.</H1>
 
-<p>You listened to the soundfile.
+<p>You listened to the soundfile and read the content on the previous page.
 
-<p>Now make up a question or a sentence about the people you heard about, using the words from the <a href="#words">list</a>. For example, ask or say:
+<p>Now make up a question or a sentence about the people you heard and read about, using the words from the <a href="#words">list</a>. For example, ask or say:
 
 <ul>
 <li>how they were related to each other.
@@ -22,7 +22,7 @@ And tell us what the answer to your question is.
 <li>Course 3: If you write [% config.S.win %] correct sentences (True-False questions) with the correct answers, TRUE or FALSE, you are also a WINNER.
 </ul>
 
-Otherwise, you are a LOSER and you must do the Dictation Exercise.
+Otherwise, you are a LOSER.
 
 <H3> Choose one course. </H3>
 
@@ -35,7 +35,7 @@ In each course, you can only attempt to write a question a certain number of tim
 <ul>
 <li>In Course 3,
   <ul>
-  <li>If [% config.S.chances.question %] of your sentences is/are not grammatically correct, then GAME OVER. In that case, you have to fill in all the blanks in the Dictation Exercise to get a FULL SCORE.
+  <li>If [% config.S.chances.question %] of your sentences is/are not grammatically correct, then GAME OVER.
   <li>If however, an ANSWER is not correct (for example, you answered TRUE but the answer is FALSE), you get [% config.S.chances.answer %] more chance(s) to attempt another sentence.
   <li> So in Course 3, the sentences are easier to write, but you have to write [% config.S.win %], a lot. Grammatical failure means you lose, and wrong answers are also penalized severely.
   </ul>
