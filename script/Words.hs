@@ -7,7 +7,7 @@ import Data.List
 characters = sort $ map toupper $ map (phon . head) proper_names
 
 collect_lex = [
-        ("auxiliary verbs",     aux),
+        ("auxiliary verbs",     aux ++ cops),
         ("adjectives",   story_adjs),
         ("interesting verbs",   story_verbs),
         ("intransitive verbs",  intransitives),
