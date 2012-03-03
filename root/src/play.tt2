@@ -15,7 +15,7 @@
 <TR><TD>Question:<INPUT type="text" size=85 name="question">
 <TR><TD>Answer:
     <SELECT name="answer">
-       <OPTION selected value="--">No answer</OPTION>
+       <OPTION selected value="--">--</OPTION>
 [% FOREACH option IN options.$course %]
        <OPTION value="[% option %]">[% option %]</OPTION>
 [% END %]
