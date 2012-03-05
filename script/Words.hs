@@ -10,6 +10,7 @@ collect_lex = [
         ("auxiliary verbs",     aux ++ cops),
         ("adjectives",   story_adjs),
         ("interesting verbs",   story_verbs),
+        ("WH words",   interrogatives),
         -- ("intransitive verbs",  intransitives),
         -- ("transitive verbs",    transitives),
         -- ("ditransitive verbs",  ditransitives),
