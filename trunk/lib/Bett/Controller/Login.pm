@@ -25,7 +25,7 @@ sub index :Path :Args(0) {
 	my ( $self, $c ) = @_;
 	my $name = $c->request->params->{name};
 	my $id = $c->request->params->{id};
-	my $password = $c->request->params->{password};
+	my $password = lc $c->request->params->{password};
 	my $exercise = $c->request->params->{exercise};
 	if ($id && $password) {
 		if ($c->authenticate({ id => $id,
