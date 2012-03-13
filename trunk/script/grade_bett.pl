@@ -7,9 +7,13 @@ use FindBin '$Bin';
 use Pod::Usage;
 
 use Config::General;
-use YAML qw/LoadFile/;
+use YAML qw/Bless Dump/;
+use List::Util qw/reduce/;
+use Moose::Autobox;
 use Bett::Model::DB;
 use Bett::Schema;
+
+use Grades;
 
 package Script;
 
@@ -18,18 +22,21 @@ with 'MooseX::Getopt';
 
 has 'man'  => ( is => 'ro', isa => 'Bool' );
 has 'help' => ( is => 'ro', isa => 'Bool' );
-has 'type' => (
+has 'league' => (
     traits => ['Getopt'], is => 'ro', isa => 'Str', required => 0,
-    cmd_aliases => 't',);
-has 'genre' => (
+    cmd_aliases => 'l',);
+has 'exercise' => (
     traits => ['Getopt'], is => 'ro', isa => 'Str', required => 0,
-    cmd_aliases => 'g',);
-has 'id' => (
-    traits => ['Getopt'], is => 'ro', isa => 'Str', required => 0,
-    cmd_aliases => 'i',);
-has 'description' => (
-    traits => ['Getopt'], is => 'ro', isa => 'Str', required => 0,
-    cmd_aliases => 'd',);
+    cmd_aliases => 'x',);
+has 'quitter' => (
+    traits => ['Getopt'], is => 'ro', isa => 'Int', required => 0,
+    cmd_aliases => 'q',);
+has 'loser' => (
+    traits => ['Getopt'], is => 'ro', isa => 'Int', required => 0,
+    cmd_aliases => 'o',);
+has 'winner' => (
+    traits => ['Getopt'], is => 'ro', isa => 'Int', required => 0,
+    cmd_aliases => 'w',);
 
 package main;
 
@@ -38,35 +45,92 @@ my $connect_info = Bett::Model::DB->config->{connect_info};
 my $schema = Bett::Schema->connect( $connect_info );
 
 my $script = Script->new_with_options;
-my $type = $script->type;
-my $genre = $script->genre;
-my $id = $script->id;
-my $description = $script->description;
+my $id = $script->league;
+my $exercise = $script->exercise;
+my $quitter = $script->quitter;
+my $loser = $script->loser;
+my $winner = $script->winner;
+my $results = { quitter => $quitter, loser => $loser, winner => $winner };
 my $man = $script->man;
 my $help = $script->help;
 
 pod2usage(1) if $help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
 
-my $ex = { description => $description, genre => $genre,
-	id => $id, type => $type };
+my $league = League->new( id => $id );
+my $members = $league->members;
+my %members = map { $_->{id} => $_ } @$members;
+my ($report, $card);
+$report->{exercise} = $exercise;
+$report->{cutpoints} =
+	{ quitter => $quitter, loser => $loser, winner => $winner };
+for my $course ( qw/Wh Yn S/ ) {
+	my $class = $schema->resultset($course)->search({
+			league => $id, exercise => $exercise });
+	my $config = $config{uc $course};
+	my $answerchances = $config->{chances}->{answer};
+	for my $player ( keys %members ) {
+		my $standing = $class->find({ player => $player });
+		my ( $score, $answerchancesleft );
+		if ( $standing ) {
+			$score = $standing->score;
+			$answerchancesleft = $standing->answerchance;
+			$report->{points}->{$player}->{$course}->{questions} =
+				$score + $answerchances - $answerchancesleft;
+			$report->{points}->{$player}->{$course}->{answers} = $score;
+			$report->{points}->{$player}->{$course}->{attempts} =
+				$standing->try;
+			my $grade = ($score == $config->{win}) ?
+				'winner': (($answerchancesleft <= 0) or
+										($standing->questionchance <= 0)) ?
+					'loser': 'quitter';
+			push @{ $card->{$player} }, $grade;
+		}
+		else {
+			$report->{points}->{$player}->{$course}->{questions} = undef;
+			$report->{points}->{$player}->{$course}->{answers} = undef;
+			$report->{points}->{$player}->{$course}->{attempts} = undef;
+			push @{ $card->{$player} }, "quitter";
+		}
+		Bless( $report->{points}->{$player}->{$course} )->keys(
+			[ qw/answers questions attempts/ ] );
+		Bless( $report->{points}->{$player} )->keys( [ qw/Wh Yn S/ ] );
+	}
+}
 
-my $class = $schema->resultset('Exercise')->update_or_create($ex);
+sub takeWin {
+	return $a if $a eq 'winner';
+	return $b if $b eq 'winner';
+	return $a if $a eq 'loser';
+	return $b if $b eq 'loser';
+	return $a if $a;
+	return $b if $b;
+}
 
+
+for my $member (keys %members) {
+	my $card = $card->{$member};
+	my $grade = reduce {takeWin} "quitter", @$card;
+	$report->{grade}->{$member} = $results->{$grade};
+}
+
+print Dump $report;
 
 =head1 NAME
 
-create_exercise.pl - create exercise in bett DB from commandline
+grade_bett.pl - record results from bett DB
 
 =head1 SYNOPSIS
 
-perl script/create_exercise.pl -t Non-competitive -g business -i stress -d 'cusp and adventurers'
+perl script/grade_bett.pl -l FIA0034 -x adventure -q 4 -l 1 -w 2 > /home/drbean/002/FIA0034/homework/2.yaml
 
 =head1 DESCRIPTION
 
-INSERT INTO exercise (description, genre, id, type) VALUES (?, ?, ?, ?. ?)
+SELECT * FROM {wh,yn,s} WHERE league='FIA0034';
 
-Actually DELETE and INSERT. So it can be used to remove and add exercises. So be careful.
+People who quit with q good questions get a score, perhaps. Players who get to GAME OVER, but who fail to be winners, ie are losers, get l points, and winners get w points.
+
+Output numbers of grammatically-correct questions, correct answers, questions attempted in the wh, yn and s courses.
 
 =head1 AUTHOR
 
