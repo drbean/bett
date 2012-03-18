@@ -71,19 +71,20 @@ for my $course ( qw/Wh Yn S/ ) {
 	my $answerchances = $config->{chances}->{answer};
 	for my $player ( keys %members ) {
 		my $standing = $class->find({ player => $player });
-		my ( $score, $answerchancesleft );
+		my ( $score, $answerchancesleft, $questions );
 		if ( $standing ) {
 			$score = $standing->score;
 			$answerchancesleft = $standing->answerchance;
-			$report->{points}->{$player}->{$course}->{questions} =
-				$score + $answerchances - $answerchancesleft;
+			$questions = $score + $answerchances - $answerchancesleft;
 			$report->{points}->{$player}->{$course}->{answers} = $score;
+			$report->{points}->{$player}->{$course}->{questions} = $questions;
 			$report->{points}->{$player}->{$course}->{attempts} =
 				$standing->try;
-			my $grade = ($score == $config->{win}) ?
-				'winner': (($answerchancesleft <= 0) or
-										($standing->questionchance <= 0)) ?
-					'loser': 'quitter';
+			my $grade = ($score >= $config->{win}) ?
+				'winner': (($questions >= $config->{win}) or
+								($answerchancesleft <= 0) or
+									($standing->questionchance <= 0)) ?
+				'loser': 'quitter';
 			push @{ $card->{$player} }, $grade;
 		}
 		else {
