@@ -30,7 +30,7 @@ my $schema = Bett::Schema->connect( $connect_info );
 
 my $script = Script->new_with_options;
 my $story = $script->story;
-my $words = qx"$Bin/Words_$story";
+my $words = qx"$Bin/../bin/Words_$story";
 chomp $words;
 
 my $wordstring = { exercise => $story, string =>  $words };
