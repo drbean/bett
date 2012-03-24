@@ -29,7 +29,7 @@ my $schema = Bett::Schema->connect( $connect_info );
 
 my $script = Script->new_with_options;
 my $story = $script->story;
-my %characters = qx"$Bin/Characters_$story";
+my %characters = qx"$Bin/../bin/Characters_$story";
 chomp %characters;
 my %chars = reverse %characters;
 chomp %chars;
