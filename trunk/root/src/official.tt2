@@ -13,6 +13,7 @@
 <p>
 Type password again:
   <input type="password" name="password" size="40" />
+  <input type="hidden" name="exercise" value="[% exercise %]" />
 </p>
 
 <p>
