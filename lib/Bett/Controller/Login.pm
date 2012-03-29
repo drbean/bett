@@ -44,6 +44,7 @@ sub index :Path :Args(0) {
 				}
 				$c->stash->{jigsawroles} =
 				  [ $jigsawroles->get_column('role')->func('DISTINCT') ];
+				$c->stash->{exercise} = $exercise;
 				$c->stash->{template} = 'official.tt2';
 				return;
 			}
@@ -51,7 +52,7 @@ sub index :Path :Args(0) {
 				({player => $id});
 			my @leagues;
 			push @leagues, $_->league for @memberships;
-			if ( @leagues != 1 ) {
+			if ( @leagues > 1 ) {
 				$c->stash->{id} = $id;
 				$c->stash->{username} = $name;
 				$c->stash->{leagues} = \@leagues;
