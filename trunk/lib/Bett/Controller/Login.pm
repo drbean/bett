@@ -103,7 +103,7 @@ sub official : Local {
 			$c->session->{exercise} = $exercise if $exercise;
 			$c->model('dicDB::Jigsawrole')->update_or_create(
 				{	league => $league, player => $username,
-					role => $jigsawrole } );
+					role => $jigsawrole } ) if $jigsawrole;
 			$c->response->redirect($c->uri_for("/game"), 303);
 			return;
 		}
