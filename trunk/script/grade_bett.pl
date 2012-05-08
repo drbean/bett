@@ -133,6 +133,8 @@ People who quit with q good questions get a score, perhaps. Players who get to G
 
 Output numbers of grammatically-correct questions, correct answers, questions attempted in the wh, yn and s courses.
 
+If correct question quota is filled, but answer quota not filled, player is treated as Loser, not Quitter.
+
 =head1 AUTHOR
 
 Dr Bean, C<drbean at (@) cpan dot, yes a dot, org>
