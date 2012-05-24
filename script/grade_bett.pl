@@ -57,13 +57,16 @@ my $help = $script->help;
 pod2usage(1) if $help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
 
-my $league = League->new( id => $id );
+( my $leagueid = $id ) =~ s/^([[:alpha:]]+[[:digit:]]+).*$/$1/;
+my $league = League->new( id => $leagueid );
 my $members = $league->members;
 my %members = map { $_->{id} => $_ } @$members;
 my ($report, $card);
 $report->{exercise} = $exercise;
 $report->{cutpoints} =
 	{ quitter => $quitter, loser => $loser, winner => $winner };
+my %fullcourseqns;
+@fullcourseqns{keys %members} = ( 0 ) x keys %members;
 for my $course ( qw/Wh Yn S/ ) {
 	my $class = $schema->resultset($course)->search({
 			league => $id, exercise => $exercise });
@@ -71,7 +74,7 @@ for my $course ( qw/Wh Yn S/ ) {
 	my $answerchances = $config->{chances}->{answer};
 	for my $player ( keys %members ) {
 		my $standing = $class->find({ player => $player });
-		my ( $score, $answerchancesleft, $questions );
+		my ( $score, $answerchancesleft, $questions ) = ( 0 ) x 3;
 		if ( $standing ) {
 			$score = $standing->score;
 			$answerchancesleft = $standing->answerchance;
@@ -92,6 +95,10 @@ for my $course ( qw/Wh Yn S/ ) {
 			$report->{points}->{$player}->{$course}->{answers} = undef;
 			$report->{points}->{$player}->{$course}->{attempts} = undef;
 			push @{ $card->{$player} }, "quitter";
+		}
+		$fullcourseqns{$player} += $questions;
+		if ( $fullcourseqns{$player} >= $config{S}->{win} ) {
+			push @{ $card->{$player} }, "loser";
 		}
 		Bless( $report->{points}->{$player}->{$course} )->keys(
 			[ qw/answers questions attempts/ ] );
