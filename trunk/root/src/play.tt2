@@ -10,7 +10,7 @@
 <FORM method="post" action="[% c.uri_for(c.action_for('play'), course) %]">
 <INPUT type="hidden" name="course" value="[% course %]">
 <TABLE>
-<TH>[% $course.try %] question(s) attempted. [% $course.score + config.$course.chances.answers - $course.answerchance %] grammatically correct question(s). [% $course.score %] correct answer(s). [% $course.score %] question(s) completed. [% config.$course.win - $course.score %] question(s) to go.<BR>
+<TH>[% $course.try %] question(s) attempted. [% $course.score + config.$course.chances.answer - $course.answerchance %] grammatically correct question(s). [% $course.score %] correct answer(s). [% $course.score %] question(s) completed. [% config.$course.win - $course.score %] question(s) to go.<BR>
 [% $course.questionchance %] more question and [% $course.answerchance %] more answer chances left.
 <TR><TD>Question:<INPUT type="text" size=85 name="question">
 <TR><TD>Answer:
