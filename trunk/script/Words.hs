@@ -1,6 +1,7 @@
 import Parsing
 import Cats
 import Story_Cats
+import Topic_Cats
 import Data.Char
 import Data.List
 
