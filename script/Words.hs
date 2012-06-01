@@ -28,7 +28,7 @@ classifieds = unlines $
 
 otherwords = map (phon . head) $
 	object_names ++ class_names ++ story_verbs ++ story_adjs ++ story_aux ++
-	topic_intransitives ++
+	topic_transitives ++
 --	prons ++ reflexives ++ interrogatives ++
 	aux ++ transitives ++ ditransitives ++ -- intransitives ++ 
 	preps ++ determiners ++ possessives
