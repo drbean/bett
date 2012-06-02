@@ -102,7 +102,7 @@ sub try :Chained('wordschars') :PathPart('') :CaptureArgs(0) {
 		$question ||= '';
 		my $myanswer = $c->request->params->{answer};
 		my $check =
-qx"echo \"$question\" | ./bin/Questioner_$ex";
+qx"echo \"$question\" | /var/www/cgi-bin/bett/bin/Questioner_$ex";
 		my ($lexed, $expectedcourse, $theanswer) =
 						split /\n/, $check; 
 		$c->stash( lexed => $lexed );
