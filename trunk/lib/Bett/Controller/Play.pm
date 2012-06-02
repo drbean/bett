@@ -101,9 +101,8 @@ sub try :Chained('wordschars') :PathPart('') :CaptureArgs(0) {
 		my $question = $c->request->params->{question};
 		$question ||= '';
 		my $myanswer = $c->request->params->{answer};
-$DB::single=1;
 		my $check =
-qx"echo \"$question\" | /var/www/cgi-bin/bett/bin/Questioner_$ex";
+qx"echo \"$question\" | ./bin/Questioner_$ex";
 		my ($lexed, $expectedcourse, $theanswer) =
 						split /\n/, $check; 
 		$c->stash( lexed => $lexed );
@@ -131,10 +130,8 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 	my $myanswer = $c->stash->{myanswer};
 	my ($thewhanswers, @thewhanswers);
 	if ( $expectedcourse eq 'WH' ) {
-		@thewhanswers = split /\["|","|"\]/, $theanswer;
-		shift @thewhanswers;
-		$thewhanswers .= $_ . " " for @thewhanswers;
-		chop $thewhanswers;
+		$thewhanswers = $theanswer;
+		@thewhanswers = split /, /, $theanswer;
 		$myanswer =~ s/_/ /g;
 		s/_/ /g for @thewhanswers;
 	}
@@ -153,16 +150,16 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 		$c->stash->{error_msg} = "The question, '$question' was a correct question, but Bett doesn't know the answer. Sorry. Try an easier question.";
 		$c->stash->{unhandled} = $theanswer;
 	}
+	elsif ( $course and ($expectedcourse ne 'Unparseable') and ($course ne $expectedcourse ) ) {
+		$c->stash->{error_msg} =
+"'$question' is not a $translate{$course} question. It's a $translate{$expectedcourse} question. Try again.";
+		$c->stash->{wrongcourse} = $course;
+	}
 	elsif ( $expectedcourse eq 'Unparseable' ) {
 		$c->stash->{error_msg} =
 "'$question' is not grammatical. Try again.";
 		$c->stash->{err} = "question";
 		}
-	elsif ( $course and $course ne $expectedcourse ) {
-		$c->stash->{error_msg} =
-"'$question' is not a $translate{$course} question. It's a $translate{$expectedcourse} question. Try again.";
-		$c->stash->{err} = "question";
-	}
 	elsif ( @thewhanswers and not any { $_ eq $myanswer } @thewhanswers ) {
 		$c->stash->{error_msg} =
 "'$myanswer' is not the answer, nor one of the answers to '$question'. " .
@@ -261,7 +258,7 @@ sub update :Chained('question') :PathPart('') :CaptureArgs(0) {
 				--$answers,
 			});
 	}
-	elsif ( $unknown or $unhandled or $c->stash->{oldquestion})
+	elsif ( $unknown or $unhandled or $c->stash->{oldquestion} or $c->stash->{wrongcourse} )
 	{
 		$standing->update({ try => ++$tries });
 	}
@@ -313,6 +310,7 @@ my ( $self, $c ) = @_;
 	}
 	else {
 		$c->stash->{ config } = $c->config;
+$DB::single=1;
 		$c->stash->{ template } = 'play.tt2';
 	}
 }
