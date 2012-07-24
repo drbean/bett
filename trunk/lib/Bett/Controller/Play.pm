@@ -162,7 +162,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 		}
 	elsif ( @thewhanswers and not any { $_ eq $myanswer } @thewhanswers ) {
 		$c->stash->{error_msg} =
-"'$myanswer' is not the answer, nor one of the answers to '$question'. " .
+"The question, \'$question' was grammatical, but '$myanswer' is not the answer, nor one of the answers to '$question'. " .
 	"The answer(s) is/are: '$thewhanswers'.";
 		$c->stash->{err} = "answer";
 	}
