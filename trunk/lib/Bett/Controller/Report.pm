@@ -88,8 +88,7 @@ Compile report
 
 sub compile :Chained('theanswer') :PathPart('') :Args(0) {
 	my ( $self, $c ) = @_;
-		$c->stash->{ template } = 'report.tt2';
-	}
+	$c->stash->{ template } = 'report.tt2';
 }
 
 =head1 AUTHOR
