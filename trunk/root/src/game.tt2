@@ -67,6 +67,4 @@ In each course, you can only attempt to write a question a certain number of tim
 
 Choose words only from this list.
 
-<pre>
 [% words %]
-</pre>

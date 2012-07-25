@@ -99,7 +99,7 @@ sub words :Global {
     my ( $self, $c ) = @_;
 	my $exercise = $c->session->{exercise};
 	my $words = $c->model('DB::Word')->find({ exercise => $exercise })->string;
-    $c->response->body( '<pre>' . $words . '</pre>' );
+    $c->response->body( $words );
 }
 
 =head1 AUTHOR
