@@ -5,7 +5,7 @@ import Topic_Cats
 import Data.Char
 import Data.List
 
-characters = sort $ map ("<LI>" ++ ) $ map toupper $ map (phon . head) proper_names
+characters = unwords $ sort $ map ("<TR><TD>" ++ ) $ map toupper $ map (phon . head) proper_names
 
 
 collect_lex = [
@@ -24,7 +24,7 @@ collect_lex = [
         ]
 
 classifieds = unlines $ 
-	map ( \x -> "<TR><TD>" ++ fst x ++ "<TD>" ++ (unwords $ map ( phon . head ) (snd x)) )
+	map ( \x -> "<TR><TD>" ++ fst x ++ ":<TD>" ++ (unwords $ map ( phon . head ) (snd x)) )
 	collect_lex
 
 
@@ -44,9 +44,9 @@ sortedwords = unlines $ map (
 
 main = do
 	putStrLn "<UL>"
-	putStrLn "<LI><TABLE><TR><TH>Names:"
-	putStrLn $ "<TD><UL>" ++ unwords characters
-	putStrLn "</UL></TABLE>"
+	putStrLn "<LI><TABLE><CAPTION>Names:"
+	putStrLn characters
+	putStrLn "</TABLE>"
 	putStrLn "\n<LI><TABLE><CAPTION>Other words (classified):"
 	putStr classifieds
 	putStrLn "</TABLE>"
