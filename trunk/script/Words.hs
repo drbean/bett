@@ -5,7 +5,8 @@ import Topic_Cats
 import Data.Char
 import Data.List
 
-characters = sort $ map toupper $ map (phon . head) proper_names
+characters = sort $ map ("<LI>" ++ ) $ map toupper $ map (phon . head) proper_names
+
 
 collect_lex = [
         ("auxiliary verbs",     aux ++ cops),
@@ -23,7 +24,7 @@ collect_lex = [
         ]
 
 classifieds = unlines $ 
-	map ( \x -> fst x ++ ":\t" ++ (unwords $ map ( phon . head ) (snd x)) )
+	map ( \x -> "<TR><TD>" ++ fst x ++ "<TD>" ++ (unwords $ map ( phon . head ) (snd x)) )
 	collect_lex
 
 
@@ -36,15 +37,19 @@ otherwords = map (phon . head) $
 	++ conjuncts
 
 sortedwords = unlines $ map (
-	\i -> unwords $ [(toUpper i) : ":"] ++
+	\i -> unwords $ ["<TR><TD>" ++ (toUpper i) : ":" ++ "<TD>" ] ++
 	[ (l:ls) | (l:ls) <- otherwords, i==l ]
 	) ['a'..'z']
 
 
 main = do
-	putStrLn "Names:"
-	putStrLn $ unwords characters
-	putStrLn "\nOther words (classified):"
+	putStrLn "<UL>"
+	putStrLn "<LI><TABLE><TR><TH>Names:"
+	putStrLn $ "<TD><UL>" ++ unwords characters
+	putStrLn "</UL></TABLE>"
+	putStrLn "\n<LI><TABLE><CAPTION>Other words (classified):"
 	putStr classifieds
-	putStrLn "\nWords (in alphabetical order):"
+	putStrLn "</TABLE>"
+	putStrLn "\n<LI><TABLE><CAPTION>Words (in alphabetical order):"
 	putStr sortedwords
+	putStrLn "</TABLE>"
