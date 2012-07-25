@@ -1,10 +1,10 @@
 [% META title = "Questions in database" %]
 
-Questions from [% league %] League players in the [% exercise %] exercise.
+<H2>Questions from [% league %] League players in the [% exercise %] exercise.</H2>
 
 [% n = 1 %]
 <table>
-<caption>Grammatical questions</caption>
+<caption><H3>Grammatical questions</H3></caption>
 <tr>
 <th> Number <td> Question <td> Player
 [% FOREACH question IN goodqn %]
@@ -16,7 +16,7 @@ Questions from [% league %] League players in the [% exercise %] exercise.
 
 [% n = 1 %]
 <table>
-<caption>Ungrammatical questions</caption>
+<caption><H3>Ungrammatical questions</H3></caption>
 <tr>
 <th> Number <td> Question <td> Player
 [% FOREACH question IN badqn %]
