@@ -28,8 +28,6 @@
 
 Choose words only from this list.
 
-<pre>
 [% words %]
-</pre>
 
 [% INCLUDE questions.tt2 %]
