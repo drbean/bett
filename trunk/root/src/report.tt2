@@ -1,0 +1,9 @@
+[% META title = "Error Report" %]
+
+<FORM method="post" action="[% c.uri_for(c.action_for('report'), course) %]">
+<TABLE><CAPTION>Error Report</CAPTION>
+<TR><TD>Player ID: <TD><INPUT type="text" name="player" value="[% player %]>[% player %]
+<TR><TD>Question: <TD><INPUT type="text" name="Question" value="[% Question %]>[% Question %]
+</TABLE>
+<INPUT type="submit" name="Submit" value="Submit">
+</FORM>
