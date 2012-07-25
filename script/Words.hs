@@ -44,12 +44,12 @@ sortedwords = unlines $ map (
 
 main = do
 	putStrLn "<UL>"
-	putStrLn "<LI><TABLE><CAPTION>Names:"
+	putStrLn "<LI><TABLE><CAPTION><H3>Names:</H3>"
 	putStrLn characters
 	putStrLn "</TABLE>"
-	putStrLn "\n<LI><TABLE><CAPTION>Other words (classified):"
+	putStrLn "\n<LI><TABLE><CAPTION><H3>Other words (classified):</H3>"
 	putStr classifieds
 	putStrLn "</TABLE>"
-	putStrLn "\n<LI><TABLE><CAPTION>Words (in alphabetical order):"
+	putStrLn "\n<LI><TABLE><CAPTION><H3>Words (in alphabetical order):</H3>"
 	putStr sortedwords
 	putStrLn "</TABLE>"
