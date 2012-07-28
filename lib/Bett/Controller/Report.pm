@@ -105,10 +105,10 @@ sub email :Local {
 		@$params{qw/player course question expectedcourse
 		myanswer theanswer info email/};
         $c->stash->{email} = {
+		header => [ 'Reply-To' => $email ],
                 to       => "drbean\@freeshell.org",
                 from     => "greg\@nuu.edu.tw",
                 subject  => "Bett Error, $player: $question",
-		"reply-to" => $email,
                 body     => "
 Player        : $player
 Course        : $course
