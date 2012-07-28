@@ -66,6 +66,21 @@ __PACKAGE__->config(
             __PACKAGE__->path_to( 'root', 'src' ),
         ],
     },
+    'View::Email' => {
+       stash_key => 'email',
+       default => {
+           content_type => 'text/plain',
+           charset => 'utf-8'
+       },
+       sender => {
+           mailer => 'SMTP',
+           mailer_args => {
+    	   Host     => 'smtp.example.com',
+    	   username => 'username',
+    	   password => 'password',
+       }
+     }
+}
 );
  
 # Start the application
