@@ -6,6 +6,8 @@
 <TR><TD>Player ID: <TD> [% player %]
 <INPUT type="hidden" name="course" value="[% course %]">
 <TR><TD>Course: <TD> [% course %] questions
+<INPUT type="hidden" name="question" value="[% question %]">
+<TR><TD>Player [% player %]'s question: <TD> [% question %]
 <INPUT type="hidden" name="myanswer" value="[% myanswer %]">
 <TR><TD>Player [% player %]'s answer: <TD> [% myanswer %]
 <INPUT type="hidden" name="theanswer" value="[% theanswer %]">
