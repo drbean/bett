@@ -102,8 +102,8 @@ sub email :Local {
 	my $params = $c->request->params;
 	my ($player, $course, $question, $expectedcourse,
 		$myanswer, $theanswer, $info, $email) =
-		@$params{player, course, question, expectedcourse,
-		myanswer, theanswer, info, email};
+		@$params{qw/player course question expectedcourse
+		myanswer theanswer info email/};
         $c->stash->{email} = {
                 to => "drbean\@freeshell.org",
                 from => "greg\@nuu.edu.tw",
