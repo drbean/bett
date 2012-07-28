@@ -5,18 +5,16 @@
 <INPUT type="hidden" name="player" value="[% player %]">
 <TR><TD>Player ID: <TD> [% player %]
 <INPUT type="hidden" name="course" value="[% course %]">
-<TR><TD>Course: <TD> [% course %] questions
-<INPUT type="hidden" name="expectedcourse" value="[% expectedcourse %]">
-<TR><TD>Question type: <TD> [% expectedcourse %] question
+<TR><TD>Course: <TD> [% course %] question
 <INPUT type="hidden" name="question" value="[% question %]">
 <TR><TD>Player [% player %]'s question: <TD> [% question %]
+<INPUT type="hidden" name="expectedcourse" value="[% expectedcourse %]">
+<TR><TD>Question type: <TD> [% expectedcourse %] question
 <INPUT type="hidden" name="myanswer" value="[% myanswer %]">
 <TR><TD>Player [% player %]'s answer: <TD> [% myanswer %]
 <INPUT type="hidden" name="theanswer" value="[% theanswer %]">
 <TR><TD>Bett's answer: <TD> [% theanswer %]
-<TR><TD>Other information:<br>
-eg: What's wrong with the question/answer?
-When did the problem happen?
+<TR><TD style="text-wrap: none">Other information, eg: What's wrong with the question/answer? When did the problem happen?
 <TD> <TEXTAREA name="info" rows="5" cols="40">
 </TEXTAREA>
 <TR><TD>Email address: <TD> <INPUT type="text" name="email" size="40">
