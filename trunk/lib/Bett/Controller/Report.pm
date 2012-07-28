@@ -86,7 +86,7 @@ Compile report
 
 =cut
 
-sub compile :Chained('theanswer') :PathPart('') :Args(0) {
+sub compile :Chained('expectedcourse') :PathPart('') :Args(0) {
 	my ( $self, $c ) = @_;
 	$c->stash->{ template } = 'report.tt2';
 }
