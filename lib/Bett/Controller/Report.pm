@@ -121,6 +121,7 @@ email         : $email
                 };
 $DB::single=1;
         $c->forward( $c->view('Email') );
+	$c->stash->{ template } = 'play.tt2';
 }
 =head1 AUTHOR
 
