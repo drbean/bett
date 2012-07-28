@@ -14,7 +14,7 @@
 <TR><TD>Player [% player %]'s answer: <TD> [% myanswer %]
 <INPUT type="hidden" name="theanswer" value="[% theanswer %]">
 <TR><TD>Bett's answer: <TD> [% theanswer %]
-<TR><TD style="text-wrap: none">Other information, eg: What's wrong with the question/answer? When did the problem happen?
+<TR><TD style="text-wrap: normal">Other information, eg: What's wrong with the question/answer? When did the problem happen?
 <TD> <TEXTAREA name="info" rows="5" cols="40">
 </TEXTAREA>
 <TR><TD>Email address: <TD> <INPUT type="text" name="email" size="40">
