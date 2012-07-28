@@ -121,6 +121,7 @@ email         : $email
 "
                 };
         $c->forward( $c->view('Email') );
+	$c->stash->{ course } = $course;
 	$c->stash->{ template } = 'play.tt2';
 }
 =head1 AUTHOR
