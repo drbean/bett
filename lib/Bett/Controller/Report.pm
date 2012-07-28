@@ -108,7 +108,7 @@ sub email :Local {
                 to       => "drbean\@freeshell.org",
                 from     => "greg\@nuu.edu.tw",
                 subject  => "Bett Error Report from $player",
-		reply_to => $email,
+		"reply-to" => $email,
                 body     => "
 Player        : $player
 Course        : $course
