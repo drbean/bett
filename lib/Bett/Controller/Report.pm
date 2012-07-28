@@ -125,7 +125,7 @@ email         : $email
 		$c->error(0);
 		$c->response->body('Dr Bean\'s server can\'t send an email to him at the moment. Please try contacting him yourself at mail_to:drbean@freeshell.org');
 	} else {
-		$c->stash->{status_msg} = 'Dr Bean has been informed about the problem. If he agrees that Bett made an error, he will give you credit for your question and answer. Meanwhile, try continuing writing questions and answers.');
+		$c->stash->{status_msg} = 'Dr Bean has been informed about the problem. If he agrees that Bett made an error, he will give you credit for your question and answer. Meanwhile, try continuing writing questions and answers.';
 	}
 
 	$c->stash->{ course } = $course;
