@@ -60,6 +60,7 @@ __PACKAGE__->config->{'Plugin::Authentication'} = {
 };
 
 __PACKAGE__->config(
+    default_view => 'HTML',
     'View::HTML' => {
         #Set the location for TT files
         INCLUDE_PATH => [

@@ -119,6 +119,7 @@ info          : $info
 email         : $email
 "
                 };
+$DB::single=1;
         $c->forward( $c->view('Email') );
 }
 =head1 AUTHOR
