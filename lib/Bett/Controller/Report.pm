@@ -105,10 +105,11 @@ sub email :Local {
 		@$params{qw/player course question expectedcourse
 		myanswer theanswer info email/};
         $c->stash->{email} = {
-                to => "drbean\@freeshell.org",
-                from => "greg\@nuu.edu.tw",
-                subject => "Bett Error Report from $player",
-                body => "
+                to       => "drbean\@freeshell.org",
+                from     => "greg\@nuu.edu.tw",
+                subject  => "Bett Error Report from $player",
+		reply_to => $email,
+                body     => "
 Player        : $player
 Course        : $course
 question      : $question
@@ -119,7 +120,6 @@ info          : $info
 email         : $email
 "
                 };
-$DB::single=1;
         $c->forward( $c->view('Email') );
 	$c->stash->{ template } = 'play.tt2';
 }
