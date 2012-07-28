@@ -104,12 +104,15 @@ sub email :Local {
 		$myanswer, $theanswer, $info, $email) =
 		@$params{qw/player course question expectedcourse
 		myanswer theanswer info email/};
+	my $exercise = $c->session->{exercise};
+	$c->stash(exercise => $exercise);
         $c->stash->{email} = {
 		header => [ 'Reply-To' => $email ],
                 to       => "drbean\@freeshell.org",
                 from     => "greg\@nuu.edu.tw",
-                subject  => "Bett Error, $player: $question",
+                subject  => "Bett $exercise Error, $player: $question",
                 body     => "
+Exercise      : $exercise
 Player        : $player
 Course        : $course
 question      : $question
@@ -123,7 +126,7 @@ email         : $email
         $c->forward( $c->view('Email') );
 	unless ( scalar( @{ $c->error } ) ) {
 		$c->error(0);
-		$c->response->body('Dr Bean\'s server can\'t send an email to him at the moment. Please try contacting him yourself at mail_to:drbean@freeshell.org');
+		$c->response->body('Dr Bean\'s server can\'t send an email to him at the moment. Please try contacting him yourself at <A href="mailto:drbean@freeshell.org" subject=\"$exercise $course problem\">drbean@freeshell.org</A>');
 	} else {
 		$c->stash->{status_msg} = 'Dr Bean has been informed about the problem. If he agrees that Bett made an error, he will give you credit for your question and answer. Meanwhile, try continuing writing questions and answers.';
 	}
