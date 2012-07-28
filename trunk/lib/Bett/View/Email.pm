@@ -4,7 +4,7 @@ use strict;
 use base 'Catalyst::View::Email';
 
 __PACKAGE__->config(
-    stash_key => 'email'
+    stash_key => 'email',
     sender => {
     mailer => 'SMTP',
     mailer_args => {
