@@ -91,6 +91,36 @@ sub compile :Chained('expectedcourse') :PathPart('') :Args(0) {
 	$c->stash->{ template } = 'report.tt2';
 }
 
+=head2 email
+
+Email report to drbean
+
+=cut
+
+sub email :Local {
+	my ( $self, $c ) = @_;
+	my $params = $c->request->params;
+	my ($player, $course, $question, $expectedcourse,
+		$myanswer, $theanswer, $info, $email) =
+		@$params{player, course, question, expectedcourse,
+		myanswer, theanswer, info, email};
+        $c->stash->{email} = {
+                to => "drbean\@freeshell.org",
+                from => "greg\@nuu.edu.tw",
+                subject => "Bett Error Report from $player",
+                body => "
+Player        : $player
+Course        : $course
+question      : $question
+expectedcourse: $expectedcourse
+myanswer      : $myanswer
+theanswer     : $theanswer
+info          : $info
+email         : $email
+"
+                };
+        $c->forward( $c->view('Email') );
+}
 =head1 AUTHOR
 
 Dr Bean
