@@ -107,7 +107,7 @@ sub email :Local {
         $c->stash->{email} = {
                 to       => "drbean\@freeshell.org",
                 from     => "greg\@nuu.edu.tw",
-                subject  => "Bett Error Report from $player",
+                subject  => "Bett Error, $player: $question",
 		"reply-to" => $email,
                 body     => "
 Player        : $player
