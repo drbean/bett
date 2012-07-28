@@ -4,15 +4,7 @@ use strict;
 use base 'Catalyst::View::Email';
 
 __PACKAGE__->config(
-    stash_key => 'email',
-    sender => {
-    mailer => 'SMTP',
-    mailer_args => {
-        Host     => 'smtp.example.com',
-        username => 'username',
-        password => 'password',
-        }
-    }
+    stash_key => 'email'
 );
 
 =head1 NAME
