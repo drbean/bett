@@ -110,27 +110,26 @@ sub email :Local {
 		header => [ 'Reply-To' => $email ],
                 to       => "drbean\@freeshell.org",
                 from     => "greg\@nuu.edu.tw",
-                subject  => "Bett $exercise Error, $player: $question",
+                subject  => "Bett $exercise Problem, $player: $question",
                 body     => "
 Exercise      : $exercise
 Player        : $player
 Course        : $course
-question      : $question
-expectedcourse: $expectedcourse
-myanswer      : $myanswer
-theanswer     : $theanswer
-info          : $info
-email         : $email
+Question      : $question
+Question type : $expectedcourse
+Your answer   : $myanswer
+Bett's answer : $theanswer
+Your comment  : $info
+Your email    : $email
 "
                 };
         $c->forward( $c->view('Email') );
 	unless ( scalar( @{ $c->error } ) ) {
 		$c->error(0);
-		$c->response->body('Dr Bean\'s server can\'t send an email to him at the moment. Please try contacting him yourself at <A href="mailto:drbean@freeshell.org" subject=\"$exercise $course problem\">drbean@freeshell.org</A>');
+		$c->response->body('Bett can\'t send an email to Dr Bean at the moment. There\'s something wrong with Dr Bean\'s server or the network. Please try contacting him yourself at <A href="mailto:drbean@freeshell.org" subject=\"$exercise $course problem\">drbean@freeshell.org</A>');
 	} else {
 		$c->stash->{status_msg} = 'Dr Bean has been informed about the problem. If he agrees that Bett made an error, he will give you credit for your question and answer. Meanwhile, try continuing writing questions and answers.';
 	}
-
 	$c->stash->{ course } = $course;
 	$c->stash->{ template } = 'play.tt2';
 }
