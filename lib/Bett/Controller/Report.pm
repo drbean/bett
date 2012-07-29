@@ -124,7 +124,7 @@ Your email    : $email
 "
                 };
         $c->forward( $c->view('Email') );
-	unless ( scalar( @{ $c->error } ) ) {
+	if ( scalar( @{ $c->error } ) ) {
 		$c->error(0);
 		$c->response->body('Bett can\'t send an email to Dr Bean at the moment. There\'s something wrong with Dr Bean\'s server or the network. Please try contacting him yourself at <A href="mailto:drbean@freeshell.org" subject=\"$exercise $course problem\">drbean@freeshell.org</A>');
 	} else {
