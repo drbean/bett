@@ -35,9 +35,9 @@ In each course, you can only attempt to write a question a certain number of tim
 <ul>
 <li>In Course 3,
   <ul>
-  <li>If [% config.S.chances.question %] of your sentences is/are not grammatically correct, then GAME OVER.
-  <li>If however, an ANSWER is not correct (for example, you answered YES but the answer is NO), you get [% config.S.chances.answer %] more chance(s) to attempt another sentence.
-  <li> So in Course 3, the sentences are easier to write, but you have to write [% config.S.win %], a lot. Grammatical failure means you lose, and wrong answers are also penalized severely.
+  <li>If [% config.S.chances.question %] of your tag questions is/are not grammatically correct, then GAME OVER.
+  <li>If however, an ANSWER is not correct (for example, you answered YES but the answer is NO), you get [% config.S.chances.answer %] more chance(s) to attempt another tag questions.
+  <li> So in Course 3, the tag questions are easier to write, but you have to write [% config.S.win %], a lot. Grammatical failure means you lose, and wrong answers are also penalized severely.
   </ul>
 
 <li>In Course 2,
