@@ -4,7 +4,7 @@
 
 <p>You listened to the soundfile and read the content on the previous page.
 
-<p>Now make up a question or a sentence about the people you heard and read about, using the words from the <a href="#words">list</a>. For example, ask or say:
+<p>Now make up a question about the people you heard and read about, using the words from the <a href="#words">list</a>. For example, ask:
 
 <ul>
 <li>how they were related to each other.
@@ -19,7 +19,7 @@ And tell us what the answer to your question is.
 <ul>
 <li>Course 1: If you write [% config.WH.win %] correct WH-question(s) and you answer your question(s) correctly with the name of a person or thing, you are a WINNER.
 <li>Course 2: If you write [% config.YN.win %] correct YN-questions with the correct answers, either YES or NO, you are also a WINNER.
-<li>Course 3: If you write [% config.S.win %] correct sentences (True-False questions) with the correct answers, TRUE or FALSE, you are also a WINNER.
+<li>Course 3: If you write [% config.S.win %] correct tag questions with the correct answers, YES or NO, you are also a WINNER.
 </ul>
 
 Otherwise, you are a LOSER.
@@ -36,7 +36,7 @@ In each course, you can only attempt to write a question a certain number of tim
 <li>In Course 3,
   <ul>
   <li>If [% config.S.chances.question %] of your sentences is/are not grammatically correct, then GAME OVER.
-  <li>If however, an ANSWER is not correct (for example, you answered TRUE but the answer is FALSE), you get [% config.S.chances.answer %] more chance(s) to attempt another sentence.
+  <li>If however, an ANSWER is not correct (for example, you answered YES but the answer is NO), you get [% config.S.chances.answer %] more chance(s) to attempt another sentence.
   <li> So in Course 3, the sentences are easier to write, but you have to write [% config.S.win %], a lot. Grammatical failure means you lose, and wrong answers are also penalized severely.
   </ul>
 
@@ -59,7 +59,7 @@ In each course, you can only attempt to write a question a certain number of tim
 <ul>
 <li><a href="[% c.uri_for('/play/WH') %]">Course 1: WH-questions</a>
 <li><a href="[% c.uri_for('/play/YN') %]">Course 2: YN-questions</a>
-<li><a href="[% c.uri_for('/play/S') %]">Course 3: Sentences (TF-questions)</a>
+<li><a href="[% c.uri_for('/play/S') %]">Course 3: Tag questions</a>
 </ul>
 
 
