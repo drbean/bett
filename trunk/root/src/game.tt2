@@ -51,7 +51,7 @@ In each course, you can only attempt to write a question a certain number of tim
   <ul>
   <li>you get [% WHchances %] chances if you make a mistake, [% config.WH.chances.question %] for mistakes with the grammar of the WH-question and [% config.WH.chances.answer %] for mistakes with an answer.
   <li>If you make [% config.WH.chances.question %] mistakes in the grammar of the WH-question, or have [% config.WH.chances.answer %] wrong answers (the name of a person/thing), you can try again with a new question, for a maximum of [% WHchances %] extra tries before GAME OVER.
-  <li>So thinking of questions in Course 1 is harder than the other courses, but you only have to write [% config.WH.win %], the least amount of work. And you can make more mistakes.
+  <li>So thinking of questions in Course 1 is harder than the other courses, but you only have to write [% config.WH.win %], the least amount of work. And you can make more mistakes. But that also means it takes longer to get to GAME OVER.
   </ul>
 
 </ul>
