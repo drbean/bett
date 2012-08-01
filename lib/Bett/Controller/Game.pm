@@ -41,7 +41,7 @@ sub setup :Chained('/') :PathPart('game') :CaptureArgs(0) {
 	my $exercise = $c->session->{exercise};
 	my $league = $c->session->{league};
 	my %standing;
-	for my $course ( "WH", "YN", "S" ) {
+	for my $course ( "WH", "YN", "Tag" ) {
 		my $chances = $c->config->{$course}->{chances};
 		my $cOURSE = ucfirst ( lc $course );
 		my $standing = $c->model("DB::$cOURSE")

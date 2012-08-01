@@ -33,7 +33,7 @@ Catalyst Controller.
 
 =head2 setup
 
-Session and WH, YN, S standing.
+Session and WH, YN, Tag standing.
 
 =cut
 
@@ -43,7 +43,7 @@ sub setup :Chained('/') :PathPart('play') :CaptureArgs(1) {
 	my $league = $c->session->{league};
 	my $exercise = $c->session->{exercise};
 	my $gameover;
-	for my $allcourse ( 'WH', 'YN', 'S' ) {
+	for my $allcourse ( 'WH', 'YN', 'Tag' ) {
 		my $standing = $c->model("DB::$allcourse")
 			->find({ player => $player,
 			exercise => $exercise,
@@ -122,7 +122,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 	my $ex = $c->stash->{exercise};
 	my %translate = ( WH => 'WH-question',
 		YN	=> 'YN-question',
-		S	=> 'Tag question' );
+		Tag	=> 'Tag question' );
 	my $course = $c->stash->{course};
 	my $expectedcourse = $c->stash->{expectedcourse};
 	my $question = $c->stash->{question};
@@ -287,7 +287,7 @@ GAME OVER, or loop back to REPL.
 =cut
 
 sub exchange :Chained('update') :PathPart('') :Args(0) {
-my ( $self, $c ) = @_;
+	my ( $self, $c ) = @_;
 	my $course = $c->stash->{course};
 	my $win = $c->config->{$course}->{win};
 	$c->stash->{win} = $win;
@@ -310,7 +310,6 @@ my ( $self, $c ) = @_;
 	}
 	else {
 		$c->stash->{ config } = $c->config;
-$DB::single=1;
 		$c->stash->{ template } = 'play.tt2';
 	}
 }
