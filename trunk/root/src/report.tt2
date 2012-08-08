@@ -14,6 +14,10 @@
 <TR><TD>Player [% player %]'s answer: <TD> [% myanswer %]
 <INPUT type="hidden" name="theanswer" value="[% theanswer %]">
 <TR><TD>Bett's answer: <TD> [% theanswer %]
+<INPUT type="hidden" name="status" value="[% status %]">
+<TR><TD>Status message: <TD> [% status %]
+<INPUT type="hidden" name="error" value="[% error %]">
+<TR><TD>Error message: <TD> [% error %]
 <TR><TD style="text-wrap: normal">Other information, eg: What's wrong with the question/answer? When did the problem happen?
 <TD> <TEXTAREA name="info" rows="5" cols="40">
 </TEXTAREA>
