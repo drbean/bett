@@ -116,14 +116,15 @@ sub email :Local {
 		$myanswer, $theanswer, $status, $error, $info, $email) =
 		@$params{qw/player course question expectedcourse
 		myanswer theanswer status error info email/};
+	my $league = $c->session->{league};
 	my $exercise = $c->session->{exercise};
 	$c->stash(exercise => $exercise);
-        $c->stash->{email} = {
-		header => [ 'Reply-To' => $email ],
-                to       => "drbean\@freeshell.org",
-                from     => "greg\@nuu.edu.tw",
-                subject  => "Bett $exercise Problem, $player: $question",
-                body     => "
+	$c->stash->{email} = {
+	header => [ 'Reply-To' => $email ],
+			to       => "drbean\@freeshell.org",
+			from     => "greg\@nuu.edu.tw",
+			subject  => "Bett $exercise Problem, $player: $question",
+			body     => "
 Exercise      : $exercise
 Player        : $player
 Course        : $course
@@ -137,15 +138,45 @@ Your comment  : $info
 Your email    : $email
 "
                 };
-        $c->forward( $c->view('Email') );
+	$c->forward( $c->view('Email') );
 	if ( scalar( @{ $c->error } ) ) {
 		$c->error(0);
 		$c->response->body('Bett can\'t send an email to Dr Bean at the moment. There\'s something wrong with Dr Bean\'s server or the network. Please try contacting him yourself at <A href="mailto:drbean@freeshell.org" subject=\"$exercise $course problem\">drbean@freeshell.org</A>');
 	} else {
 		$c->stash->{status_msg} = 'Dr Bean has been informed about the problem. If he agrees that Bett made an error, he will give you credit for your question and answer. Meanwhile, try continuing writing questions and answers.';
 	}
-	$c->stash->{ course } = $course;
-	$c->stash->{ template } = 'play.tt2';
+	$c->stash( course => $course );
+	my $standing = $c->model("DB::$course")
+		->find({ player => $player,
+		exercise => $exercise,
+		league => $league });
+	$c->stash( $course => $standing );
+	my $questions = $c->model('DB::Question')->search({
+		league => $league,
+		exercise => $exercise,
+		});
+	my @goodqns = $questions->search({grammatical => 1})->all;
+	my @badqns = $questions->search({ grammatical => 0})->all;
+	$c->stash(goodqn => \@goodqns);
+	$c->stash(badqn => \@badqns);
+			#[{ quoted => "fdsfds", player => 'N9741065'}]);
+	my $win = $c->config->{$course}->{win};
+	$c->stash->{win} = $win;
+	if ( $standing->questionchance < 0 or 
+		$standing->answerchance < 0 ) {
+		$c->stash->{ template } = 'over.tt2';
+	}
+	elsif ( $standing->score >= $win ) {
+		$c->stash->{ template } = 'over.tt2';
+	}
+	elsif ( $c->stash->{gameover} ) {
+		$c->stash->{ template } = 'over.tt2';
+	}
+	else {
+		$c->stash->{ config } = $c->config;
+$DB::single=1;
+		$c->stash->{ template } = 'play.tt2';
+	}
 }
 =head1 AUTHOR
 
