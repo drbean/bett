@@ -1,4 +1,4 @@
-package Bett::Schema::Result::S;
+package Bett::Schema::Result::Tag;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
@@ -19,7 +19,7 @@ Bett::Schema::Result::S
 
 =cut
 
-__PACKAGE__->table("s");
+__PACKAGE__->table("tag");
 
 =head1 ACCESSORS
 
