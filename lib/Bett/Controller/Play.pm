@@ -122,7 +122,8 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 	my $ex = $c->stash->{exercise};
 	my %translate = ( WH => 'WH-question',
 		YN	=> 'YN-question',
-		Tag	=> 'Tag question' );
+		Tag	=> 'Tag question',
+		S	=> 'Sentence, or True-False question' );
 	my $course = $c->stash->{course};
 	my $expectedcourse = $c->stash->{expectedcourse};
 	my $question = $c->stash->{question};
@@ -152,7 +153,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 	}
 	elsif ( $course and ($expectedcourse ne 'Unparseable') and ($course ne $expectedcourse ) ) {
 		$c->stash->{error_msg} =
-"'$question' is not a $translate{$course} question. It's a $translate{$expectedcourse} question. Try again.";
+"'$question' is not a $translate{$course}. It's a $translate{$expectedcourse}. Try again.";
 		$c->stash->{wrongcourse} = $course;
 	}
 	elsif ( $expectedcourse eq 'Unparseable' ) {
