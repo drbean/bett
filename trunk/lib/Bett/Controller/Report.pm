@@ -80,13 +80,25 @@ sub expectedcourse :Chained('theanswer') :PathPart('') :CaptureArgs(1) {
 	$c->stash(expectedcourse => $expectedcourse);
 }
 
+=head2 error_status_msgs
+
+URL string
+
+=cut
+
+sub error_status_msgs :Chained('expectedcourse') :PathPart('') :CaptureArgs(2) {
+	my ( $self, $c, $status_msg, $error_msg) = @_;
+	$c->stash(status => $status_msg);
+	$c->stash(error => $error_msg);
+}
+
 =head2 compile
 
 Compile report
 
 =cut
 
-sub compile :Chained('expectedcourse') :PathPart('') :Args(0) {
+sub compile :Chained('error_status_msgs') :PathPart('') :Args(0) {
 	my ( $self, $c ) = @_;
 	$c->stash->{ template } = 'report.tt2';
 }
@@ -101,9 +113,9 @@ sub email :Local {
 	my ( $self, $c ) = @_;
 	my $params = $c->request->params;
 	my ($player, $course, $question, $expectedcourse,
-		$myanswer, $theanswer, $info, $email) =
+		$myanswer, $theanswer, $status, $error, $info, $email) =
 		@$params{qw/player course question expectedcourse
-		myanswer theanswer info email/};
+		myanswer theanswer status error info email/};
 	my $exercise = $c->session->{exercise};
 	$c->stash(exercise => $exercise);
         $c->stash->{email} = {
@@ -119,6 +131,8 @@ Question      : $question
 Question type : $expectedcourse
 Your answer   : $myanswer
 Bett's answer : $theanswer
+Status message: $status
+Error message : $error
 Your comment  : $info
 Your email    : $email
 "
