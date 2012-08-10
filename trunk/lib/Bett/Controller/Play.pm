@@ -207,7 +207,7 @@ sub question :Chained('evaluate') :PathPart('') :CaptureArgs(0) {
 		lexed => $c->stash->{lexed}
 		});
 	if ( $question ) {
-		$c->stash->{error_msg} = "But '$oldquestion' is already in the question database. Try again.";
+		$c->stash->{error_msg} .= " But '$oldquestion' is already in the question database. Try again.";
 		$c->stash->{oldquestion} = $question;
 	}
 	else {
