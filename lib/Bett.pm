@@ -28,7 +28,7 @@ use Catalyst qw/
 	Authorization::Roles
 
 	Session
-	Session::Store::FastMmap
+	Session::Store::DBIC
 	Session::State::Cookie
 /;
 
@@ -57,6 +57,11 @@ __PACKAGE__->config->{'Plugin::Authentication'} = {
        user_model      => 'dicDB::Player',
        password_type   => 'clear',
    },
+};
+
+__PACKAGE__->config->{'Plugin::Session'} = {
+		dbic_class	=> 'DB::Session',
+		expires	=> 3600
 };
 
 __PACKAGE__->config(
