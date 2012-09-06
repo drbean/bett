@@ -1,22 +1,22 @@
 import Parsing
 import Cats
-import Story_Cats
-import Topic_Cats
+import qualified Story_Cats as Story
+import qualified Topic_Cats as Topic
 import Data.Char
 import Data.List
 
-characters = unwords $ sort $ map ("<TR><TD>" ++ ) $ map toupper $ map (phon . head) proper_names
+characters = unwords $ sort $ map ("<TR><TD>" ++ ) $ map toupper $ map (phon . head) Story.names
 
 
 collect_lex = [
         ("auxiliary verbs",     aux ++ cops),
-        ("adjectives",   story_adjs),
-        ("interesting verbs",   story_verbs),
+        ("adjectives",   Story.adjs),
+        ("interesting verbs",   Story.verbs),
         ("WH words",   interrogatives),
         -- ("intransitive verbs",  intransitives),
         -- ("transitive verbs",    transitives),
         -- ("ditransitive verbs",  ditransitives),
-        ("object_names",        object_names),
+        ("object_names",        Story.nouns),
         ("class_names", class_names),
         ("prepositions",        preps),
         ("determiners", determiners),
@@ -29,8 +29,8 @@ classifieds = unlines $
 
 
 otherwords = map (phon . head) $
-	object_names ++ class_names ++ story_verbs ++ story_adjs ++ story_aux ++
-	topic_transitives ++
+	Story.nouns ++ class_names ++ Story.verbs ++ Story.adjs ++ Story.advs ++ Story.aux ++
+	Topic.transitives ++
 --	prons ++ reflexives ++ interrogatives ++
 	aux ++ transitives ++ ditransitives ++ -- intransitives ++ 
 	preps ++ determiners ++ possessives
