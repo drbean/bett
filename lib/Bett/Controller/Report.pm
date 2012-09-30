@@ -25,8 +25,8 @@ Session and course
 
 =cut
 
-sub course :Chained('/') :PathPart('report') :CaptureArgs(1) {
-	my ($self, $c, $mycourse) = @_;
+sub course :Path('/report') {
+	my ($self, $c, $mycourse, $question, $myanswer, $theanswer, $expectedcourse, $status_msg, $error_msg) = @_;
         my $player = $c->session->{player_id};
 	my $league = $c->session->{league};
 	my $exercise = $c->session->{exercise};
@@ -34,72 +34,12 @@ sub course :Chained('/') :PathPart('report') :CaptureArgs(1) {
 	$c->stash(exercise => $exercise);
 	$c->stash(league => $league);
 	$c->stash(course => $mycourse);
-}
-
-=head2 question
-
-URL-escaped original string
-
-=cut
-
-sub question :Chained('course') :PathPart('') :CaptureArgs(1) {
-	my ( $self, $c, $question ) = @_;
 	$c->stash(question => $question);
-}
-
-=head2 myanswer
-
-URL string
-
-=cut
-
-sub myanswer :Chained('question') :PathPart('') :CaptureArgs(1) {
-	my ( $self, $c, $myanswer ) = @_;
 	$c->stash(myanswer => $myanswer);
-}
-
-=head2 theanswer
-
-URL string
-
-=cut
-
-sub theanswer :Chained('myanswer') :PathPart('') :CaptureArgs(1) {
-	my ( $self, $c, $theanswer ) = @_;
 	$c->stash(theanswer => $theanswer);
-}
-
-=head2 expectedcourse
-
-URL string
-
-=cut
-
-sub expectedcourse :Chained('theanswer') :PathPart('') :CaptureArgs(1) {
-	my ( $self, $c, $expectedcourse ) = @_;
 	$c->stash(expectedcourse => $expectedcourse);
-}
-
-=head2 error_status_msgs
-
-URL string
-
-=cut
-
-sub error_status_msgs :Chained('expectedcourse') :PathPart('') :CaptureArgs(2) {
-	my ( $self, $c, $status_msg, $error_msg) = @_;
 	$c->stash(status => $status_msg);
 	$c->stash(error => $error_msg);
-}
-
-=head2 compile
-
-Compile report
-
-=cut
-
-sub compile :Chained('error_status_msgs') :PathPart('') :Args(0) {
-	my ( $self, $c ) = @_;
 	$c->stash->{ template } = 'report.tt2';
 }
 
