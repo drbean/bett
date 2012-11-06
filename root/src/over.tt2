@@ -1,11 +1,11 @@
 [% META title = "Game over" %]
 
-[% coursename = [ "WH", "YN", "S" ] %]
+[% coursename = [ "WH", "YN", "Tag" ] %]
 <h1>GAME OVER</h1>
 
 <h2>Record</h2>
 [% n = 0 %]
-[% FOREACH course IN [ WH, YN, S ] %]
+[% FOREACH course IN [ WH, YN, Tag ] %]
 <h1>Course [% n+1 %]: [% coursename.$n %]-questions</h1>
 
 <table>
