@@ -2,9 +2,9 @@
 
 <H1>Welcome, [% player %], to the game for the [% exercise %] Exercise in the [% league %] league.</H1>
 
-<p>You listened to the soundfile and read the content on the previous page.
+<p>You listened to the soundfile and/or read the content on the previous page.
 
-<p>Now make up a question about the people you heard and read about, using the words from the <a href="#words">list</a>. For example, ask:
+<p>Now make up a question about the people you heard and/or read about, using the words from the <a href="#words">list</a>. For example, ask:
 
 <ul>
 <li>how they were related to each other.
@@ -12,7 +12,7 @@
 <li>how they felt.
 </ul>
 
-And tell us what the answer to your question is.
+And tell us or guess what the answer to your question is.
 
 <H3> There are three courses of action: </H3>
 
