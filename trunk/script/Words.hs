@@ -34,7 +34,8 @@ otherwords = map (phon . head) $
 	Story.nouns ++ class_names ++ Story.verbs ++ Story.adjs ++ Story.advs ++ Story.aux ++
 	Topic.transitives ++
 	prons ++ 
---	reflexives ++ interrogatives ++
+--	reflexives ++ 
+	interrogatives ++
 	aux ++ transitives ++ ditransitives ++ -- intransitives ++ 
 	preps ++ determiners ++ possessives
 	++ conjuncts
