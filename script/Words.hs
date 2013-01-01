@@ -19,6 +19,7 @@ collect_lex = [
         -- ("ditransitive verbs",  ditransitives),
         ("object_names",        Story.nouns),
         ("class_names", class_names),
+        ("pronouns",        prons),
         ("prepositions",        preps),
         ("determiners", determiners),
         ("possessives", possessives)
