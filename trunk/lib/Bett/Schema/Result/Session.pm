@@ -9,7 +9,7 @@ __PACKAGE__->load_components("Core");
 __PACKAGE__->table("session");
 __PACKAGE__->add_columns(
   "id",
-  { data_type => "CHAR", is_nullable => 1, size => 72 },
+  { data_type => "CHAR", is_nullable => 0, size => 72 },
   "session_data",
   { data_type => "VARCHAR", is_nullable => 1, size => 7500 },
   "expires",
