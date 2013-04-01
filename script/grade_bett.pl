@@ -50,6 +50,7 @@ my $exercise = $script->exercise;
 my $quitter = $script->quitter;
 my $loser = $script->loser;
 my $winner = $script->winner;
+my @courses = qw/Wh Yn Tag/;
 my $results = { quitter => $quitter, loser => $loser, winner => $winner };
 my $man = $script->man;
 my $help = $script->help;
@@ -67,10 +68,11 @@ $report->{cutpoints} =
 	{ quitter => $quitter, loser => $loser, winner => $winner };
 my %fullcourseqns;
 @fullcourseqns{keys %members} = ( 0 ) x keys %members;
-for my $course ( qw/Wh Yn S/ ) {
+for my $course ( @courses ) {
 	my $class = $schema->resultset($course)->search({
 			league => $id, exercise => $exercise });
-	my $config = $config{uc $course};
+	my $Course = $course eq 'Tag'? $course: uc $course;
+	my $config = $config{$Course};
 	my $answerchances = $config->{chances}->{answer};
 	for my $player ( keys %members ) {
 		my $standing = $class->find({ player => $player });
@@ -102,7 +104,7 @@ for my $course ( qw/Wh Yn S/ ) {
 		}
 		Bless( $report->{points}->{$player}->{$course} )->keys(
 			[ qw/answers questions attempts/ ] );
-		Bless( $report->{points}->{$player} )->keys( [ qw/Wh Yn S/ ] );
+		Bless( $report->{points}->{$player} )->keys(  \@courses  );
 	}
 }
 
