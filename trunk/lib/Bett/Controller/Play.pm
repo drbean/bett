@@ -144,6 +144,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 		$c->stash->{nothing} = 1;
 	}
 	elsif ( ($unknown = $expectedcourse) =~ s/^Questioner_$ex: unknown words: \[(.*)\]$/$1/ ) {
+		$unknown =~ tr/"/'/;
 		$c->stash->{error_msg} = "The question '$question' contained unknown words, $unknown. Use only the words from the list.";
 		$c->stash->{unknown} = $unknown;
 	}
@@ -163,7 +164,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 		}
 	elsif ( @thewhanswers and not any { $_ eq $myanswer } @thewhanswers ) {
 		$c->stash->{error_msg} =
-"The question, \'$question' was grammatical, but '$myanswer' is not the answer, nor one of the answers to '$question'. " .
+"The question, '$question' was grammatical, but '$myanswer' is not the answer, nor one of the answers to '$question'. " .
 	"The answer(s) is/are: '$thewhanswers'.";
 		$c->stash->{err} = "answer";
 	}
@@ -176,7 +177,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 	}
 	elsif ( $theanswer and $myanswer ne $theanswer ) {
 		$c->stash->{error_msg} =
-"The question, \'$question' was grammatical, but the answer to '$question' is not '$myanswer. It's '$theanswer'. Try again.";
+"The question, '$question' was grammatical, but the answer to '$question' is not '$myanswer. It's '$theanswer'. Try again.";
 		$c->stash->{err} = "answer";
 	}
 	elsif ( $myanswer eq $theanswer ) {
