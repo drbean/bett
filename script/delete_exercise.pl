@@ -19,10 +19,10 @@ with 'MooseX::Getopt';
 has 'man'  => ( is => 'ro', isa => 'Bool' );
 has 'help' => ( is => 'ro', isa => 'Bool' );
 has 'id' => (
-    traits => ['Getopt'], is => 'ro', isa => 'Str', required => 1,
+    traits => ['Getopt'], is => 'ro', isa => 'Str', required => 0,
     cmd_aliases => 'i',);
 has 'genre' => (
-    traits => ['Getopt'], is => 'ro', isa => 'Str', required => 1,
+    traits => ['Getopt'], is => 'ro', isa => 'Str', required => 0,
     cmd_aliases => 'g',);
 
 package main;
@@ -32,16 +32,26 @@ my $connect_info = Bett::Model::DB->config->{connect_info};
 my $schema = Bett::Schema->connect( $connect_info );
 
 my $script = Script->new_with_options;
-my $genre = $script->genre;
 my $id = $script->id;
+if ( not $id ) {
+	$id = shift @ARGV;
+}
+my $genre = $script->genre;
 my $man = $script->man;
 my $help = $script->help;
 
 pod2usage(1) if $help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
 
-my $class = $schema->resultset('Exercise')->find(
+my $class;
+if ( not $genre ) {
+	$class = $schema->resultset('Exercise')->search(
+	{ id => $id})->first->delete;
+}
+else {
+	$class = $schema->resultset('Exercise')->find(
 	{ genre => $genre, id => $id})->delete;
+}
 
 
 =head1 NAME
@@ -56,7 +66,11 @@ perl script/delete_exercise.pl -i careers -g business
 
 DELETE FROM exercise where id='careers' and genre='business';
 
-It is used to remove exercises. So be careful.
+It is used to remove exercises. So be careful. But we support
+
+perl script/delete_exercise.pl careers 
+
+for sake of compatibility with counterpart in dic.
 
 =head1 AUTHOR
 
