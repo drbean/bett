@@ -148,7 +148,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 		$c->stash->{error_msg} = "The question '$question' contained unknown words, $unknown. Use only the words from the list.";
 		$c->stash->{unknown} = $unknown;
 	}
-	elsif ( $theanswer =~ m/^Questioner_$ex: LogicalForm.* Non-exhaustive/ ) {
+	elsif ( $theanswer =~ m/^Questioner_$ex: LogicalForm.* Non-exhaustive|^Questioner_$ex: no .*-place predicate./ ) {
 		$c->stash->{error_msg} = "The question, '$question' was a correct question, but Bett doesn't know the answer. Report the problem to Dr Bean.";
 		$c->stash->{unhandled} = $theanswer;
 	}
