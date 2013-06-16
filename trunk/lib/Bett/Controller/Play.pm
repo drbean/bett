@@ -171,7 +171,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 	elsif ( @thewhanswers and any { $_ eq $myanswer } @thewhanswers ) {
 
 		$c->stash->{status_msg} =
-"'$myanswer' is a/the answer to '$question'. " .
+"'$myanswer' is an answer to '$question'. " .
 	"The full list of answers is: '$thewhanswers'.";
 		$c->stash->{thewhanswers} = \@thewhanswers;
 	}
