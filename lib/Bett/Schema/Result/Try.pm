@@ -1,4 +1,4 @@
-package Bett::Schema::Result::Wh;
+package Bett::Schema::Result::Try;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
@@ -15,11 +15,11 @@ __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp");
 
 =head1 NAME
 
-Bett::Schema::Result::Wh
+Bett::Schema::Result::Try
 
 =cut
 
-__PACKAGE__->table("wh");
+__PACKAGE__->table("try");
 
 =head1 ACCESSORS
 
@@ -43,19 +43,9 @@ __PACKAGE__->table("wh");
   data_type: 'int'
   is_nullable: 1
 
-=head2 score
+=head2 quoted
 
-  data_type: 'int'
-  is_nullable: 1
-
-=head2 questionchance
-
-  data_type: 'int'
-  is_nullable: 1
-
-=head2 answerchance
-
-  data_type: 'int'
+  data_type: 'text'
   is_nullable: 1
 
 =cut
@@ -69,14 +59,10 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 0 },
   "try",
   { data_type => "int", is_nullable => 1 },
-  "score",
-  { data_type => "int", is_nullable => 1 },
-  "questionchance",
-  { data_type => "int", is_nullable => 1 },
-  "answerchance",
-  { data_type => "int", is_nullable => 1 },
+  "quoted",
+  { data_type => "text", is_nullable => 1 },
 );
-__PACKAGE__->set_primary_key("player", "league", "exercise");
+__PACKAGE__->set_primary_key("player", "league", "exercise", "try");
 
 =head1 RELATIONS
 
