@@ -43,7 +43,7 @@ sub setup :Chained('/') :PathPart('play') :CaptureArgs(1) {
 	my $league = $c->session->{league};
 	my $exercise = $c->session->{exercise};
 	my $gameover;
-	for my $allcourse ( 'WH', 'YN', 'Tag' ) {
+	for my $allcourse ( 'WH', 'YN', 'Tag', 'S' ) {
 		my $standing = $c->model("DB::$allcourse")
 			->find({ player => $player,
 			exercise => $exercise,
@@ -102,14 +102,14 @@ sub try :Chained('wordschars') :PathPart('') :CaptureArgs(0) {
 		$question ||= '';
 		my $myanswer = $c->request->params->{answer};
 		my $check =
-qx"echo \"$question\" | /var/www/cgi-bin/bett/bin/Questioner_$ex";
-		my ($lexed, $expectedcourse, $theanswer) =
-						split /\n/, $check; 
+qx"echo \"$question\" | /var/www/cgi-bin/bett/bin/Parser_$ex";
+		my ($parse, $lexed) = split /\n/, $check; 
+		$c->stash( parse => $parse );
 		$c->stash( lexed => $lexed );
 		$c->stash( question => $question );
 		$c->stash( myanswer => $myanswer );
-		$c->stash( theanswer => $theanswer );
-		$c->stash( expectedcourse => $expectedcourse );
+		$c->stash( theanswer => $myanswer );
+		$c->stash( expectedcourse => "S" );
 	}
 }
 
