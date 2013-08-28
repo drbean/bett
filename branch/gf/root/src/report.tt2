@@ -1,0 +1,29 @@
+[% META title = "Error Report" %]
+
+<FORM method="post" action="[% c.uri_for('email') %]">
+<TABLE><CAPTION>Error Report</CAPTION>
+<INPUT type="hidden" name="player" value="[% player %]">
+<TR><TD>Player ID: <TD> [% player %]
+<INPUT type="hidden" name="course" value="[% course %]">
+<TR><TD>Course: <TD> [% course %] question
+<INPUT type="hidden" name="question" value="[% question %]">
+<TR><TD>Player [% player %]'s question: <TD> [% question %]
+<INPUT type="hidden" name="expectedcourse" value="[% expectedcourse %]">
+<TR><TD>Question type: <TD> [% expectedcourse %] question
+<INPUT type="hidden" name="myanswer" value="[% myanswer %]">
+<TR><TD>Player [% player %]'s answer: <TD> [% myanswer %]
+<INPUT type="hidden" name="theanswer" value="[% theanswer %]">
+<TR><TD>Bett's answer: <TD> [% theanswer %]
+<INPUT type="hidden" name="status" value="[% status %]">
+<TR><TD>Status message: <TD> [% status %]
+<INPUT type="hidden" name="error" value="[% error %]">
+<TR><TD>Error message: <TD> [% error %]
+<TR><TD style="text-wrap: normal">Other information, eg: What's wrong with the question/answer? When did the problem happen?
+<TD> <TEXTAREA name="info" rows="5" cols="40">
+</TEXTAREA>
+<TR><TD>Email address: <TD> <INPUT type="text" name="email" size="40">
+</TABLE>
+Include an email address if you want Dr Bean to respond to this error report.
+<BR>
+<INPUT type="submit" name="Submit" value="Submit">
+</FORM>
