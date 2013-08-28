@@ -61,6 +61,8 @@ __PACKAGE__->add_columns(
   { data_type => "int", is_nullable => 1 },
   "quoted",
   { data_type => "text", is_nullable => 1 },
+  "answer",
+  { data_type => "text", is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("player", "league", "exercise", "try");
 
