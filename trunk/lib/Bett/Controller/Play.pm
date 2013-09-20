@@ -101,11 +101,23 @@ sub try :Chained('wordschars') :PathPart('') :CaptureArgs(0) {
 		my $question = $c->request->params->{question};
 		$question ||= '';
 		my $myanswer = $c->request->params->{answer};
+		my $tries = $c->model('DB::Try')->search({
+			league => $c->stash->{league},
+			exercise => $c->stash->{exercise},
+			player => $c->stash->{player},
+			});
+		$tries->create({
+				try => ($tries->get_column('try')->max() + 1),
+				quoted => $question,
+				answer => $myanswer,
+			});
 		my $check =
 qx"echo \"$question\" | /var/www/cgi-bin/bett/bin/Transfer_$ex";
-		my ($lexed, $expectedcourse, $theanswer) =
-						( $check, "S", "Unknown" ); 
+		my ($unknown, $lexed) =
+						(split /\n/, $check); 
+		my ( $expectedcourse, $theanswer) = ( "S", "Unknown" );
 		$c->stash( lexed => $lexed );
+		$c->stash( unknown => $unknown );
 		$c->stash( question => $question );
 		$c->stash( myanswer => $myanswer );
 		$c->stash( theanswer => $theanswer );
@@ -126,6 +138,8 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 		S	=> 'Sentence (True-False question)' );
 	my $course = $c->stash->{course};
 	my $expectedcourse = $c->stash->{expectedcourse};
+	my $lexed = $c->stash->{lexed};
+	my $unknown = delete $c->stash->{unknown};
 	my $question = $c->stash->{question};
 	my $theanswer = $c->stash->{theanswer};
 	my $myanswer = $c->stash->{myanswer};
@@ -136,55 +150,26 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 		$myanswer =~ s/_/ /g;
 		s/_/ /g for @thewhanswers;
 	}
-	my $unknown;
 	if ( $question eq '' )
 	{
 		$c->stash->{error_msg} =
 			"Enter a question and answer.";
 		$c->stash->{nothing} = 1;
 	}
-	elsif ( ($unknown = $expectedcourse) =~ s/^Questioner_$ex: unknown words: \[(.*)\]$/$1/ ) {
+	elsif ( $lexed ) {
+		$c->stash->{status_msg} = "The question, '$question' was a grammatical question."
+	}
+	elsif ( $unknown ) {
 		$unknown =~ tr/"/'/;
 		$c->stash->{error_msg} = "The question '$question' contained unknown words, $unknown. Use only the words from the list.";
 		$c->stash->{unknown} = $unknown;
 	}
-	elsif ( $theanswer =~ m/^Questioner_$ex: / ) {
-		$c->stash->{error_msg} = "The question, '$question' was a correct question, but Bett doesn't know the answer. Report the problem to Dr Bean.";
-		$c->stash->{unhandled} = $theanswer;
-	}
-	elsif ( $course and ($expectedcourse ne 'Unparseable') and ($course ne $expectedcourse ) ) {
-		$c->stash->{error_msg} =
-"'$question' is not a $translate{$course}. It's a $translate{$expectedcourse}. Try again.";
-		$c->stash->{wrongcourse} = $course;
-	}
-	elsif ( $expectedcourse eq 'Unparseable' ) {
-		$c->stash->{error_msg} =
-"'$question' is not grammatical. Try again.";
+	elsif ( not $lexed and not $unknown ) {
+		$c->stash->{error_msg} = "'$question' is not grammatical. Try again.";
 		$c->stash->{err} = "question";
 		}
-	elsif ( @thewhanswers and not any { $_ eq $myanswer } @thewhanswers ) {
-		$c->stash->{error_msg} =
-"The question, '$question' was grammatical, but '$myanswer' is not the answer, nor one of the answers to '$question'. " .
-	"The answer(s) is/are: '$thewhanswers'.";
-		$c->stash->{err} = "answer";
-	}
-	elsif ( @thewhanswers and any { $_ eq $myanswer } @thewhanswers ) {
-
-		$c->stash->{status_msg} =
-"'$myanswer' is a correct answer to '$question'. " .
-	"The full list of correct answers is: '$thewhanswers'.";
-		$c->stash->{thewhanswers} = \@thewhanswers;
-	}
-	elsif ( $theanswer and $myanswer ne $theanswer ) {
-		$c->stash->{error_msg} =
-"The question, '$question' was grammatical, but the answer to '$question' is not '$myanswer. It's '$theanswer'. Try again.";
-		$c->stash->{err} = "answer";
-	}
-	elsif ( $myanswer eq $theanswer ) {
-		$c->stash->{status_msg} = "The question, '$question' was a grammatical question, and your answer, $myanswer was the correct answer to that question."
-	}
 	else {
-		die "Expected course: $expectedcourse, answer: $theanswer,";
+		$c->stash->{error_msg} = "Bett is having problems. Please report the problem to Dr Bean. Expected course: $expectedcourse, answer: $theanswer,";
 	}
 }
 
@@ -200,8 +185,8 @@ sub question :Chained('evaluate') :PathPart('') :CaptureArgs(0) {
 	my $league= $c->stash->{ league };
 	my $course = $c->stash->{course};
 	my $oldquestion = $c->stash->{question};
-	my $grammatical = $c->stash->{expectedcourse}
-				eq 'Unparseable'? 0: 1;
+	my $grammatical = $c->stash->{lexed} ? 1: 0;
+$DB::single = 1;
 	return if ($c->stash->{unknown} or not $oldquestion);
 	my $questions = $c->stash->{questions};
 	my $question = $questions->find({
@@ -213,7 +198,7 @@ sub question :Chained('evaluate') :PathPart('') :CaptureArgs(0) {
 	}
 	else {
 		$questions->create({
-			lexed => $c->stash->{lexed},
+			lexed => ($c->stash->{lexed} or $oldquestion),
 			quoted => $c->stash->{question},
 			course => $c->stash->{course},
 			player => $c->stash->{player},
@@ -264,13 +249,7 @@ sub update :Chained('question') :PathPart('') :CaptureArgs(0) {
 	{
 		$standing->update({ try => ++$tries });
 	}
-	elsif ( $c->stash->{myanswer} eq $c->stash->{theanswer} ) {
-		$standing->update({
-			try => ++$tries,
-			score => ++$score,
-			});
-	}
-	elsif ( @$thewhanswers and any { $_ eq $myanswer } @$thewhanswers ) {
+	elsif ( $c->stash->{lexed} ) {
 		$standing->update({
 			try => ++$tries,
 			score => ++$score,
@@ -303,9 +282,11 @@ sub exchange :Chained('update') :PathPart('') :Args(0) {
 	if ( $standing->questionchance < 0 or 
 		$standing->answerchance < 0 ) {
 		$c->stash->{ template } = 'over.tt2';
+		$c->stash->{ result } = 'loss';
 	}
 	elsif ( $standing->score >= $win ) {
 		$c->stash->{ template } = 'over.tt2';
+		$c->stash->{ result } = 'win';
 	}
 	elsif ( $c->stash->{gameover} ) {
 		$c->stash->{ template } = 'over.tt2';
