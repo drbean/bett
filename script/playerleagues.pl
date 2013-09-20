@@ -20,15 +20,13 @@ my $schema = Bett::Schema->connect( $connect_info );
 
 my $leaguegenres = [
 			[ qw/league genre/ ],
-			[ "GL00007",	1 ],
-			[ "GL00034",	1 ],
-			[ "FLA0010",	1 ],
-			[ "FLA0018",	1 ],
-			[ "BMA0059",	2 ],
-			[ "FIA0034",	2 ],
-			[ "MIA0013",	2 ],
-			[ "FLA0027",	7 ],
-			[ "FLA0030",	6 ],
+			[ "GL00006",	1 ],
+			[ "GL00030",	1 ],
+			[ "FLA0006",	7 ],
+			[ "FLA0007",	5 ],
+			[ "AFN2N0",	2 ],
+			[ "AFN3Y0",	8 ],
+			[ "AFN300",	1 ],
 		];
 
 my @leagueids = map $_->[0], @$leaguegenres[1..$#$leaguegenres];
@@ -47,13 +45,14 @@ uptodatepopulate( 'League', $leagues );
 
 uptodatepopulate( 'Genre', [
 			[ qw/id value/ ],
-			[ 1, "intermediate" ],
+			[ 1, "conversation" ],
 			[ 2, "business" ],
 			[ 3, "friends" ],
 			[ 4, "intercultural" ],
 			[ 5, "speaking" ],
 			[ 6, "pop" ],
 			[ 7, "media" ],
+			[ 8, "multimedia" ],
 			] );
 
 uptodatepopulate( 'Leaguegenre', $leaguegenres );
