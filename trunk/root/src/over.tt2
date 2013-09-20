@@ -1,6 +1,6 @@
 [% META title = "Game over" %]
 
-[% coursename = [ "WH", "YN", "Tag" ] %]
+[% coursename = [ "WH", "YN", "Tag", S] %]
 [% IF result == "win" %]
 <h1>CONGRATULATIONS</h1>
 [% ELSIF result == "loss" %]
@@ -10,7 +10,7 @@
 
 <h2>Record</h2>
 [% n = 0 %]
-[% FOREACH course IN [ WH, YN, Tag ] %]
+[% FOREACH course IN [ WH, YN, Tag, S ] %]
 <h1>Course [% n+1 %]: [% coursename.$n %]-questions</h1>
 
 <table>
