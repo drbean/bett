@@ -1,7 +1,12 @@
 [% META title = "Game over" %]
 
 [% coursename = [ "WH", "YN", "Tag" ] %]
+[% IF result == "win" %]
+<h1>CONGRATULATIONS</h1>
+[% ELSIF result == "loss" %]
 <h1>GAME OVER</h1>
+[% ELSE %]
+[% END %]
 
 <h2>Record</h2>
 [% n = 0 %]
