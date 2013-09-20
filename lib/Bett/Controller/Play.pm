@@ -104,7 +104,7 @@ sub try :Chained('wordschars') :PathPart('') :CaptureArgs(0) {
 		my $check =
 qx"echo \"$question\" | /var/www/cgi-bin/bett/bin/Transfer_$ex";
 		my ($lexed, $expectedcourse, $theanswer) =
-						split /\n/, $check; 
+						( $check, "S", "Unknown" ); 
 		$c->stash( lexed => $lexed );
 		$c->stash( question => $question );
 		$c->stash( myanswer => $myanswer );
