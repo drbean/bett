@@ -1,5 +1,5 @@
 import WordsCharacters
-import qualified Data.Map.Strict as Map
+import qualified Data.Map as Map
 import Data.Char
 
 characters = unwords ( map ("<TR><TD>" ++ ) (gfWords Map.! "PN" ))
