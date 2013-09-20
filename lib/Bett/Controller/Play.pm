@@ -123,7 +123,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 	my %translate = ( WH => 'WH-question',
 		YN	=> 'YN-question',
 		Tag	=> 'Tag question',
-		S	=> 'Sentence, or True-False question' );
+		S	=> 'Sentence (True-False question)' );
 	my $course = $c->stash->{course};
 	my $expectedcourse = $c->stash->{expectedcourse};
 	my $question = $c->stash->{question};
