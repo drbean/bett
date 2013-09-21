@@ -5,7 +5,7 @@
 	tfoptions = ['True', 'False']
 	%]
 [% options = {
-	WH => characters, YN => ynoptions, Tag => ynoptions } %]
+	WH => characters, YN => ynoptions, Tag => ynoptions, S => tfoptions } %]
 <P><A HREF="[% c.uri_for('/report', course, question, myanswer, theanswer, expectedcourse, status_msg, error_msg) %]">Report a problem</A>
 <H1>Course [% courseno.$course %]: [% course %]-question</H1>
 <FORM method="post" action="[% c.uri_for('/play', course) %]">
