@@ -69,7 +69,7 @@ In each course, you can only attempt to write a question a certain number of tim
 <li><a href="[% c.uri_for('/play/WH') %]">Course 1: WH-questions</a>
 <li><a href="[% c.uri_for('/play/YN') %]">Course 2: YN-questions</a>
 <li><a href="[% c.uri_for('/play/Tag') %]">Course 3: Tag questions</a>
-<li><a href="[% c.uri_for('/play/S') %]">Course 3: TF-questions</a>
+<li><a href="[% c.uri_for('/play/S') %]">Course 4: TF-questions</a>
 </ul>
 
 
