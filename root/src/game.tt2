@@ -17,7 +17,6 @@ And tell us or guess what the answer to your question is, TRUE, FALSE, or DON'T 
 <H3> There is one course of action: </H3>
 
 <ul>
-<li>Course 3: If you write [% config.S.win %] grammatically-correct T/F questions with an answer, either TRUE, FALSE, or DON'T KNOW, you are a WINNER.
 <li>Course 4: If you write [% config.S.win %] grammatically correct True/False-questions (ie, a sentence, not a question) with an answer, either TRUE or FALSE, you are also a WINNER.
 </ul>
 
