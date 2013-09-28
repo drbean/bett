@@ -293,6 +293,7 @@ sub exchange :Chained('update') :PathPart('') :Args(0) {
 	}
 	else {
 		$c->stash->{ config } = $c->config;
+		$c->stash->{ course } = $course;
 		$c->stash->{ template } = 'play.tt2';
 	}
 }
