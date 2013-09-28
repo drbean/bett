@@ -58,7 +58,8 @@ my $help = $script->help;
 pod2usage(1) if $help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
 
-( my $leagueid = $id ) =~ s/^([[:alpha:]]+[[:digit:]]+).*$/$1/;
+# ( my $leagueid = $id ) =~ s/^([[:alpha:]]+[[:digit:]]+).*$/$1/;
+my $leagueid = $id;
 my $league = League->new( id => $leagueid );
 my $members = $league->members;
 my %members = map { $_->{id} => $_ } @$members;
