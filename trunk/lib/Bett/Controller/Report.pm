@@ -26,7 +26,7 @@ Session and course
 =cut
 
 sub course :Path('/report') {
-	my ($self, $c, $mycourse, $question, $myanswer, $theanswer, $expectedcourse, $status_msg, $error_msg) = @_;
+	my ($self, $c, $mycourse, $question, $myanswer, $theanswer, $unknown, $parse, $expectedcourse, $status_msg, $error_msg) = @_;
         my $player = $c->session->{player_id};
 	my $league = $c->session->{league};
 	my $exercise = $c->session->{exercise};
@@ -37,6 +37,8 @@ sub course :Path('/report') {
 	$c->stash(question => $question);
 	$c->stash(myanswer => $myanswer);
 	$c->stash(theanswer => $theanswer);
+	$c->stash(unknown => $unknown);
+	$c->stash(parse => $parse);
 	$c->stash(expectedcourse => $expectedcourse);
 	$c->stash(status => $status_msg);
 	$c->stash(error => $error_msg);
@@ -53,7 +55,7 @@ sub email :Local {
 	my ( $self, $c ) = @_;
 	my $params = $c->request->params;
 	my ($player, $course, $question, $expectedcourse,
-		$myanswer, $theanswer, $status, $error, $info, $email) =
+		$myanswer, $theanswer, $unknown, $parse, $status, $error, $info, $email) =
 		@$params{qw/player course question expectedcourse
 		myanswer theanswer status error info email/};
 	my $league = $c->session->{league};
@@ -72,6 +74,8 @@ Question      : $question
 Question type : $expectedcourse
 Your answer   : $myanswer
 Bett's answer : $theanswer
+Unknown_words : $unknown
+Parse         : $parse
 Status message: $status
 Error message : $error
 Your comment  : $info

@@ -113,10 +113,12 @@ sub try :Chained('wordschars') :PathPart('') :CaptureArgs(0) {
 			});
 		my $check =
 qx"echo \"$question\" | /var/www/cgi-bin/bett/bin/Transfer_$ex";
-		my ($unknown, $lexed) =
+		my ($unknown, $parsed) =
 						(split /\n/, $check); 
+		$parsed = s/^Parsed: (.*)$/$1/;
+		$unknown = s/^Unknown_words: (.*)$/$1/;
 		my ( $expectedcourse, $theanswer) = ( "S", "Unknown" );
-		$c->stash( lexed => $lexed );
+		$c->stash( parsed => $parsed );
 		$c->stash( unknown => $unknown );
 		$c->stash( question => $question );
 		$c->stash( myanswer => $myanswer );
@@ -138,7 +140,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 		S	=> 'Sentence (True-False question)' );
 	my $course = $c->stash->{course};
 	my $expectedcourse = $c->stash->{expectedcourse};
-	my $lexed = $c->stash->{lexed};
+	my $parsed = $c->stash->{parsed};
 	my $unknown = delete $c->stash->{unknown};
 	my $question = $c->stash->{question};
 	my $theanswer = $c->stash->{theanswer};
@@ -156,7 +158,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 			"Enter a question and answer.";
 		$c->stash->{nothing} = 1;
 	}
-	elsif ( $lexed ) {
+	elsif ( $parsed ) {
 		$c->stash->{status_msg} = "The question, '$question' was a grammatical question."
 	}
 	elsif ( $unknown ) {
@@ -164,7 +166,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 		$c->stash->{error_msg} = "The question '$question' contained unknown words, $unknown. Use only the words from the list.";
 		$c->stash->{unknown} = $unknown;
 	}
-	elsif ( not $lexed and not $unknown ) {
+	elsif ( not $parsed and not $unknown ) {
 		$c->stash->{error_msg} = "'$question' is not grammatical. Try again.";
 		$c->stash->{err} = "question";
 		}
@@ -185,12 +187,12 @@ sub question :Chained('evaluate') :PathPart('') :CaptureArgs(0) {
 	my $league= $c->stash->{ league };
 	my $course = $c->stash->{course};
 	my $oldquestion = $c->stash->{question};
-	my $grammatical = $c->stash->{lexed} ? 1: 0;
+	my $grammatical = $c->stash->{parsed} ? 1: 0;
 $DB::single = 1;
 	return if ($c->stash->{unknown} or not $oldquestion);
 	my $questions = $c->stash->{questions};
 	my $question = $questions->find({
-		lexed => $c->stash->{lexed}
+		lexed => $c->stash->{parsed}
 		});
 	if ( $question ) {
 		$c->stash->{error_msg} .= " But '$oldquestion' is already in the question database. Try again.";
@@ -198,7 +200,7 @@ $DB::single = 1;
 	}
 	else {
 		$questions->create({
-			lexed => ($c->stash->{lexed} or $oldquestion),
+			lexed => ($c->stash->{parsed} or $oldquestion),
 			quoted => $c->stash->{question},
 			course => $c->stash->{course},
 			player => $c->stash->{player},
@@ -249,7 +251,7 @@ sub update :Chained('question') :PathPart('') :CaptureArgs(0) {
 	{
 		$standing->update({ try => ++$tries });
 	}
-	elsif ( $c->stash->{lexed} ) {
+	elsif ( $c->stash->{parsed} ) {
 		$standing->update({
 			try => ++$tries,
 			score => ++$score,
