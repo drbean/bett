@@ -14,6 +14,10 @@
 <TR><TD>Player [% player %]'s answer: <TD> [% myanswer %]
 <INPUT type="hidden" name="theanswer" value="[% theanswer %]">
 <TR><TD>Bett's answer: <TD> [% theanswer %]
+<INPUT type="hidden" name="unknown" value="[% unknown %]">
+<TR><TD>Illegal words: <TD> [% unknown %]
+<INPUT type="hidden" name="parse" value="[% parse %]">
+<TR><TD>Question, as parsed: <TD> [% parse %]
 <INPUT type="hidden" name="status" value="[% status %]">
 <TR><TD>Status message: <TD> [% status %]
 <INPUT type="hidden" name="error" value="[% error %]">
