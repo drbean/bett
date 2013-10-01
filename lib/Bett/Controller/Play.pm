@@ -115,11 +115,11 @@ sub try :Chained('wordschars') :PathPart('') :CaptureArgs(0) {
 qx"echo \"$question\" | /var/www/cgi-bin/bett/bin/Transfer_$ex";
 		my ($unknown, $parsed) =
 						(split /\n/, $check); 
-		$parsed = s/^Parsed: (.*)$/$1/;
-		$unknown = s/^Unknown_words: (.*)$/$1/;
+		$parsed =~ s/^Parsed: (.*)$/$1/;
+		$unknown =~ s/^Unknown_words: (.*)$/$1/;
 		my ( $expectedcourse, $theanswer) = ( "S", "Unknown" );
-		$c->stash( parsed => $parsed );
-		$c->stash( unknown => $unknown );
+		$c->stash( parsed => $parsed || '');
+		$c->stash( unknown => $unknown || '');
 		$c->stash( question => $question );
 		$c->stash( myanswer => $myanswer );
 		$c->stash( theanswer => $theanswer );
@@ -188,11 +188,10 @@ sub question :Chained('evaluate') :PathPart('') :CaptureArgs(0) {
 	my $course = $c->stash->{course};
 	my $oldquestion = $c->stash->{question};
 	my $grammatical = $c->stash->{parsed} ? 1: 0;
-$DB::single = 1;
 	return if ($c->stash->{unknown} or not $oldquestion);
 	my $questions = $c->stash->{questions};
 	my $question = $questions->find({
-		lexed => $c->stash->{parsed}
+		lexed => $c->stash->{parsed} || $oldquestion
 		});
 	if ( $question ) {
 		$c->stash->{error_msg} .= " But '$oldquestion' is already in the question database. Try again.";
@@ -200,7 +199,7 @@ $DB::single = 1;
 	}
 	else {
 		$questions->create({
-			lexed => ($c->stash->{parsed} or $oldquestion),
+			lexed => $c->stash->{parsed} || $oldquestion,
 			quoted => $c->stash->{question},
 			course => $c->stash->{course},
 			player => $c->stash->{player},

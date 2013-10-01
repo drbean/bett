@@ -26,7 +26,7 @@ Session and course
 =cut
 
 sub course :Path('/report') {
-	my ($self, $c, $mycourse, $question, $myanswer, $theanswer, $unknown, $parse, $expectedcourse, $status_msg, $error_msg) = @_;
+	my ($self, $c, $mycourse, $question, $myanswer, $theanswer, $expectedcourse, $unknown, $parse, $status_msg, $error_msg) = @_;
         my $player = $c->session->{player_id};
 	my $league = $c->session->{league};
 	my $exercise = $c->session->{exercise};
@@ -37,11 +37,11 @@ sub course :Path('/report') {
 	$c->stash(question => $question);
 	$c->stash(myanswer => $myanswer);
 	$c->stash(theanswer => $theanswer);
-	$c->stash(unknown => $unknown);
-	$c->stash(parse => $parse);
+	$c->stash(unknown => $unknown || 'No illegal words');
+	$c->stash(parse => $parse || 'No parse');
 	$c->stash(expectedcourse => $expectedcourse);
-	$c->stash(status => $status_msg);
-	$c->stash(error => $error_msg);
+	$c->stash(status => $status_msg || 'No message');
+	$c->stash(error => $error_msg || 'No message');
 	$c->stash->{ template } = 'report.tt2';
 }
 
@@ -57,7 +57,7 @@ sub email :Local {
 	my ($player, $course, $question, $expectedcourse,
 		$myanswer, $theanswer, $unknown, $parse, $status, $error, $info, $email) =
 		@$params{qw/player course question expectedcourse
-		myanswer theanswer status error info email/};
+		myanswer theanswer unknown parse status error info email/};
 	my $league = $c->session->{league};
 	my $exercise = $c->session->{exercise};
 	$c->stash(exercise => $exercise);
@@ -118,7 +118,6 @@ Your email    : $email
 	}
 	else {
 		$c->stash->{ config } = $c->config;
-$DB::single=1;
 		$c->stash->{ template } = 'play.tt2';
 	}
 }
