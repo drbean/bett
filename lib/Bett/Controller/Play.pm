@@ -163,7 +163,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 	}
 	elsif ( $unknown ) {
 		$unknown =~ tr/"/'/;
-		$c->stash->{error_msg} = "The question '$question' contained unknown words, $unknown. Use only the words from the list.";
+		$c->stash->{error_msg} = "The question '$question' contained unknown words. Use only the words from the list.";
 		$c->stash->{unknown} = $unknown;
 	}
 	elsif ( not $parsed and not $unknown ) {
