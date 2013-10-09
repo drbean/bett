@@ -161,7 +161,7 @@ $DB::single=1;
 	}
 	elsif ( $parsed ) {
 		$c->stash->{status_msg} = "The question, '$question' was a grammatical question.";
-		$c->stash( unknown => 'No illegal words' );
+		# $c->stash( unknown => 'No illegal words' );
 	}
 	elsif ( $unknown ) {
 		$unknown =~ tr/"/'/;
@@ -171,8 +171,8 @@ $DB::single=1;
 	elsif ( not $parsed and not $unknown ) {
 		$c->stash->{error_msg} = "'$question' is not grammatical. Try again.";
 		$c->stash( err => "question" );
-		$c->stash( unknown => 'No illegal words' );
-		$c->stash( parsed => 'No parse' );
+		# $c->stash( unknown => 'No illegal words' );
+		# $c->stash( parsed => 'No parse' );
 	}
 	else {
 		$c->stash->{error_msg} = "Bett is having problems. Please report the problem to Dr Bean. Expected course: $expectedcourse, answer: $theanswer,";
@@ -304,6 +304,8 @@ sub exchange :Chained('update') :PathPart('') :Args(0) {
 	}
 	$c->stash( status => $c->stash->{ status_msg } || "No status message" );
 	$c->stash( error => $c->stash->{ error_msg } || "No error message" );
+	$c->stash( unknown => $c->stash->{ unknown } || 'No illegal words' );
+	$c->stash( parsed => $c->stash->{ parsed } || 'No parse' );
 }
 
 =head1 AUTHOR
