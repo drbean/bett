@@ -141,10 +141,10 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 	my $course = $c->stash->{course};
 	my $expectedcourse = $c->stash->{expectedcourse};
 	my $parsed = $c->stash->{parsed};
+	my $unknown = delete $c->stash->{unknown};
 	my $question = $c->stash->{question};
 	my $theanswer = $c->stash->{theanswer};
 	my $myanswer = $c->stash->{myanswer};
-	my $unknown_stash = delete $c->stash->{unknown};
 	my ($thewhanswers, @thewhanswers);
 	if ( $expectedcourse eq 'WH' ) {
 		$thewhanswers = $theanswer;
@@ -152,6 +152,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 		$myanswer =~ s/_/ /g;
 		s/_/ /g for @thewhanswers;
 	}
+$DB::single=1;
 	if ( $question eq '' )
 	{
 		$c->stash->{error_msg} =
@@ -159,18 +160,16 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 		$c->stash->{nothing} = 1;
 	}
 	elsif ( $parsed ) {
-		$c->stash->{status_msg} = "The question, '$question' was a grammatical question.";
-		$c->stash->{unknown} = 'No illegal words';
+		$c->stash->{status_msg} = "The question, '$question' was a grammatical question."
 	}
-	elsif ( $unknown_stash ) {
-		$unknown_stash =~ tr/"/'/;
+	elsif ( $unknown ) {
+		$unknown =~ tr/"/'/;
 		$c->stash->{error_msg} = "The question '$question' contained unknown words. Use only the words from the list.";
-		$c->stash->{unknown} = $unknown_stash;
+		$c->stash->{unknown} = $unknown;
 	}
-	elsif ( not $parsed and not $unknown_stash ) {
+	elsif ( not $parsed and not $unknown ) {
 		$c->stash->{error_msg} = "'$question' is not grammatical. Try again.";
 		$c->stash->{err} = "question";
-		$c->stash->{unknown} = 'No illegal words';
 		}
 	else {
 		$c->stash->{error_msg} = "Bett is having problems. Please report the problem to Dr Bean. Expected course: $expectedcourse, answer: $theanswer,";
@@ -192,6 +191,7 @@ sub question :Chained('evaluate') :PathPart('') :CaptureArgs(0) {
 	my $grammatical = $c->stash->{parsed} ? 1: 0;
 	return if ($c->stash->{unknown} or not $oldquestion);
 	my $questions = $c->stash->{questions};
+$DB::single=1;
 	my $question = $questions->find({
 		lexed => $c->stash->{parsed} || $oldquestion
 		});
