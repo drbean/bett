@@ -19,8 +19,8 @@
 <INPUT type="hidden" name="parse" value="[% parse %]">
 <TR><TD>Question, as parsed: <TD> [% parse %]
 <INPUT type="hidden" name="status" value="[% status %]">
-<TR><TD>Status message: <TD> [% status %]
-<INPUT type="hidden" name="error" value="[% error %]">
+<TR><TD>Status message: <TD> [% status || "No message" %]
+<INPUT type="hidden" name="error" value="[% error || "No message" %]">
 <TR><TD>Error message: <TD> [% error %]
 <TR><TD style="text-wrap: normal">Other information, eg: What's wrong with the question/answer? When did the problem happen?
 <TD> <TEXTAREA name="info" rows="5" cols="40">
