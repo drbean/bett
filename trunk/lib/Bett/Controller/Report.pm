@@ -26,7 +26,7 @@ Session and course
 =cut
 
 sub course :Path('/report') {
-	my ($self, $c, $mycourse, $question, $myanswer, $theanswer, $expectedcourse, $unknown, $parse, $status_msg, $error_msg) = @_;
+	my ($self, $c, $mycourse, $question, $myanswer, $theanswer, $expectedcourse, $unknown, $parse, $error, $status) = @_;
         my $player = $c->session->{player_id};
 	my $league = $c->session->{league};
 	my $exercise = $c->session->{exercise};
@@ -40,8 +40,8 @@ sub course :Path('/report') {
 	$c->stash(unknown => $unknown || 'No illegal words');
 	$c->stash(parse => $parse || 'No parse');
 	$c->stash(expectedcourse => $expectedcourse);
-	$c->stash(status => $status_msg || 'No message');
-	$c->stash(error => $error_msg || 'No message');
+	$c->stash(error => $error || 'No message');
+	$c->stash(status => $status || 'No message');
 	$c->stash->{ template } = 'report.tt2';
 }
 
