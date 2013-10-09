@@ -302,6 +302,8 @@ sub exchange :Chained('update') :PathPart('') :Args(0) {
 		$c->stash->{ course } = $course;
 		$c->stash->{ template } = 'play.tt2';
 	}
+	$c->stash( status => $c->stash->{ status_msg } || "No status message" );
+	$c->stash( error => $c->stash->{ error_msg } || "No error message" );
 }
 
 =head1 AUTHOR
