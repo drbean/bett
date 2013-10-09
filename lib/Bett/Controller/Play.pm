@@ -172,6 +172,7 @@ $DB::single=1;
 		$c->stash->{error_msg} = "'$question' is not grammatical. Try again.";
 		$c->stash( err => "question" );
 		$c->stash( unknown => 'No illegal words' );
+		$c->stash( parse => 'No parse' );
 	}
 	else {
 		$c->stash->{error_msg} = "Bett is having problems. Please report the problem to Dr Bean. Expected course: $expectedcourse, answer: $theanswer,";
