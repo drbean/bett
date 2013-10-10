@@ -248,7 +248,7 @@ sub update :Chained('question') :PathPart('') :CaptureArgs(0) {
 				--$answers,
 			});
 	}
-	elsif ( $unknown or $unhandled or $c->stash->{oldquestion} or $c->stash->{wrongcourse} )
+	elsif ( $c->stash->{oldquestion} or $c->stash->{wrongcourse} )
 	{
 		$standing->update({ try => ++$tries });
 	}
