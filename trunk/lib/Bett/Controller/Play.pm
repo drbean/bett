@@ -152,7 +152,6 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 		$myanswer =~ s/_/ /g;
 		s/_/ /g for @thewhanswers;
 	}
-$DB::single=1;
 	if ( $question eq '' )
 	{
 		$c->stash->{error_msg} =
@@ -192,9 +191,7 @@ sub question :Chained('evaluate') :PathPart('') :CaptureArgs(0) {
 	my $course = $c->stash->{course};
 	my $oldquestion = $c->stash->{question};
 	my $grammatical = $c->stash->{parsed} ? 1: 0;
-	return if ($c->stash->{unknown} or not $oldquestion);
 	my $questions = $c->stash->{questions};
-$DB::single=1;
 	my $question = $questions->find({
 		lexed => $c->stash->{parsed} || $oldquestion
 		});
