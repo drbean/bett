@@ -1,0 +1,49 @@
+[% META title = "Knowledge exchange" %]
+
+<H1>Welcome, [% player %], to the game for the [% exercise %] Exercise in the [% league %] league.</H1>
+
+<p>You listened to the soundfile and/or read the content on the previous page.
+
+<p>Now make up a True/False question (ie a sentence) about the people you heard and/or read about, using the words from the <a href="#words">list</a>. For example, ask:
+
+<ul>
+<li>how they were related to each other.
+<li>what they did.
+<li>how they felt.
+</ul>
+
+And tell us or guess what the answer to your question is, TRUE, FALSE, or DON'T KNOW.
+
+<H3> There is one course of action: </H3>
+
+<ul>
+<li>Course 4: If you write [% config.S.win %] grammatically correct True/False-questions (ie, a sentence, not a question) with an answer, either TRUE or FALSE, you are also a WINNER.
+</ul>
+
+Otherwise, you are a LOSER.
+
+<H3> Choose the course. </H3>
+
+[% Schances = config.S.chances.question + config.S.chances.answer %]
+
+In this course, you can only attempt to write a question a certain number of times. Read the details.
+
+<ul>
+<li>In Course 4,
+  <ul>
+  <li>If [% config.S.chances.question %] of your True/False questions is/are not grammatically correct, then GAME OVER.
+  <li> You have to write [% config.S.win %], to be a winner. Grammatical failure means you lose.
+  </ul>
+
+</ul>
+
+<ul>
+<li><a href="[% c.uri_for('/play/S') %]">Course 4: True/False questions</a>
+</ul>
+
+
+<a name="words"><h2>Words you can use</h2></a>
+
+Choose words only from this list.
+
+[% words %]
