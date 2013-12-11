@@ -112,7 +112,7 @@ sub try :Chained('wordschars') :PathPart('') :CaptureArgs(0) {
 				answer => $myanswer,
 			});
 		my $check =
-qx"echo \"$question\" | /var/www/cgi-bin/bett/bin/Transfer_$ex";
+qx"echo \"$question\" | /var/www/cgi-bin/bett/bin/Questioner_$ex";
 		my ($unknown, $parsed) =
 						(split /\n/, $check); 
 		$parsed =~ s/^Parsed: (.*)$/$1/;
