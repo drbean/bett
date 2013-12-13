@@ -165,16 +165,51 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 		$c->stash->{error_msg} = "The question '$question' contained unknown words, $unknown. Use only the words from the list.";
 		# $c->stash( unknown => $unknown );
 	}
-	elsif ( $parsed ) {
-		$c->stash->{status_msg} = "The question, '$question' was a grammatical question.";
-		# $c->stash( unknown => 'No illegal words' );
+	elsif ( $theanswer =~ m/^Questioner_$ex: / ) {
+        $c->stash->{error_msg} = "The question, '$question' was a correct question, but Bett doesn't know the answer. Report the problem to Dr Bean.";
+        $c->stash->{unhandled} = $theanswer;
+    }
+	elsif ( $course and ($expectedcourse ne 'Unparseable') and ($course ne $expectedcourse ) ) {
+			$c->stash->{error_msg} =
+"'$question' is not a $translate{$course}. It's a $translate{$expectedcourse}. Try again.";
+			$c->stash->{wrongcourse} = $course;
 	}
-	elsif ( not $parsed and not $unknown ) {
-		$c->stash->{error_msg} = "'$question' is not grammatical. Try again.";
-		$c->stash( err => "question" );
-		# $c->stash( unknown => 'No illegal words' );
-		# $c->stash( parsed => 'No parse' );
+    elsif ( $expectedcourse eq 'Unparseable' ) {
+            $c->stash->{error_msg} = "'$question' is not grammatical. Try again.";
+            $c->stash->{err} = "question";
+            }
+    elsif ( @thewhanswers and not any { $_ eq $myanswer } @thewhanswers ) {
+            $c->stash->{error_msg} =
+"The question, '$question' was grammatical, but '$myanswer' is not the answer, nor one of the answers to '$question'. " .
+    "The answer(s) is/are: '$thewhanswers'.";
+            $c->stash->{err} = "answer";
+    }
+    elsif ( @thewhanswers and any { $_ eq $myanswer } @thewhanswers ) {
+
+            $c->stash->{status_msg} = "'$myanswer' is a correct answer to '$question'. " .
+    "The full list of correct answers is: '$thewhanswers'.";
+            $c->stash->{thewhanswers} = \@thewhanswers;
+    }
+    elsif ( $theanswer and $myanswer ne $theanswer ) {
+            $c->stash->{error_msg} =
+"The question, '$question' was grammatical, but the answer to '$question' is not '$myanswer,', it's '$theanswer'. Try again.";
+            $c->stash->{err} = "answer";
+    }
+    elsif ( $myanswer eq $theanswer ) {
+              $c->stash->{status_msg} = "The question, '$question' was a grammatical question, and your answer, $myanswer was the correct answer to that question."
 	}
+
+
+	#elsif ( $parsed ) {
+	#	$c->stash->{status_msg} = "The question, '$question' was a grammatical question.";
+	#	# $c->stash( unknown => 'No illegal words' );
+	#}
+	#elsif ( not $parsed and not $unknown ) {
+	#	$c->stash->{error_msg} = "'$question' is not grammatical. Try again.";
+	#	$c->stash( err => "question" );
+	#	# $c->stash( unknown => 'No illegal words' );
+	#	# $c->stash( parsed => 'No parse' );
+	#}
 	else {
 		$c->stash->{error_msg} = "Bett is having problems. Please report the problem to Dr Bean. Expected course: $expectedcourse, answer: $theanswer,";
 	}
