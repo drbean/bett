@@ -16,8 +16,8 @@
 <TR><TD>Bett's answer: <TD> [% theanswer %]
 <INPUT type="hidden" name="unknown" value="[% unknown %]">
 <TR><TD>Illegal words: <TD> [% unknown %]
-<INPUT type="hidden" name="parse" value="[% parse || "No parse" %]">
-<TR><TD>Question, as parsed: <TD> [% parse %]
+<INPUT type="hidden" name="grammatical" value="[% grammatical || "No parse" %]">
+<TR><TD>Question's grammaticality: <TD> [% grammatical %]
 <INPUT type="hidden" name="status" value="[% status %]">
 <TR><TD>Status message: <TD> [% status || "No message" %]
 <INPUT type="hidden" name="error" value="[% error || "No message" %]">

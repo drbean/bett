@@ -26,7 +26,7 @@ Session and course
 =cut
 
 sub course :Path('/report') {
-	my ($self, $c, $mycourse, $question, $myanswer, $theanswer, $expectedcourse, $unknown, $parse, $error, $status) = @_;
+	my ($self, $c, $mycourse, $question, $myanswer, $theanswer, $expectedcourse, $unknown, $grammatical, $error, $status) = @_;
         my $player = $c->session->{player_id};
 	my $league = $c->session->{league};
 	my $exercise = $c->session->{exercise};
@@ -38,7 +38,7 @@ sub course :Path('/report') {
 	$c->stash(myanswer => $myanswer);
 	$c->stash(theanswer => $theanswer);
 	$c->stash(unknown => $unknown || 'No illegal words');
-	$c->stash(parse => $parse || 'No parse');
+	$c->stash(grammatical => $grammatical || 'No parse');
 	$c->stash(expectedcourse => $expectedcourse);
 	$c->stash(error => $error || 'No message');
 	$c->stash(status => $status || 'No message');
@@ -55,9 +55,9 @@ sub email :Local {
 	my ( $self, $c ) = @_;
 	my $params = $c->request->params;
 	my ($player, $course, $question, $expectedcourse,
-		$myanswer, $theanswer, $unknown, $parse, $status, $error, $info, $email) =
+		$myanswer, $theanswer, $unknown, $grammatical, $status, $error, $info, $email) =
 		@$params{qw/player course question expectedcourse
-		myanswer theanswer unknown parse status error info email/};
+		myanswer theanswer unknown grammatical status error info email/};
 	my $league = $c->session->{league};
 	my $exercise = $c->session->{exercise};
 	$c->stash(exercise => $exercise);
@@ -75,7 +75,7 @@ Question type : $expectedcourse
 Your answer   : $myanswer
 Bett's answer : $theanswer
 Unknown_words : $unknown
-Parse         : $parse
+Grammaticality: $grammatical
 Status message: $status
 Error message : $error
 Your comment  : $info

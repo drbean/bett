@@ -115,12 +115,11 @@ sub try :Chained('wordschars') :PathPart('') :CaptureArgs(0) {
 qx"echo \"$question\" | /var/www/cgi-bin/bett/bin/Questioner_$ex";
 		my ($lexed, $expectedcourse, $theanswer) =
 						(split /\n/, $check); 
-		my $parsed = $lexed;
 		my $unknown_field = qr/Questioner_$ex: unknown words: /;
 		my $unknown;
 		($unknown = $expectedcourse) =~ s/^$unknown_field(.*)$/$1/
 			if $expectedcourse =~ $unknown_field;
-		$c->stash( parsed => $parsed || '');
+		$c->stash( lexed => $lexed || '');
 		$c->stash( unknown => $unknown || '');
 		$c->stash( question => $question );
 		$c->stash( myanswer => $myanswer );
@@ -142,12 +141,12 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 		S	=> 'Sentence (True-False question)' );
 	my $course = $c->stash->{course};
 	my $expectedcourse = $c->stash->{expectedcourse};
-	my $parsed = $c->stash->{parsed};
 	my $unknown = $c->stash->{unknown};
 	my $question = $c->stash->{question};
 	my $theanswer = $c->stash->{theanswer};
 	my $myanswer = $c->stash->{myanswer};
 	my ($thewhanswers, @thewhanswers);
+	my $grammatical = "Grammatical";
 	if ( $expectedcourse eq 'WH' ) {
 		$thewhanswers = $theanswer;
 		@thewhanswers = split / /, $theanswer;
@@ -177,6 +176,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
     elsif ( $expectedcourse eq 'Unparseable' ) {
             $c->stash->{error_msg} = "'$question' is not grammatical. Try again.";
             $c->stash->{err} = "question";
+            $grammatical = 'Unparseable';
             }
     elsif ( @thewhanswers and not any { $_ eq $myanswer } @thewhanswers ) {
             $c->stash->{error_msg} =
@@ -213,6 +213,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 	else {
 		$c->stash->{error_msg} = "Bett is having problems. Please report the problem to Dr Bean. Expected course: $expectedcourse, answer: $theanswer,";
 	}
+	$c->stash->{grammatical} = $grammatical unless $unknown;
 }
 
 =head2 question
@@ -227,18 +228,18 @@ sub question :Chained('evaluate') :PathPart('') :CaptureArgs(0) {
 	my $league= $c->stash->{ league };
 	my $course = $c->stash->{course};
 	my $oldquestion = $c->stash->{question};
-	my $grammatical = $c->stash->{parsed} ? 1: 0;
+	my $grammatical = ( $c->stash->{grammatical} eq "Grammatical" ) ? 'True': 'False';
 	my $questions = $c->stash->{questions};
 	my $question = $questions->find({
-		lexed => $c->stash->{parsed} || $oldquestion
+		lexed => $c->stash->{lexed} || $oldquestion
 		});
 	if ( $question ) {
 		$c->stash->{error_msg} .= " But '$oldquestion' is already in the question database. Try again.";
 		$c->stash->{oldquestion} = $question;
 	}
-	else {
+	elsif ( not $c->stash->{unknown} ) {
 		$questions->create({
-			lexed => $c->stash->{parsed} || $oldquestion,
+			lexed => $c->stash->{lexed} || $oldquestion,
 			quoted => $c->stash->{question},
 			course => $c->stash->{course},
 			player => $c->stash->{player},
@@ -289,7 +290,7 @@ sub update :Chained('question') :PathPart('') :CaptureArgs(0) {
 	{
 		$standing->update({ try => ++$tries });
 	}
-	elsif ( $c->stash->{parsed} ) {
+	elsif ( $c->stash->{lexed} ) {
 		$standing->update({
 			try => ++$tries,
 			score => ++$score,
@@ -339,7 +340,7 @@ sub exchange :Chained('update') :PathPart('') :Args(0) {
 	$c->stash( status => $c->stash->{ status_msg } || "No status message" );
 	$c->stash( error => $c->stash->{ error_msg } || "No error message" );
 	$c->stash( unknown => $c->stash->{ unknown } || 'No illegal words' );
-	$c->stash( parsed => $c->stash->{ parsed } || 'No parse' );
+	$c->stash( grammatical => $c->stash->{ grammatical } || 'No parse' );
 }
 
 =head1 AUTHOR
