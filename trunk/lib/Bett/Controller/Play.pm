@@ -55,7 +55,7 @@ sub setup :Chained('/') :PathPart('play') :CaptureArgs(1) {
 			$c->config->{$allcourse}->{win} );
 	}
 	my $questions = $c->model('DB::Question')->search({
-		league => { 'like', "$league%" },
+		league => $league,
 		exercise => $exercise,
 		});
 	$c->stash(questions => $questions);
