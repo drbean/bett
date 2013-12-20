@@ -237,7 +237,7 @@ sub question :Chained('evaluate') :PathPart('') :CaptureArgs(0) {
 		$c->stash->{error_msg} .= " But '$oldquestion' is already in the question database. Try again.";
 		$c->stash->{oldquestion} = $question;
 	}
-	elsif ( not $c->stash->{unknown} ) {
+	elsif ( not $c->stash->{unknown} or not $c->stash->{nothing} ) {
 		$questions->create({
 			lexed => $c->stash->{lexed} || $oldquestion,
 			quoted => $c->stash->{question},
