@@ -1,11 +1,11 @@
-The homework for Friday is now up. Please try to look at the site, connected from http://sac.nuu.edu.tw/AFN3Y0.html before Friday.
+The next set of homework is now up. Please try to look at the site, connected from http://sac.nuu.edu.tw/AFN3Y0.html before Friday.
 
-At the moment, you can only ask questions about Rena and Dr Bean, but I will be putting information about more people up, so please continue to look at the site from time to time.
+Now, you can ask questions about Rena, Dr Bean, Jeff, Alex, Cindy and Vicky. Before, Bett was accepting questions which were ungrammatical and which had words which were not in the list. Now, I think I have removed those bugs.
 
-Although it is more natural for questions about the members of the class ("Who has a cat") to be in present tense, all questions must be in past tense ("Who had a cat") and they must only use the words from the list.
+You can try to ask the same questions you asked last week.
 
-If something was not mentioned in the video, then it can be assumed that answers to questions about that thing are No. So, the answer to ("Dr Bean didn't have a mother, did he?") is "No. He didn't." Many students didn't talk about their families in their videos, so they didn't have families. Check out the videos on http://ec.must.edu.tw
+But remember that questions must be in the past tense. I often forget to put my question in the past tense also. But the app will only accept questions about the situation before now.
 
-I don't have the resources of IBM. This is all my own work. So you are going to find problems with the app. Some of your grammatical questions will be evaluated as ungrammatical. Some of your questions with corrects answers will be evaluated as having the wrong answers. If the answer is wrong to a question like, "Did the man who was a teacher want to work in Hsinchu," for example, (if it is "No," not "Yes," for example), then please contact me by using the web form on the app.
+Remember also, that if something was not mentioned in the video, then it can be assumed that answers to questions about that thing are No. So, Rena had no family, and Alex had no parents.
 
-This is a work in progress. I want you to cooperate with me, by showing me problems.
+I have not received any more error reports. Please take the time to mention anything which doesn't seem right to you. For example, 'Who was the student who had a cat,' has an answer. But 'Whose grandmother was a farmer?' doesn't have an answer and 'Who was the student whose grandmother was a farmer,' doesn't either. You are going to find problems with the app. Please help me by pointing out wrong answers. You can contact me by using the web form on the app.
