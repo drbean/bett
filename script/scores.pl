@@ -15,7 +15,7 @@ script_files/scores.pl GL00006
  
 =head1 DESCRIPTION
 
-Dumps scores to standings.yaml in present directory and prints to STDOUT. No attention is paid to what the League schema tells us about what leagues and what exercises exist at present. Old leagues and exercises may have been deleted, but their players and exercise play results remain (unless a different exercise with the same name as a deleted one is added later?). A schema exercise without scores will still be included in the computed scores. Needs to be refactored when Genre schema is produced.
+Dumps scores to standings.yaml in present directory and prints to STDOUT. No attention is paid to what the League schema tells us about what leagues and what exercises and what course exist at present. Old leagues and exercises and what course may have been deleted, but their players and exercise play results remain (unless a different exercise with the same name as a deleted one is added later?). A schema exercise without scores will still be included in the computed scores. Needs to be refactored when Genre schema is produced.
 
 =head1 AUTHOR
 
@@ -39,13 +39,13 @@ use List::MoreUtils qw/any uniq/;
 use YAML qw/DumpFile/;
 use IO::All;
 use Cwd; use File::Basename;
-use dic;
+use Bett;
 use Net::FTP;
 
 my $id = $ARGV[0] || basename( getcwd );
 
-my $connect_info = dic::Model::DB->config->{connect_info};
-my $schema = dic::Schema->connect( $connect_info );
+my $connect_info = Bett->config->{connect_info};
+my $schema = Bett->connect( $connect_info );
 my $playset = $schema->resultset('Play');
 my $league;
 $league = $schema->resultset('League')->find({ id => $id }) if $id;
