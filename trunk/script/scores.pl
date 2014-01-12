@@ -46,19 +46,21 @@ my $id = $ARGV[0] || basename( getcwd );
 
 my $connect_info = Bett::Model::DB->config->{connect_info};
 my $schema = Bett::Schema->connect( $connect_info );
-my $playset = $schema->resultset('Play');
+my $playset = $schema->resultset('Wh');
 my $league;
 $league = $schema->resultset('League')->find({ id => $id }) if $id;
 my ($genre, @newExerciseList);
 if ( $league ) {
-	$genre = $league->genre->get_column('genre');
+	$genre = $league->get_column('genre');
 	@newExerciseList = uniq $schema->resultset('Exercise')->search({ genre =>
 		$genre })->get_column('id')->all;
 }
 my @playingleagues = uniq $playset->get_column('league')->all;
 my @leagues = (any { $_ eq $id } @playingleagues) ? ( $id ): @playingleagues;
+@leagues = qw/AFN3Y0/;
 my @exerciseIds = $playset->get_column('exercise')->all;
-@exerciseIds = uniq sort @exerciseIds;
+# @exerciseIds = uniq sort @exerciseIds;
+@exerciseIds = qw/q-and-a-exam/;
 my $remote = "standings.txt";
 my $local = $genre? "/tmp/$genre/$remote": "/tmp/$remote";
 
@@ -76,50 +78,78 @@ else {
 my $io = io($local) or die "No score print to $local? $@";
 my $output = "Standings\n";
 my $scores;
-for my $id ( sort @leagues )
+for my $id ( 'AFN3Y0' )
 {
 	my @leagueExercises;
 	@leagueExercises = @newExerciseList if $league;
-	my $leagueplay = $playset->search({ league => $id });
+	# my $leagueplay = $playset->search({ league => $id });
+	my $wh = $schema->resultset('Wh');
+	my $yn = $schema->resultset('Yn');
+	my $tag = $schema->resultset('Tag');
 	my $league = $schema->resultset('League')->find({ id => $id });
-	push @leagueExercises, $leagueplay->get_column('exercise')->all;
+	# push @leagueExercises, $leagueplay->get_column('exercise')->all;
 	@leagueExercises = uniq @leagueExercises;
 	@leagueExercises = qw/alex cindy dave jeff kelly mindy neil rena shane vicky/;
-	$output .= join "\t", $id."\t", @leagueExercises, "Total\n";
+	# $output .= join "\t", $id."\t", @leagueExercises, "Total\n";
+	$output .= join "\t", $id."\t", "WH", "YN", "TAG", "Total\n";
 	$output .= "============================================\n";
-    my $play = $leagueplay->search( [
-			{exercise => 'alex'},
-			{exercise => 'cindy'},
-			{exercise => 'dave'},
-			{exercise => 'jeff'},
-			{exercise => 'kelly'},
-			{exercise => 'mindy'},
-			{exercise => 'neil'},
-			{exercise => 'rena'},
-			{exercise => 'shane'},
-			{exercise => 'vicky'},
-			 ],
-		{ select => [ 'player', 'exercise', { sum => 'correct' } ],
-		'group_by' => [qw/player exercise/],
-		as => [ qw/player exercise score/ ],
-		'order_by' => 'player' });
-	while ( my $result = $play->next )
+	#my $play = $leagueplay->search( [
+	#		{exercise => 'alex'},
+	#		{exercise => 'cindy'},
+	#		{exercise => 'dave'},
+	#		{exercise => 'jeff'},
+	#		{exercise => 'kelly'},
+	#		{exercise => 'mindy'},
+	#		{exercise => 'neil'},
+	#		{exercise => 'rena'},
+	#		{exercise => 'shane'},
+	#		{exercise => 'vicky'},
+	#		 ],
+	#	{ select => [ 'player', 'exercise', { sum => 'correct' } ],
+	#	'group_by' => [qw/player exercise/],
+	#	as => [ qw/player exercise score/ ],
+	#	'order_by' => 'player' });
+	#while ( my $result = $play->next )
+	#{
+	#	my $player = $result->get_column('player');
+	#	my $exercise = $result->exercise;
+	#	my $score = $result->get_column('score');
+	#	$scores->{$id}->{$player}->{$exercise} = $score;
+	#	$scores->{$id}->{$player}->{Total} += $score;
+	#}
+	my $exercise = 'q-and-a-exam';
+	my $member = $schema->resultset('Member')->search(
+		{league => $id });
+	my @player_ids;
+	while ( my $member = $member->next )
 	{
-		my $player = $result->get_column('player');
-		my $exercise = $result->exercise;
-		my $score = $result->get_column('score');
-		$scores->{$id}->{$player}->{$exercise} = $score;
-		$scores->{$id}->{$player}->{Total} += $score;
-	}
-	for my $player ( uniq $play->get_column('player')->all )
-	{
-		$output .= $player . "\t";
-		for my $exercise ( @leagueExercises, "Total")
+		my $player = $member->id;
+		push @player_ids, $player;
+		for my $course_name ( qw/wh yn tag/ )
 		{
-			my $score = $scores->{$id}->{$player}->{$exercise};
-			$score ||= '-';
-			$output .= $score . "\t";
+			my $course = $course_name eq 'wh'? $wh:
+				$course_name eq 'yn'? $yn:
+					$tag;
+			my $play = $course->find(
+				{player => $player, exercise => $exercise});
+			next unless $play;
+			$scores->{$id}->{$player}->{$course_name}->{try} = $play->try;
+			$scores->{$id}->{$player}->{$course_name}->{score} = $play->score;
+			$scores->{$id}->{$player}->{Total} +=
+				$scores->{$id}->{$player}->{$course_name}->{score};
 		}
+	}
+	for my $player ( uniq sort @player_ids ) {
+		$output .= $player . "\t";
+		for my $course ( qw/wh yn tag/ ) {
+			my $try = $scores->{$id}->{$player}->{$course}->{try};
+			my $score = $scores->{$id}->{$player}->{$course}->{score};
+			$try //= '-';
+			$score //= '-';
+			my $entry = $score . '/' . $try;
+			$output .= $entry . "\t";
+		}
+		$output .= $scores->{$id}->{$player}->{Total};
 		$output .= "\n";
 	}
 	$output .= "\n";
