@@ -102,7 +102,7 @@ for my $course ( @courses ) {
 			push @{ $card->{$player} }, "no-show";
 		}
 		$fullcourseqns{$player} += $questions;
-		if ( $fullcourseqns{$player} >= $config{S}->{win} ) {
+		if ( $fullcourseqns{$player} >= $config{YN}->{win} ) {
 			push @{ $card->{$player} }, "loser";
 		}
 		Bless( $report->{points}->{$player}->{$course} )->keys(
@@ -118,18 +118,20 @@ sub takeWin {
 	return $b if $b eq 'loser';
 	return $a if $a eq 'quitter';
 	return $b if $b eq 'quitter';
+	return $a if $a eq 'non-starter';
+	return $b if $b eq 'non-starter';
 	return $a if $a;
 	return $b if $b;
 }
 
 
 for my $member (keys %members) {
-	my $card = $card->{$member};
-	my $grade = reduce {takeWin} "no-show", @$card;
+	my $my_card = $card->{$member};
+	my $grade = reduce {takeWin} "no-show", @$my_card;
 	if ( $grade eq 'no-show' or $grade eq 'non-starter' ) {
 		$report->{grade}->{$member} = 0;
 	}
-	if ( $grade eq 'quitter' ) {
+	elsif ( $grade eq 'quitter' ) {
 		$report->{grade}->{$member} = $results->{'loser'};
 	}
 	else {
@@ -155,7 +157,7 @@ People who quit with q good questions get a (TODO: loser's) score, perhaps. Play
 
 Output numbers of grammatically-correct questions, correct answers, questions attempted in the wh, yn and s courses.
 
-If correct question quota is filled, but answer quota not filled, player is treated as Loser, not Quitter.
+If correct question quota for YN course is filled (over all courses), but answer quota not filled, player is treated as Loser, not Quitter.
 
 =head1 AUTHOR
 
