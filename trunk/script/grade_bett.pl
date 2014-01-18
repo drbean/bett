@@ -90,14 +90,16 @@ for my $course ( @courses ) {
 				'winner': (($questions >= $config->{win}) or
 								($answerchancesleft <= 0) or
 									($standing->questionchance <= 0)) ?
-				'loser': 'quitter';
+				'loser': ( $questions >= $report->{cutpoints}->{quitter} )?
+				'quitter':
+				'non-starter';
 			push @{ $card->{$player} }, $grade;
 		}
 		else {
 			$report->{points}->{$player}->{$course}->{questions} = undef;
 			$report->{points}->{$player}->{$course}->{answers} = undef;
 			$report->{points}->{$player}->{$course}->{attempts} = undef;
-			push @{ $card->{$player} }, "quitter";
+			push @{ $card->{$player} }, "no-show";
 		}
 		$fullcourseqns{$player} += $questions;
 		if ( $fullcourseqns{$player} >= $config{S}->{win} ) {
@@ -114,6 +116,8 @@ sub takeWin {
 	return $b if $b eq 'winner';
 	return $a if $a eq 'loser';
 	return $b if $b eq 'loser';
+	return $a if $a eq 'quitter';
+	return $b if $b eq 'quitter';
 	return $a if $a;
 	return $b if $b;
 }
@@ -121,8 +125,16 @@ sub takeWin {
 
 for my $member (keys %members) {
 	my $card = $card->{$member};
-	my $grade = reduce {takeWin} "quitter", @$card;
-	$report->{grade}->{$member} = $results->{$grade};
+	my $grade = reduce {takeWin} "no-show", @$card;
+	if ( $grade eq 'no-show' or $grade eq 'non-starter' ) {
+		$report->{grade}->{$member} = 0;
+	}
+	if ( $grade eq 'quitter' ) {
+		$report->{grade}->{$member} = $results->{'loser'};
+	}
+	else {
+		$report->{grade}->{$member} = $results->{$grade};
+	}
 }
 
 print Dump $report;
@@ -139,7 +151,7 @@ perl script/grade_bett.pl -l FIA0034 -x adventure -q 4 -l 1 -w 2 > /home/drbean/
 
 SELECT * FROM {wh,yn,s} WHERE league='FIA0034';
 
-People who quit with q good questions get a score, perhaps. Players who get to GAME OVER, but who fail to be winners, ie are losers, get l points, and winners get w points.
+People who quit with q good questions get a (TODO: loser's) score, perhaps. Players who get to GAME OVER, but who fail to be winners, ie are losers, get l points, and winners get w points.
 
 Output numbers of grammatically-correct questions, correct answers, questions attempted in the wh, yn and s courses.
 
