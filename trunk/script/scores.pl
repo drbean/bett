@@ -65,7 +65,7 @@ my $remote = "standings.txt";
 my $local = $genre? "/tmp/$genre/$remote": "/tmp/$remote";
 
 my $ftp = Net::FTP->new('web.nuu.edu.tw') or die "web.nuu.edu.tw? $@";
-$ftp->login('greg', '') or die "web.nuu.edu.tw login? $@";
+$ftp->login('greg', '6y6t6y6t') or die "web.nuu.edu.tw login? $@";
 if ( $genre ) {
 	$ftp->cwd("public_html/$genre") or die
 		"web.nuu.edu.tw/~greg/public_html/$genre? $@";
