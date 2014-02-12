@@ -112,7 +112,7 @@ sub try :Chained('wordschars') :PathPart('') :CaptureArgs(0) {
 				answer => $myanswer,
 			});
 		my $check =
-qx"echo \"$question\" | /var/www/cgi-bin/bett/bin/Questioner_$ex";
+qx"echo \"$question\" | /var/www/cgi-bin/bett/bin/Transfer_$ex";
 		my ($lexed, $expectedcourse, $theanswer) =
 						(split /\n/, $check); 
 		my $unknown_field = qr/Questioner_$ex: unknown words: /;
