@@ -33,7 +33,7 @@ Catalyst Controller.
 
 =head2 setup
 
-Session and WH, YN, Tag, S standing.
+Session and WH, YN, Tag standing.
 
 =cut
 
@@ -43,7 +43,7 @@ sub setup :Chained('/') :PathPart('play') :CaptureArgs(1) {
 	my $league = $c->session->{league};
 	my $exercise = $c->session->{exercise};
 	my $gameover;
-	for my $allcourse ( 'WH', 'YN', 'Tag', 'S' ) {
+	for my $allcourse ( 'WH', 'YN', 'Tag' ) {
 		my $standing = $c->model("DB::$allcourse")
 			->find({ player => $player,
 			exercise => $exercise,
@@ -112,7 +112,7 @@ sub try :Chained('wordschars') :PathPart('') :CaptureArgs(0) {
 				answer => $myanswer,
 			});
 		my $check =
-qx"echo \"$question\" | /var/www/cgi-bin/bett/bin/Transfer_$ex";
+qx"echo \"$question\" | /var/www/cgi-bin/bett/bin/Questioner_$ex";
 		my ($lexed, $expectedcourse, $theanswer) =
 						(split /\n/, $check); 
 		my $unknown_field = qr/Questioner_$ex: unknown words: /;
