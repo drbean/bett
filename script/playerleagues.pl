@@ -24,9 +24,10 @@ my $leaguegenres = [
 			[ "GL00030",	1 ],
 			[ "FLA0006",	7 ],
 			[ "FLA0007",	5 ],
-			[ "AFN2N0",	2 ],
-			[ "AFN3Y0",	8 ],
-			[ "AFN300",	1 ],
+			[ "AFB1J0",	8 ],
+			[ "AFBB32",	1 ],
+			[ "40112040",	1 ],
+			[ "40113024",	1 ],
 		];
 
 my @leagueids = map $_->[0], @$leaguegenres[1..$#$leaguegenres];
@@ -52,7 +53,7 @@ uptodatepopulate( 'Genre', [
 			[ 5, "speaking" ],
 			[ 6, "pop" ],
 			[ 7, "media" ],
-			[ 8, "multimedia" ],
+			[ 8, "call" ],
 			] );
 
 uptodatepopulate( 'Leaguegenre', $leaguegenres );
