@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use lib 'lib' '/var/www/cgi-bin/bett/lib';
+use lib qw/lib /var/www/cgi-bin/bett/lib/;
 use FindBin '$Bin';
 
 use Config::General;
