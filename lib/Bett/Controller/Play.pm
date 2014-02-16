@@ -113,10 +113,12 @@ sub try :Chained('wordschars') :PathPart('') :CaptureArgs(0) {
 			});
 		my $check =
 qx"echo \"$question\" | /var/www/cgi-bin/bett/bin/Transfer_$ex";
-		my ($lexed, $expectedcourse, $theanswer) =
+		my ($unknown, $parsed, $theanswer, $expectedcourse) =
 						(split /\n/, $check); 
-		$parsed =~ s/^Parsed: (.*)$/$1/;
 		$unknown =~ s/^Unknown_words: (.*)$/$1/;
+		$parsed =~ s/^Parsed: (.*)$/$1/;
+		$theanswer =~ s/^Answer: (.*)$/$1/;
+		$expectedcourse =~ s/^Course: (.*)$/$1/;
 		$c->stash( lexed => $lexed || '');
 		$c->stash( unknown => $unknown || '');
 		$c->stash( question => $question );
