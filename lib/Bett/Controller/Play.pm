@@ -174,7 +174,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 "'$question' is not a $translate{$course}. It's a $translate{$expectedcourse}. Try again.";
 			$c->stash->{wrongcourse} = $course;
 	}
-    elsif ( $expectedcourse eq 'Unparseable' ) {
+    elsif ( $parsed eq '[]' ) {
             $c->stash->{error_msg} = "'$question' is not grammatical. Try again.";
             $c->stash->{err} = "question";
             $grammatical = 'Unparseable';
