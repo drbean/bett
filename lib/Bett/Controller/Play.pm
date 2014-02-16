@@ -160,10 +160,6 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 			"Enter a question and answer.";
 		$c->stash->{nothing} = 1;
 	}
-	elsif ( $parsed ) {
-		$c->stash->{status_msg} = "The question, '$question' was a grammatical question.";
-		# $c->stash( unknown => 'No illegal words' );
-}
 	elsif ( $unknown ) {
 		$unknown =~ tr/"/'/;
 		$c->stash->{error_msg} = "The question '$question' contained unknown words, $unknown. Use only the words from the list.";
