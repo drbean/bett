@@ -115,10 +115,8 @@ sub try :Chained('wordschars') :PathPart('') :CaptureArgs(0) {
 qx"echo \"$question\" | /var/www/cgi-bin/bett/bin/Transfer_$ex";
 		my ($lexed, $expectedcourse, $theanswer) =
 						(split /\n/, $check); 
-		my $unknown_field = qr/Questioner_$ex: unknown words: /;
-		my $unknown;
-		($unknown = $expectedcourse) =~ s/^$unknown_field(.*)$/$1/
-			if $expectedcourse =~ $unknown_field;
+		$parsed =~ s/^Parsed: (.*)$/$1/;
+		$unknown =~ s/^Unknown_words: (.*)$/$1/;
 		$c->stash( lexed => $lexed || '');
 		$c->stash( unknown => $unknown || '');
 		$c->stash( question => $question );
@@ -159,6 +157,10 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 			"Enter a question and answer.";
 		$c->stash->{nothing} = 1;
 	}
+	elsif ( $parsed ) {
+		$c->stash->{status_msg} = "The question, '$question' was a grammatical question.";
+		# $c->stash( unknown => 'No illegal words' );
+}
 	elsif ( $unknown ) {
 		$unknown =~ tr/"/'/;
 		$c->stash->{error_msg} = "The question '$question' contained unknown words, $unknown. Use only the words from the list.";
