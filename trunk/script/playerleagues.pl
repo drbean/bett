@@ -20,10 +20,10 @@ my $schema = Bett::Schema->connect( $connect_info );
 
 my $leaguegenres = [
 			[ qw/league genre/ ],
-			[ "GL00006",	1 ],
-			[ "GL00030",	1 ],
-			[ "FLA0006",	7 ],
-			[ "FLA0007",	5 ],
+			[ "GL00005",	1 ],
+			[ "GL00019",	1 ],
+			[ "FLA0021",	2 ],
+			[ "FLA0027",	9 ],
 			[ "AFB1J0",	8 ],
 			[ "AFBB32",	1 ],
 			[ "40112040",	1 ],
@@ -54,6 +54,7 @@ uptodatepopulate( 'Genre', [
 			[ 6, "pop" ],
 			[ 7, "media" ],
 			[ 8, "call" ],
+			[ 9, "esp" ],
 			] );
 
 uptodatepopulate( 'Leaguegenre', $leaguegenres );
