@@ -147,7 +147,8 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 	my $unknown = $c->stash->{unknown};
 	my $question = $c->stash->{question};
 	my $THEANSWER = uc $c->stash->{theanswer};
-	my $MYANSWER = uc $c->stash->{myanswer};
+	my $myanswer = uc $c->stash->{myanswer};
+	my $MYANSWER = uc $myanswer;
 	my ($thewhanswers, @thewhanswers);
 	my $grammatical = "Grammatical";
 	if ( $expectedcourse eq 'WH' ) {
@@ -200,8 +201,8 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 "The question, '$question' was grammatical, but the answer to '$question' is not '$Myanswer,', it's '$Theanswer'. Try again.";
             $c->stash->{err} = "answer";
     }
-    elsif ( $myanswer eq $theanswer ) {
-              $c->stash->{status_msg} = "The question, '$question' was a grammatical question, and your answer, $myanswer was the correct answer to that question."
+    elsif ( $MYANSWER eq $THEANSWER ) {
+              $c->stash->{status_msg} = "The question, '$question' was a grammatical question, and your answer, $Myanswer was the correct answer to that question."
 	}
 
 
