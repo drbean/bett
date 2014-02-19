@@ -146,8 +146,8 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 	my $parsed = $c->stash->{lexed};
 	my $unknown = $c->stash->{unknown};
 	my $question = $c->stash->{question};
-	my $theanswer = $c->stash->{theanswer};
-	my $myanswer = $c->stash->{myanswer};
+	my $THEANSWER = uc $c->stash->{theanswer};
+	my $MYANSWER = uc $c->stash->{myanswer};
 	my ($thewhanswers, @thewhanswers);
 	my $grammatical = "Grammatical";
 	if ( $expectedcourse eq 'WH' ) {
@@ -193,9 +193,11 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
     "The full list of correct answers is: '$thewhanswers'.";
             $c->stash->{thewhanswers} = \@thewhanswers;
     }
-    elsif ( $theanswer and $myanswer ne $theanswer ) {
+    elsif ( $THEANSWER and $MYANSWER ne $THEANSWER ) {
+		my $Theanswer = ucfirst lc $THEANSWER;
+		my $Myanswer = ucfirst lc $MYANSWER;
             $c->stash->{error_msg} =
-"The question, '$question' was grammatical, but the answer to '$question' is not '$myanswer,', it's '$theanswer'. Try again.";
+"The question, '$question' was grammatical, but the answer to '$question' is not '$Myanswer,', it's '$Theanswer'. Try again.";
             $c->stash->{err} = "answer";
     }
     elsif ( $myanswer eq $theanswer ) {
