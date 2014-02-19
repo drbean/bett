@@ -194,7 +194,6 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
             $c->stash->{err} = "answer";
     }
     elsif ( @thewhanswers and any { $_ eq $myanswer } @thewhanswers ) {
-
             $c->stash->{status_msg} = "'$myanswer' is a correct answer to '$question'. " .
     "The full list of correct answers is: '$thewhanswers'.";
             $c->stash->{thewhanswers} = \@thewhanswers;
