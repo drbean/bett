@@ -146,9 +146,9 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 	my $parsed = $c->stash->{lexed};
 	my $unknown = $c->stash->{unknown};
 	my $question = $c->stash->{question};
-	my $theanswer = uc $c->stash->{theanswer};
+	my $theanswer = $c->stash->{theanswer};
 	my $THEANSWER = uc $theanswer;
-	my $myanswer = uc $c->stash->{myanswer};
+	my $myanswer = $c->stash->{myanswer};
 	my $MYANSWER = uc $myanswer;
 	my ($thewhanswers, @thewhanswers);
 	my $grammatical = "Grammatical";
