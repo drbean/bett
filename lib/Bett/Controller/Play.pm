@@ -203,7 +203,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
             $c->stash->{err} = "answer";
     }
     elsif ( $MYANSWER eq $THEANSWER ) {
-              $c->stash->{status_msg} = "The question, '$question' was a grammatical question, and your answer, $Myanswer was the correct answer to that question."
+              $c->stash->{status_msg} = "The question, '$question' was a grammatical question, and your answer, $myanswer was the correct answer to that question."
 	}
 
 
