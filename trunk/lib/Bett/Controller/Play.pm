@@ -164,11 +164,6 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 			"Enter a question and answer.";
 		$c->stash->{nothing} = 1;
 	}
-	elsif ( $unknown ) {
-		$unknown =~ tr/"/'/;
-		$c->stash->{error_msg} = "The question '$question' contained unknown words, $unknown. Use only the words from the list.";
-		# $c->stash( unknown => $unknown );
-	}
 	elsif ( $theanswer eq "No answer" ) {
         $c->stash->{error_msg} = "The question, '$question' was a correct question, but Bett doesn't know the answer. Report the problem to Dr Bean.";
         $c->stash->{unhandled} = $theanswer;
@@ -183,10 +178,17 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 			$c->stash->{wrongcourse} = $course;
 	}
     elsif ( $parsed eq '[]' ) {
+		if ( $unknown ) {
+			$unknown =~ tr/"/'/;
+			$c->stash->{error_msg} = "The question '$question' contained unknown words, $unknown. Use only the words from the list.";
+			# $c->stash( unknown => $unknown );
+		}
+		else {
             $c->stash->{error_msg} = "'$question' is not grammatical. Try again.";
             $c->stash->{err} = "question";
             $grammatical = 'Unparseable';
-            }
+		}
+	}
     elsif ( @thewhanswers and any { $_ eq $myanswer } @thewhanswers ) {
             $c->stash->{status_msg} = "'$myanswer' is a correct answer to '$question'. " .
     "The full list of correct answers is: '$thewhanswers'.";
