@@ -16,7 +16,7 @@ allwords = concat ( map (\x -> gfWords Map.! x) pos )
 sortedwords = unlines $ map (
 	\i -> unwords $ ["<TR><TD>" ++ (toUpper i) : ":" ++ "<TD>" ] ++
 	[ (l:ls) | (l:ls) <- allwords, i==l ]
-	) ['\'' 'a'..'z']
+	) ['\'', 'a'..'z']
 
 
 main = do
