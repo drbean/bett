@@ -43,7 +43,7 @@ otherwords = map (phon . head) $
 sortedwords = unlines $ map (
 	\i -> unwords $ ["<TR><TD>" ++ (toUpper i) : ":" ++ "<TD>" ] ++
 	[ (l:ls) | (l:ls) <- otherwords, i==l ]
-	) ['a'..'z']
+	) ['\'' 'a'..'z']
 
 
 main = do
