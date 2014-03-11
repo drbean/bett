@@ -9,7 +9,7 @@
 <th> Number <td> Question <td> Player
 [% FOREACH question IN goodqn %]
 <tr>
-<th>[% n %] <td>[% question.quoted %] <td>[%# question.player %]
+<th>[% n %] <td>[% question.quoted %] <td>[% question.player %]
 [% n = n+1 %]
 [% END %]
 </table>
@@ -21,7 +21,7 @@
 <th> Number <td> Question <td> Player
 [% FOREACH question IN badqn %]
 <tr>
-<th>[% n %] <td>[% question.quoted %] <td>[%# question.player %]
+<th>[% n %] <td>[% question.quoted %] <td>[% question.player %]
 [% n = n+1 %]
 [% END %]
 </table>
