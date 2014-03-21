@@ -52,6 +52,13 @@ In each course, you can only attempt to write a question a certain number of tim
 <li><a href="[% c.uri_for('/play/Tag') %]">Course 3: Tag questions</a>
 </ul>
 
+<h3>Details</n3>
+
+<p>You have to write your [% config.Tag.win %], [% config.YN.win %], or [% config.WH.win %] grammatical questions and answers in one course. You can't write half in one and half in another.
+</p>
+
+<p>You only need to do that one course. But if you find one course unsuitable, you can change to another one.
+</p>
 
 <a name="words"><h2>Words you can use</h2></a>
 
