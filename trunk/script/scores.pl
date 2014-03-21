@@ -57,15 +57,15 @@ if ( $league ) {
 }
 my @playingleagues = uniq $playset->get_column('league')->all;
 my @leagues = (any { $_ eq $id } @playingleagues) ? ( $id ): @playingleagues;
-@leagues = qw/AFN3Y0/;
+@leagues = qw/AFB1J0/;
 my @exerciseIds = $playset->get_column('exercise')->all;
 # @exerciseIds = uniq sort @exerciseIds;
-@exerciseIds = qw/q-and-a-exam/;
+@exerciseIds = qw/AFB1J0/;
 my $remote = "standings.txt";
 my $local = $genre? "/tmp/$genre/$remote": "/tmp/$remote";
 
 my $ftp = Net::FTP->new('web.nuu.edu.tw') or die "web.nuu.edu.tw? $@";
-$ftp->login('greg', '') or die "web.nuu.edu.tw login? $@";
+$ftp->login('greg', '6y6t6y6t') or die "web.nuu.edu.tw login? $@";
 if ( $genre ) {
 	$ftp->cwd("public_html/$genre") or die
 		"web.nuu.edu.tw/~greg/public_html/$genre? $@";
@@ -78,7 +78,7 @@ else {
 my $io = io($local) or die "No score print to $local? $@";
 my $output = "Standings\n";
 my $scores;
-for my $id ( 'AFN3Y0' )
+for my $id ( 'AFB1J0' )
 {
 	my @leagueExercises;
 	@leagueExercises = @newExerciseList if $league;
@@ -117,7 +117,7 @@ for my $id ( 'AFN3Y0' )
 	#	$scores->{$id}->{$player}->{$exercise} = $score;
 	#	$scores->{$id}->{$player}->{Total} += $score;
 	#}
-	my $exercise = 'q-and-a-exam';
+	my $exercise = 'AFB1J0';
 	my $member = $schema->resultset('Member')->search(
 		{league => $id });
 	my @player_ids;
