@@ -2,23 +2,23 @@
 
 <FORM method="post" action="[% c.uri_for('email') %]">
 <TABLE><CAPTION>Error Report</CAPTION>
-<INPUT type="hidden" name="player" value="[% player %]">
+<INPUT type="hidden" name="player" value="[% player || "Player ??" %]">
 <TR><TD>Player ID: <TD> [% player %]
-<INPUT type="hidden" name="course" value="[% course %]">
+<INPUT type="hidden" name="course" value="[% course || "Unknown course" %]">
 <TR><TD>Course: <TD> [% course %] question
-<INPUT type="hidden" name="question" value="[% question %]">
+<INPUT type="hidden" name="question" value="[% question || "No question" %]">
 <TR><TD>Player [% player %]'s question: <TD> [% question %]
-<INPUT type="hidden" name="expectedcourse" value="[% expectedcourse %]">
+<INPUT type="hidden" name="expectedcourse" value="[% expectedcourse || "Indeterminate parse" %]">
 <TR><TD>Question type: <TD> [% expectedcourse %] question
-<INPUT type="hidden" name="myanswer" value="[% myanswer %]">
+<INPUT type="hidden" name="myanswer" value="[% myanswer || "No answer given" %]">
 <TR><TD>Player [% player %]'s answer: <TD> [% myanswer %]
-<INPUT type="hidden" name="theanswer" value="[% theanswer %]">
+<INPUT type="hidden" name="theanswer" value="[% theanswer || "No correct answer" %]">
 <TR><TD>Bett's answer: <TD> [% theanswer %]
-<INPUT type="hidden" name="unknown" value="[% unknown %]">
+<INPUT type="hidden" name="unknown" value="[% unknown || "No unknown words" %]">
 <TR><TD>Illegal words: <TD> [% unknown %]
 <INPUT type="hidden" name="grammatical" value="[% grammatical || "No parse" %]">
 <TR><TD>Question's grammaticality: <TD> [% grammatical %]
-<INPUT type="hidden" name="status" value="[% status %]">
+<INPUT type="hidden" name="status" value="[% status || "No status message" %]">
 <TR><TD>Status message: <TD> [% status || "No message" %]
 <INPUT type="hidden" name="error" value="[% error || "No message" %]">
 <TR><TD>Error message: <TD> [% error %]
