@@ -124,7 +124,7 @@ qx"echo \"$question\" | /var/www/cgi-bin/bett/bin/Transfer_$ex";
 		$c->stash( unknown => $unknown || '');
 		$c->stash( question => $question );
 		$c->stash( myanswer => $myanswer );
-		$c->stash( theanswer => $theanswer );
+		$c->stash( theanswer => $theanswer || "No Transfer answer");
 		$c->stash( expectedcourse => $expectedcourse );
 		$c->stash( error => $error );
 	}
