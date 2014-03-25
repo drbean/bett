@@ -123,7 +123,7 @@ qx"echo \"$question\" | /var/www/cgi-bin/bett/bin/Transfer_$ex";
 		$c->stash( lexed => $lexed || '');
 		$c->stash( unknown => $unknown || '');
 		$c->stash( question => $question );
-		$c->stash( myanswer => $myanswer );
+		$c->stash( myanswer => $myanswer || "No user answer");
 		$c->stash( theanswer => $theanswer || "No Transfer answer");
 		$c->stash( expectedcourse => $expectedcourse );
 		$c->stash( error => $error );
@@ -349,6 +349,7 @@ sub exchange :Chained('update') :PathPart('') :Args(0) {
 		$c->stash->{ course } = $course;
 		$c->stash->{ template } = 'play.tt2';
 	}
+	$c->stash( theanswer => $c->stash->{ theanswer } || "The answer doesn't exist" );
 	$c->stash( status => $c->stash->{ status_msg } || "No status message" );
 	$c->stash( error => $c->stash->{ error_msg } || "No error message" );
 	$c->stash( unknown => $c->stash->{ unknown } || 'No illegal words' );
