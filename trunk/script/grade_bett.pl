@@ -147,7 +147,7 @@ grade_bett.pl - record results from bett DB
 
 =head1 SYNOPSIS
 
-perl script/grade_bett.pl -l FIA0034 -x adventure -q 4 -l 1 -w 2 > /home/drbean/002/FIA0034/homework/2.yaml
+perl script/grade_bett.pl -l FIA0034 -x adventure -q 4 -o 1 -w 2 > /home/drbean/002/FIA0034/homework/2.yaml
 
 =head1 DESCRIPTION
 
