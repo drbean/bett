@@ -41,7 +41,7 @@ __PACKAGE__->table("try");
 =head2 try
 
   data_type: 'int'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 quoted
 
@@ -58,7 +58,7 @@ __PACKAGE__->add_columns(
   "league",
   { data_type => "text", is_nullable => 0 },
   "try",
-  { data_type => "int", is_nullable => 1 },
+  { data_type => "int", is_nullable => 0 },
   "quoted",
   { data_type => "text", is_nullable => 1 },
   "answer",
