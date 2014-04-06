@@ -118,7 +118,12 @@ qx"echo \"$question\" | /var/www/cgi-bin/bett/bin/Transfer_$ex";
 		$unknown =~ s/^Unknown_words: (.*)$/$1/;
 		$lexed =~ s/^Parsed: (.*)$/$1/;
 		$theanswer =~ s/^Answer: (.*)$/$1/;
-		$expectedcourse =~ s/^Course: (.*)$/$1/;
+		if ( $expectedcourse ) {
+			$expectedcourse =~ s/^Course: (.*)$/$1/;
+		}
+		else {
+			$expectedcourse = "No expected course";
+		}
 		$error = s/Transfer_$ex*: \w*.hs:(\d+,\d+)-(\d+,\d+): (.*)$/$1/;
 		$c->stash( lexed => $lexed || '');
 		$c->stash( unknown => $unknown || '');
