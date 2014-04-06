@@ -255,7 +255,7 @@ sub question :Chained('evaluate') :PathPart('') :CaptureArgs(0) {
 	my $question = $questions->find({
 		lexed => $c->stash->{lexed} || $oldquestion
 		});
-	if ( $question ) {
+	if ( $question != 0 ) {
 		$c->stash->{error_msg} .= " But '$oldquestion' is already in the question database. Try again.";
 		$c->stash->{oldquestion} = $question;
 	}
