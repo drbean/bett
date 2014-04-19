@@ -12,7 +12,7 @@
 <TR><TD>Question type: <TD> [% expectedcourse %] question
 <INPUT type="hidden" name="myanswer" value="[% myanswer || "No answer given" %]">
 <TR><TD>Player [% player %]'s answer: <TD> [% myanswer %]
-<INPUT type="hidden" name="theanswer" value="[% theanswer || "No correct answer" %]">
+<INPUT type="hidden" name="theanswer" value="[% theanswer || "No correct answer" | uri %]">
 <TR><TD>Bett's answer: <TD> [% theanswer %]
 <INPUT type="hidden" name="unknown" value="[% unknown || "No unknown words" %]">
 <TR><TD>Illegal words: <TD> [% unknown %]
