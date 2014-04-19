@@ -83,7 +83,7 @@ __PACKAGE__->config(
            mailer_args => {
     	   Host     => 'mail.nuu.edu.tw',
     	   username => 'greg',
-    	   password => '6y6t6y6t',
+    	   password => '',
        }
      }
 }
