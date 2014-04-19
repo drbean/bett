@@ -26,22 +26,15 @@ Session and course
 =cut
 
 sub course :Path('/report') {
-	my ($self, $c, $mycourse, $question, $myanswer, $theanswer, $expectedcourse, $unknown, $grammatical, $error, $status) = @_;
-        my $player = $c->session->{player_id};
-	my $league = $c->session->{league};
-	my $exercise = $c->session->{exercise};
-	$c->stash(player => $player);
-	$c->stash(exercise => $exercise);
-	$c->stash(league => $league);
-	$c->stash(course => $mycourse);
-	$c->stash(question => $question);
-	$c->stash(myanswer => $myanswer);
-	$c->stash(theanswer => $theanswer);
-	$c->stash(unknown => $unknown || 'No illegal words');
-	$c->stash(grammatical => $grammatical || 'No parse');
-	$c->stash(expectedcourse => $expectedcourse);
-	$c->stash(error => $error || 'No message');
-	$c->stash(status => $status || 'No message');
+	my ($self, $c) = @_;
+	my $report = $c->request->params;
+	# $mycourse, $question, $myanswer, $theanswer, $expectedcourse, $unknown, $grammatical, $error, $status)
+	$c->stash( player => $c->session->{player_id} );
+	$c->stash( league => $c->session->{league} );
+	$c->stash( exercise => $c->session->{exercise} );
+	for my $param ( keys %$report ) {
+		$c->stash( $param => $report->{$param} );
+	}
 	$c->stash->{ template } = 'report.tt2';
 }
 
@@ -62,11 +55,11 @@ sub email :Local {
 	my $exercise = $c->session->{exercise};
 	$c->stash(exercise => $exercise);
 	$c->stash->{email} = {
-	header => [ 'Reply-To' => $email ],
+	header => [ 'Reply-To' => $email,
 			to       => "drbean\@freeshell.org",
 			from     => "greg\@nuu.edu.tw",
-			subject  => "Bett $exercise Problem, $player: $question",
-			body     => "
+			subject  => "Bett $exercise Problem, $player: $question", ]
+	, body     => "
 Exercise      : $exercise
 Player        : $player
 Course        : $course
