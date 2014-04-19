@@ -79,11 +79,11 @@ __PACKAGE__->config(
            charset => 'utf-8'
        },
        sender => {
-           mailer => 'SMTP',
+           mailer => 'Sendmail',
            mailer_args => {
-    	   Host     => 'smtp.example.com',
-    	   username => 'username',
-    	   password => 'password',
+    	   Host     => 'mail.nuu.edu.tw',
+    	   username => 'greg',
+    	   password => '6y6t6y6t',
        }
      }
 }
