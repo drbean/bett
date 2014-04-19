@@ -128,13 +128,13 @@ qx"echo \"$question\" | /var/www/cgi-bin/bett/bin/Transfer_$ex";
 			$error = s/Transfer_$ex*: \w*.hs:(\d+,\d+)-(\d+,\d+): (.*)$/$1/;
 		}
 		else {
-			$error = "No error";
+			$error = "No Transfer_$ex error";
 		}
 		$c->stash( lexed => $lexed || '');
 		$c->stash( unknown => $unknown || '');
-		$c->stash( question => $question );
+		$c->stash( question => $question || "No user question");
 		$c->stash( myanswer => $myanswer || "No user answer");
-		$c->stash( theanswer => $theanswer || "No Transfer answer");
+		$c->stash( theanswer => $theanswer || "No Transfer_$ex answer");
 		$c->stash( expectedcourse => $expectedcourse );
 		$c->stash( error => $error );
 	}
@@ -359,11 +359,19 @@ sub exchange :Chained('update') :PathPart('') :Args(0) {
 		$c->stash->{ course } = $course;
 		$c->stash->{ template } = 'play.tt2';
 	}
-	$c->stash( theanswer => $c->stash->{ theanswer } || "The answer doesn't exist" );
-	$c->stash( status => $c->stash->{ status_msg } || "No status message" );
-	$c->stash( error => $c->stash->{ error_msg } || "No error message" );
-	$c->stash( unknown => $c->stash->{ unknown } || 'No illegal words' );
-	$c->stash( grammatical => $c->stash->{ grammatical } || 'No parse' );
+	my %report_params = (
+		course	=> $course || "No course",
+		question	=> $c->stash->{ question } || "No question",
+		theanswer	=> $c->stash->{ theanswer } || "No theanswer",
+		myanswer	=> $c->stash->{ myanswer } || "No myanswer",
+		expectedcourse		=> $c->stash->{ expectedcourse },
+		unknown	=> $c->stash->{ unknown } || 'No illegal words',
+		grammatical	=> $c->stash->{ grammatical } || 'No parse',
+		error	=> $c->stash->{ error_msg } || "No error message",
+		status	=> $c->stash->{ status_msg } || "No status",
+			);
+	$c->stash( report_params => \%report_params);
+	$c->stash->{ player => $c->session->{player_id} };
 }
 
 =head1 AUTHOR
