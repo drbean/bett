@@ -19,8 +19,8 @@
 <INPUT type="hidden" name="grammatical" value="[% grammatical || "No parse" %]">
 <TR><TD>Question's grammaticality: <TD> [% grammatical %]
 <INPUT type="hidden" name="status" value="[% status || "No status message" %]">
-<TR><TD>Status message: <TD> [% status || "No message" %]
-<INPUT type="hidden" name="error" value="[% error || "No message" %]">
+<TR><TD>Status message: <TD> [% status || "No status message" %]
+<INPUT type="hidden" name="error" value="[% error || "No error message" %]">
 <TR><TD>Error message: <TD> [% error %]
 <TR><TD style="text-wrap: normal">Other information, eg: What's wrong with the question/answer? When did the problem happen?
 <TD> <TEXTAREA name="info" rows="5" cols="40">
