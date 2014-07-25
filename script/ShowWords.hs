@@ -5,8 +5,12 @@ import Data.Char
 characters = unwords ( map ("<TR><TD>" ++ ) (gfWords Map.! "PN" ))
 pos = Map.keys gfWords
 
+containsSpace = elem ' '
+quoteWords xs	| containsSpace xs = "\"" ++ xs ++ "\""
+		| otherwise = xs
+
 classifieds = unlines $ 
-	map ( \x -> "<TR><TD>" ++ (posMap Map.! x) ++ ":<TD>" ++ (unwords $ gfWords Map.! x) )
+	map ( \x -> "<TR><TD>" ++ (posMap Map.! x) ++ ":<TD>" ++ (unwords (  map quoteWords $ gfWords Map.! x) ) )
 		pos
 	
 
