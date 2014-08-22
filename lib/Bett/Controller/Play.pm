@@ -165,7 +165,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 	my $grammatical = "Grammatical";
 	if ( $expectedcourse eq 'WH' ) {
 		$thewhanswers = $theanswer;
-		@thewhanswers = split / /, $theanswer;
+		@thewhanswers = split / , | or /, $theanswer;
 		$myanswer =~ s/_/ /g;
 		s/_/ /g for @thewhanswers;
 	}
