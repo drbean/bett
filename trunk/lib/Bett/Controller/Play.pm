@@ -113,10 +113,11 @@ sub try :Chained('wordschars') :PathPart('') :CaptureArgs(0) {
 			});
 		my $check =
 qx"echo \"$question\" | /var/www/cgi-bin/bett/bin/Transfer_$ex";
-		my ($unknown, $lexed, $theanswer, $expectedcourse, $error) =
+		my ($unknown, $lexed, $lf, $theanswer, $expectedcourse, $error) =
 						(split /\n/, $check); 
 		$unknown =~ s/^Unknown_words: (.*)$/$1/;
 		$lexed =~ s/^Parsed: (.*)$/$1/;
+		$lf =~ s/^LF (.*)$/$1/;
 		$theanswer =~ s/^Answer: (.*)$/$1/;
 		if ( $expectedcourse ) {
 			$expectedcourse =~ s/^Course: (.*)$/$1/;
@@ -168,7 +169,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 		$myanswer =~ s/_/ /g;
 		s/_/ /g for @thewhanswers;
 	}
-	if ( $question eq '' )
+	if ( $question eq "No user question" )
 	{
 		$c->stash->{error_msg} =
 			"Enter a question and answer.";
@@ -179,7 +180,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
         $c->stash->{unhandled} = $theanswer;
     }
 	elsif ( $theanswer =~ m/Transfer_\w+: .*$/ ) {
-        $c->stash->{error_msg} = "The question, '$question' was a correct question, and Bett understands there is an answer, but it doesn't know the answer. Report the problem to Dr Bean.";
+        $c->stash->{error_msg} = "The question, '$question' was a correct question, and Bett understands there is an answer, but it is broken and it can't work out the answer. Report the problem to Dr Bean.";
         $c->stash->{unhandled} = $theanswer;
     }
 	elsif ( $course and $expectedcourse and ($expectedcourse ne 'Unparseable') and ($course ne $expectedcourse ) ) {
