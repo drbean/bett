@@ -185,7 +185,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
     }
 	elsif ( $course and $expectedcourse and ($expectedcourse ne 'Unparseable') and ($course ne $expectedcourse ) ) {
 			$c->stash->{error_msg} =
-"'$question' is not a $translate{$course}. It's a $translate{$expectedcourse}. Try again.";
+"'$question' is not a $translate{$course}. It's a $translate{$expectedcourse}.";
 			$c->stash->{wrongcourse} = $course;
 	}
     elsif ( $parsed eq '[]' ) {
@@ -195,7 +195,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 			# $c->stash( unknown => $unknown );
 		}
 		else {
-            $c->stash->{error_msg} = "'$question' is not grammatical. Try again.";
+            $c->stash->{error_msg} = "'$question' is not grammatical. You lose one grammar chance";
             $c->stash->{err} = "question";
             $grammatical = 'Unparseable';
 		}
@@ -207,7 +207,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
     }
     elsif ( @thewhanswers and not any { $_ eq $myanswer } @thewhanswers ) {
             $c->stash->{error_msg} =
-"The question, '$question' was grammatical, but '$myanswer' is not the answer, nor one of the answers to '$question'. " .
+"The question, '$question' was grammatical, but '$myanswer' is not the answer, nor one of the answers to '$question'. You lose one answer chance. " .
     "The answer(s) is/are: '$thewhanswers'.";
             $c->stash->{err} = "answer";
     }
@@ -218,7 +218,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 		my $Theanswer = ucfirst lc $THEANSWER;
 		my $Myanswer = ucfirst lc $MYANSWER;
             $c->stash->{error_msg} =
-"The question, '$question' was grammatical, but the answer to '$question' is not '$Myanswer,', it's '$Theanswer'. Try again.";
+"The question, '$question' was grammatical, but the answer to '$question' is not '$Myanswer,', it's '$Theanswer'.  You lose one answer chance.";
             $c->stash->{err} = "answer";
     }
 
@@ -257,7 +257,7 @@ sub question :Chained('evaluate') :PathPart('') :CaptureArgs(0) {
 		lexed => $c->stash->{lexed} || $oldquestion
 		});
 	if ( $question != 0 ) {
-		$c->stash->{error_msg} .= " But '$oldquestion' is already in the question database. Try again.";
+		$c->stash->{error_msg} .= " But '$oldquestion' is already in the question database.";
 		$c->stash->{oldquestion} = $question;
 	}
 	elsif ( not $c->stash->{unknown} and not $c->stash->{nothing} ) {
@@ -373,6 +373,7 @@ sub exchange :Chained('update') :PathPart('') :Args(0) {
 			);
 	$c->stash( report_params => \%report_params);
 	$c->stash->{ player => $c->session->{player_id} };
+	$c->stash->{error_msg} .= " Try again.";
 }
 
 =head1 AUTHOR
