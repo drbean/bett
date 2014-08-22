@@ -27,7 +27,7 @@
 </TEXTAREA>
 <TR><TD>Email address: <TD> <INPUT type="text" name="email" size="40">
 </TABLE>
-Include an email address if you want Dr Bean to respond to this error report.
+Include your email address if you want Dr Bean to respond to this error report.
 <BR>
 <INPUT type="submit" name="Submit" value="Submit">
 </FORM>
