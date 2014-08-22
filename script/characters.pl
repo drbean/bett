@@ -5,7 +5,6 @@ use warnings;
 use lib ( "lib", "/var/www/cgi-bin/bett/lib" );
 use FindBin '$Bin';
 
-use Config::General;
 use YAML qw/LoadFile/;
 use Bett::Model::DB;
 use Bett::Schema;
@@ -23,7 +22,7 @@ has 'story' => (
 
 package main;
 
-my %config = Config::General->new( "/var/www/cgi-bin/bett/bett.conf" )->getall;
+my $config = LoadFile "/var/www/cgi-bin/bett/bett.yaml";
 my $connect_info = Bett::Model::DB->config->{connect_info};
 my $schema = Bett::Schema->connect( $connect_info );
 
