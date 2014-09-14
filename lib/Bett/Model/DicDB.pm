@@ -7,7 +7,7 @@ use base 'Catalyst::Model::DBIC::Schema';
 # use Bett;
 
 # my $name = Bett->config->{dic_database};
-my $name = "dic022";
+my $name = "dic031";
 
 __PACKAGE__->config(
     schema_class => 'Bett::DicSchema',
