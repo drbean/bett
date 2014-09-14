@@ -1,36 +1,27 @@
 # rename this file to bett.yml and put a ':' after 'name' if
 # you want to use YAML like in old versions of Catalyst
-name Bett
+name: Bett
 
-database bett031
-dic_database dic031
-leagues /home/drbean/031
+database: bett031
+dic_database: dic031
 
-<WH>
-	win 5
-	<chances>
-		question 12
-		answer 8
-	</chances>
-</WH>
-<YN>
-	win 6
-	<chances>
-		question 9
-		answer 6
-	</chances>
-</YN>
-<Tag>
-	win 6
-	<chances>
-		question 9
-		answer 6
-	</chances>
-</Tag>
-<S>
-	win 6
-	<chances>
-		question 10
-		answer 4
-	</chances>
-</S>
+WH:
+  win: 5
+    chances:
+      question: 12
+      answer: 8
+YN:
+  win: 6
+    chances:
+      question: 9
+      answer: 6
+Tag:
+  win: 6
+    chances:
+      question: 9
+      answer: 6
+S:
+  win: 6
+    chances:
+      question: 10
+      answer: 4
