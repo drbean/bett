@@ -70,7 +70,7 @@ It is used to remove exercises. So be careful. But we support
 
 perl script/delete_exercise.pl careers 
 
-for sake of compatibility with counterpart in dic.
+for sake of compatibility with counterpart in Dic.
 
 =head1 AUTHOR
 
