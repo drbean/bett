@@ -7,21 +7,21 @@ dic_database: dic031
 
 WH:
   win: 5
-    chances:
-      question: 12
-      answer: 8
+  chances:
+    question: 12
+    answer: 8
 YN:
   win: 6
-    chances:
-      question: 9
-      answer: 6
+  chances:
+    question: 9
+    answer: 6
 Tag:
   win: 6
-    chances:
-      question: 9
-      answer: 6
+  chances:
+    question: 9
+    answer: 6
 S:
   win: 6
-    chances:
-      question: 10
-      answer: 4
+  chances:
+    question: 10
+    answer: 4
