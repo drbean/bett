@@ -24,7 +24,7 @@ has 'story' => (
 
 package main;
 
-my %config = Config::General->new( "/var/www/cgi-bin/bett/bett.conf" )->getall;
+my $config = LoadFile "/var/www/cgi-bin/bett/bett.yaml";
 my $connect_info = Bett::Model::DB->config->{connect_info};
 my $schema = Bett::Schema->connect( $connect_info );
 
