@@ -36,8 +36,8 @@ sub index :Path :Args(0) {
 				$c->stash->{id}   = $id;
 				$c->stash->{name} = $name;
 				$c->stash->{leagues} =
-				  [ $c->model('dicDB::League')->search( {} ) ];
-				my $jigsawroles = $c->model('dicDB::Jigsawrole');
+				  [ $c->model('DicDB::League')->search( {} ) ];
+				my $jigsawroles = $c->model('DicDB::Jigsawrole');
 				my $oldrole = $jigsawroles->search( { player => $id } )->next;
 				if ($oldrole) {
 					$c->stash->{oldrole} = $oldrole->role;
@@ -48,7 +48,7 @@ sub index :Path :Args(0) {
 				$c->stash->{template} = 'official.tt2';
 				return;
 			}
-			my @memberships = $c->model("dicDB::Member")->search
+			my @memberships = $c->model("DicDB::Member")->search
 				({player => $id});
 			my @leagues;
 			my $exercise = $c->session->{exercise} || $c->request->query_params
@@ -109,7 +109,7 @@ sub official : Local {
 			$c->session->{league} = $league;
 			$exercise = $c->forward( 'get_exercise', [ $league ] ) unless $exercise;
 			$c->session->{exercise} = $exercise if $exercise;
-			$c->model('dicDB::Jigsawrole')->update_or_create(
+			$c->model('DicDB::Jigsawrole')->update_or_create(
 				{	league => $league, player => $username,
 					role => $jigsawrole } ) if $jigsawrole;
 			$c->response->redirect($c->uri_for("/game"), 303);
