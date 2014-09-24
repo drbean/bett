@@ -6,17 +6,17 @@ database: bett031
 dic_database: dic031
 
 WH:
-  win: 5
+  win: 1
   chances:
     question: 12
     answer: 8
 YN:
-  win: 6
+  win: 1
   chances:
     question: 9
     answer: 6
 Tag:
-  win: 6
+  win: 1
   chances:
     question: 9
     answer: 6
