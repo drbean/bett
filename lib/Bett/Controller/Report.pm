@@ -58,7 +58,7 @@ sub email :Local {
 	header => [ 'Reply-To' => $email,
 			To       => "drbean\@sac.nuu.edu.tw",
 			From     => "greg\@nuu.edu.tw",
-			Subject  => "Bett $exercise Problem, $player: $question", ]
+			Subject  => "$exercise, $player: $question", ]
 	, body     => "
 Exercise      : $exercise
 Player        : $player
