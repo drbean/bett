@@ -56,9 +56,9 @@ sub email :Local {
 	$c->stash(exercise => $exercise);
 	$c->stash->{email} = {
 	header => [ 'Reply-To' => $email,
-			to       => "drbean\@sac.nuu.edu.tw",
-			from     => "greg\@nuu.edu.tw",
-			subject  => "Bett $exercise Problem, $player: $question", ]
+			To       => "drbean\@sac.nuu.edu.tw",
+			From     => "greg\@nuu.edu.tw",
+			Subject  => "Bett $exercise Problem, $player: $question", ]
 	, body     => "
 Exercise      : $exercise
 Player        : $player
