@@ -33,7 +33,7 @@ has 'description' => (
 
 package main;
 
-my %config = Config::General->new( "bett.conf" )->getall;
+my $config = LoadFile 'bett.yaml';
 my $connect_info = Bett::Model::DB->config->{connect_info};
 my $schema = Bett::Schema->connect( $connect_info );
 
