@@ -19,11 +19,6 @@ use Catalyst::Runtime 5.80;
 use Catalyst qw/
     ConfigLoader
 
- -Debug
- Static::Simple
- StackTrace
-
-
 	Authentication
 	Authorization::Roles
 
@@ -31,6 +26,12 @@ use Catalyst qw/
 	Session::Store::DBIC
 	Session::State::Cookie
 /;
+
+ # -Debug
+ # Static::Simple
+ # StackTrace
+
+
 
 extends 'Catalyst';
 
@@ -81,9 +82,9 @@ __PACKAGE__->config(
        sender => {
            mailer => 'Sendmail',
            mailer_args => {
-    	   Host     => 'mail.nuu.edu.tw',
-    	   username => 'greg',
-    	   password => '',
+    	   Host     => 'localhost',
+		   # username => 'greg',
+    	   # password => '',
        }
      }
 }
