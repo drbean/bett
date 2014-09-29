@@ -161,7 +161,7 @@ DB::Exercise code used by both membership, login actions
 
 sub get_exercise :Private {
 	my ($self, $c, $league) = @_;
-	my $leaguegenre = $c->model("DB::Leaguegenre")->search({league => $league})->next;
+	my $leaguegenre = $c->model("DicDB::Leaguegenre")->search({league => $league})->next;
 	my $genre = $leaguegenre->get_column('genre');
 	my $exercises = $c->model("DB::Exercise")->search({ genre =>
 			$genre });
