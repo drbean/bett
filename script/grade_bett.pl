@@ -7,7 +7,7 @@ use FindBin '$Bin';
 use Pod::Usage;
 
 use Config::General;
-use YAML qw/Bless Dump/;
+use YAML qw/Bless Dump LoadFile/;
 use List::Util qw/reduce/;
 use Moose::Autobox;
 use Bett::Model::DB;
@@ -40,7 +40,7 @@ has 'winner' => (
 
 package main;
 
-my %config = Config::General->new( "bett.conf" )->getall;
+my $config = LoadFile "bett.yaml";
 my $connect_info = Bett::Model::DB->config->{connect_info};
 my $schema = Bett::Schema->connect( $connect_info );
 
@@ -73,8 +73,8 @@ for my $course ( @courses ) {
 	my $class = $schema->resultset($course)->search({
 			league => $id, exercise => $exercise });
 	my $Course = $course eq 'Tag'? $course: uc $course;
-	my $config = $config{$Course};
-	my $answerchances = $config->{chances}->{answer};
+	my $course_config = $config->{$Course};
+	my $answerchances = $course_config->{chances}->{answer};
 	for my $player ( keys %members ) {
 		my $standing = $class->find({ player => $player });
 		my ( $score, $answerchancesleft, $questions ) = ( 0 ) x 3;
@@ -86,8 +86,8 @@ for my $course ( @courses ) {
 			$report->{points}->{$player}->{$course}->{questions} = $questions;
 			$report->{points}->{$player}->{$course}->{attempts} =
 				$standing->try;
-			my $grade = ($score >= $config->{win}) ?
-				'winner': (($questions >= $config->{win}) or
+			my $grade = ($score >= $course_config->{win}) ?
+				'winner': (($questions >= $course_config->{win}) or
 								($answerchancesleft <= 0) or
 									($standing->questionchance <= 0)) ?
 				'loser': ( $questions >= $report->{cutpoints}->{quitter} )?
@@ -95,7 +95,7 @@ for my $course ( @courses ) {
 				'non-starter';
 			push @{ $card->{$player} }, $grade;
 			$fullcourseqns{$player} += $standing->try;
-			if ( $fullcourseqns{$player} >= $config{YN}->{win} ) {
+			if ( $fullcourseqns{$player} >= $config->{YN}->{win} ) {
 				push @{ $card->{$player} }, "quitter";
 			}
 		}
