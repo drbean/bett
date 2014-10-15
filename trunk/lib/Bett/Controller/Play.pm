@@ -131,7 +131,7 @@ qx"echo \"$question\" | /var/www/cgi-bin/bett/bin/Transfer_$ex";
 		else {
 			$error = "No Transfer_$ex error";
 		}
-		$c->stash( lexed => $lexed || '');
+		$c->stash( lexed => $lexed || '[]');
 		$c->stash( unknown => $unknown || '');
 		$c->stash( question => $question || "No user question");
 		$c->stash( myanswer => $myanswer || "No user answer");
@@ -162,7 +162,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 	my $myanswer = $c->stash->{myanswer};
 	my $MYANSWER = uc $myanswer;
 	my ($thewhanswers, @thewhanswers);
-	my $grammatical = "Grammatical";
+	my $grammatical_test = "Grammatical";
 	if ( $expectedcourse eq 'WH' ) {
 		$thewhanswers = $theanswer;
 		@thewhanswers = split / , | or /, $theanswer;
@@ -175,10 +175,10 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 			"Enter a question and answer.";
 		$c->stash->{nothing} = 1;
 	}
-	elsif ( $theanswer eq "No answer" ) {
-        $c->stash->{error_msg} = "The question, '$question' was a correct question, but Bett doesn't know the answer. Report the problem to Dr Bean.";
-        $c->stash->{unhandled} = $theanswer;
-    }
+	#elsif ( $theanswer eq "No answer" ) {
+    #    $c->stash->{error_msg} = "The question, '$question' was a correct question, but Bett doesn't know the answer. Report the problem to Dr Bean.";
+    #    $c->stash->{unhandled} = $theanswer;
+    #}
 	elsif ( $theanswer =~ m/Transfer_\w+: .*$/ ) {
         $c->stash->{error_msg} = "The question, '$question' was a correct question, and Bett understands there is an answer, but it is broken and it can't work out the answer. Report the problem to Dr Bean.";
         $c->stash->{unhandled} = $theanswer;
@@ -192,12 +192,12 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 		if ( $unknown ) {
 			$unknown =~ tr/"/'/;
 			$c->stash->{error_msg} = "The question '$question' contained unknown words, $unknown. Use only the words from the list.";
-			# $c->stash( unknown => $unknown );
+			$c->stash( unknown => $unknown );
 		}
 		else {
             $c->stash->{error_msg} = "'$question' is not grammatical. You lose one grammar chance";
             $c->stash->{err} = "question";
-            $grammatical = 'Unparseable';
+            $grammatical_test = 'Unparseable';
 		}
 	}
     elsif ( @thewhanswers and any { $_ eq $myanswer } @thewhanswers ) {
@@ -236,7 +236,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 	else {
 		$c->stash->{error_msg} = "Bett is having problems. Please report the problem to Dr Bean. Expected course: $expectedcourse, answer: $theanswer,";
 	}
-	$c->stash->{grammatical} = $grammatical unless $unknown;
+	$c->stash->{grammatical} = $grammatical_test unless $unknown;
 }
 
 =head2 question
@@ -253,21 +253,25 @@ sub question :Chained('evaluate') :PathPart('') :CaptureArgs(0) {
 	my $oldquestion = $c->stash->{question};
 	my $grammatical = ( $c->stash->{grammatical} eq "Grammatical" ) ? 'True': 'False';
 	my $questions = $c->stash->{questions};
-	my $question = $questions->find({
-		lexed => $c->stash->{lexed} || $oldquestion
-		});
-	if ( $question != 0 ) {
-		$c->stash->{error_msg} .= " But '$oldquestion' is already in the question database.";
-		$c->stash->{oldquestion} = $question;
-	}
-	elsif ( not $c->stash->{unknown} and not $c->stash->{nothing} ) {
-		$questions->create({
-			lexed => $c->stash->{lexed} || $oldquestion,
-			quoted => $c->stash->{question},
-			course => $c->stash->{course},
-			player => $c->stash->{player},
-			grammatical => $grammatical,
-		});
+	my $parsed = $c->stash->{lexed};
+	my $dupe;
+	unless ( $parsed eq '[]' ) {
+		my $question = $questions->find({
+			lexed => $parsed
+			});
+		if ( $question != 0 ) {
+			$c->stash->{error_msg} .= " But '$oldquestion' is already in the question database.";
+			$c->stash->{oldquestion} = $question;
+		}
+		elsif ( not $c->stash->{unknown} and not $c->stash->{nothing} ) {
+			$questions->create({
+				lexed => $parsed,
+				quoted => $c->stash->{question},
+				course => $c->stash->{course},
+				player => $c->stash->{player},
+				grammatical => $grammatical,
+			});
+		}
 	}
 	$c->stash( questions => $questions );
 	
@@ -309,11 +313,11 @@ sub update :Chained('question') :PathPart('') :CaptureArgs(0) {
 				--$answers,
 			});
 	}
-	elsif ( $c->stash->{oldquestion} or $c->stash->{wrongcourse} )
+	elsif ( $unknown or $c->stash->{oldquestion} or $c->stash->{wrongcourse} )
 	{
 		$standing->update({ try => ++$tries });
 	}
-	elsif ( $c->stash->{lexed} ) {
+	elsif ( $c->stash->{lexed} ne '[]' ) {
 		$standing->update({
 			try => ++$tries,
 			score => ++$score,
@@ -358,6 +362,12 @@ sub exchange :Chained('update') :PathPart('') :Args(0) {
 	else {
 		$c->stash->{ config } = $c->config;
 		$c->stash->{ course } = $course;
+		my $rewrite_offer = "";
+		unless ( $c->stash->{question} eq "No user question"
+				or $c->stash->{grammatical} eq "Grammatical" ) {
+			$rewrite_offer = $c->stash->{question};
+		}
+		$c->stash->{ rewrite_offer } = $rewrite_offer;
 		$c->stash->{ template } = 'play.tt2';
 	}
 	my %report_params = (
