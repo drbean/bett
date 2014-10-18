@@ -257,7 +257,8 @@ sub question :Chained('evaluate') :PathPart('') :CaptureArgs(0) {
 	my $dupe;
 	my $db_question;
 	if ( $parsed eq '[]' ) {
-		$db_question = $questions->first({ quoted => $my_question });
+		$db_question = $questions->single({ quoted => $my_question });
+		$parsed = $my_question;
 	}
 	else {
 		$db_question = $questions->find({ lexed => $parsed });
