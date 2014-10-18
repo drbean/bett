@@ -250,28 +250,30 @@ sub question :Chained('evaluate') :PathPart('') :CaptureArgs(0) {
 	my $exercise= $c->stash->{exercise };
 	my $league= $c->stash->{ league };
 	my $course = $c->stash->{course};
-	my $oldquestion = $c->stash->{question};
+	my $my_question = $c->stash->{question};
 	my $grammatical = ( $c->stash->{grammatical} eq "Grammatical" ) ? 'True': 'False';
 	my $questions = $c->stash->{questions};
 	my $parsed = $c->stash->{lexed};
 	my $dupe;
-	unless ( $parsed eq '[]' ) {
-		my $question = $questions->find({
-			lexed => $parsed
-			});
-		if ( $question != 0 ) {
-			$c->stash->{error_msg} .= " But '$oldquestion' is already in the question database.";
-			$c->stash->{oldquestion} = $question;
-		}
-		elsif ( not $c->stash->{unknown} and not $c->stash->{nothing} ) {
-			$questions->create({
-				lexed => $parsed,
-				quoted => $c->stash->{question},
-				course => $c->stash->{course},
-				player => $c->stash->{player},
-				grammatical => $grammatical,
-			});
-		}
+	my $db_question;
+	if ( $parsed eq '[]' ) {
+		$db_question = $questions->first({ quoted => $my_question });
+	}
+	else {
+		$db_question = $questions->find({ lexed => $parsed });
+	}
+	if ( $db_question != 0 ) {
+		$c->stash->{error_msg} .= " But '$my_question' is already in the question database.";
+		$c->stash->{oldquestion} = $my_question;
+	}
+	elsif ( not $c->stash->{unknown} and not $c->stash->{nothing} ) {
+		$questions->create({
+			lexed => $parsed,
+			quoted => $c->stash->{question},
+			course => $c->stash->{course},
+			player => $c->stash->{player},
+			grammatical => $grammatical,
+		});
 	}
 	$c->stash( questions => $questions );
 	
