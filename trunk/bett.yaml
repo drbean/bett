@@ -2,8 +2,8 @@
 # you want to use YAML like in old versions of Catalyst
 name: Bett
 
-database: bett031
-dic_database: dic031
+database: bett032
+dic_database: dic032
 
 WH:
   win: 1
