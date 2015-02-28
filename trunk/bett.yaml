@@ -6,12 +6,12 @@ database: bett032
 dic_database: dic032
 
 WH:
-  win: 1
+  win: 2
   chances:
     question: 12
     answer: 8
 YN:
-  win: 1
+  win: 3
   chances:
     question: 9
     answer: 6
