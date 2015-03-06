@@ -19,18 +19,20 @@ And tell us what the answer to your question is.
 <ul>
 <li>Course 1: If you write [% config.WH.win %] correct WH-question(s) and you answer your question(s) correctly with the name of a person or thing, you are a WINNER.
 <li>Course 2: If you write [% config.YN.win %] correct YN-questions with the correct answers, either YES or NO, you are also a WINNER.
-<li>Course 3: If you write [% config.Tag.win %] correct tag questions with the correct answers, YES or NO, you are also a WINNER.
+<!-- <li>Course 3: If you write [% config.Tag.win %] correct tag questions with the correct answers, YES or NO, you are also a WINNER. -->
 </ul>
 
 Otherwise, you are a LOSER.
 
 <H3> Choose one course. </H3>
 
-[% Tagchances = config.Tag.chances.question + config.Tag.chances.answer %]
+<!-- [% Tagchances = config.Tag.chances.question + config.Tag.chances.answer %] -->
 [% YNchances = config.YN.chances.question + config.YN.chances.answer %]
 [% WHchances = config.WH.chances.question + config.WH.chances.answer %]
 
 In each course, you can only attempt to write a question a certain number of times. Read the details for Course 3, 2 and 1.
+
+<!--
 
 <ul>
 <li>In Course 3,
@@ -39,6 +41,8 @@ In each course, you can only attempt to write a question a certain number of tim
   <li>If however, an ANSWER is not correct (for example, you answered YES but the answer is NO), you get [% config.Tag.chances.answer %] more chance(s) to attempt another tag question.
   <li> So in Course 3, the questions are easier to write, but you have to write [% config.Tag.win %], a lot. Grammatical failure means you lose, and wrong answers are also penalized severely.
   </ul>
+
+-->
 
 <li>In Course 2,
   <ul>
@@ -59,7 +63,7 @@ In each course, you can only attempt to write a question a certain number of tim
 <ul>
 <li><a href="[% c.uri_for('/play/WH') %]">Course 1: WH-questions</a>
 <li><a href="[% c.uri_for('/play/YN') %]">Course 2: YN-questions</a>
-<li><a href="[% c.uri_for('/play/Tag') %]">Course 3: Tag questions</a>
+<!-- <li><a href="[% c.uri_for('/play/Tag') %]">Course 3: Tag questions</a> -->
 </ul>
 
 <h3>Details</h3>
