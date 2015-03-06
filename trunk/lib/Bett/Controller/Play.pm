@@ -250,7 +250,7 @@ sub question :Chained('evaluate') :PathPart('') :CaptureArgs(0) {
 	my $league= $c->stash->{ league };
 	my $course = $c->stash->{course};
 	my $my_question = $c->stash->{question};
-	my $grammatical = ( $c->stash->{grammatical} eq "Grammatical" ) ? 'True': 'False';
+	my $grammatical = ( $c->stash->{grammatical} eq "Grammatical" ) ? 1: 0;
 	my $questions = $c->stash->{questions};
 	my $parsed = $c->stash->{lexed};
 	my $dupe;
