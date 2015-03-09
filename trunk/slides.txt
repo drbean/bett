@@ -1,36 +1,8 @@
-# This is a sample Vroom input file. It should help you get started.
-#
-# Edit this file with your content. Then run `vroom --vroom` to start
-# the show!
-#
-# See `perldoc Vroom::Vroom` for complete details.
-#
----- config
-# Basic config options.
-title: Bett CompComp--Asking questions on the computer
-indent: 5
-height: 18
-width: 40
-skip: 0
+% Bett CompComp--Asking questions on the computer
+% Dr Bean
+% Mon Mar  9 15:16:16 CST 2015
 
-# The following options are for Gvim usage.
-# vim: gvim
-# fuopt: maxhorz,maxvert
-# guioptions: egmLtT
-# guicursor: a:blinkon0-ver25-Cursor
-# guifont: Bitstream_Vera_Sans_Mono:h18
-
----- center
-== Bett CompComp--Asking questions on the computer
-
-by Dr Bean
-
-Spring Semester, 2012
-
-(hint: press the spacebar to go forward, press Backspace to go back)
-
-----
-== Scoring of  Bett homework
+## Scoring of  Bett homework
 
 Winner                                      : 2
 (had 2 WH questions with correct answers, or
@@ -44,8 +16,7 @@ Loser                                       : 1
 Quitter                                     : 0
 (Was not a winner or loser)
 
-----
-== Error reports on Bett
+## Error reports on Bett
 
 Good example from student:
 
@@ -79,23 +50,20 @@ again.
 I would be very grateful if you looked into it for me.
 Thank you.
 
-----
-== CompComp on Bett
+## CompComp on Bett
 
 Queen Jackson
 
 http://web.nuu.edu.tw/~greg/DictationExercises.html
 
 
-----
-== Make sure you find the right page!
+## Make sure you find the right page!
 
 With your partner open 2 instances of the browser:
 
 http://web.nuu.edu.tw/~greg/conversation/bett/twoscreens.png
 
-----
-== Choose a course: WH, YN, or TF questions. Ask a question.
+## Choose a course: WH, YN, or TF questions. Ask a question.
 
 First, White types in a question in her/his
 screen. Then Black chooses the answer, and
@@ -114,8 +82,7 @@ Then it's Black's turn to ask a question in
 	his/her screen. White writes her/his answer
 	in Black's screen.
 
-----
-== Ask each other more than 7 questions each!
+## Ask each other more than 7 questions each!
 
 1-3 questions each: 1 and 3 points (or 3 & 1) to your grade, depending on who
 got most points.
@@ -124,8 +91,58 @@ got most points.
 7+ questions each: 3 and 5 points (or 5 & 3) to your grade, depending on who
 got most points.
 
-----
-== Write down the scores for each question on the Question Competition form
+## Write down the scores for each question on the Question Competition form
 
-----
-== The end of Bett CompComp instructions
+## Example questions from students {.allowframebreaks}
+
+Question                                              Error
+--------------------------------------------------  ---------------------------
+  Does Oliver study?                                  
+  Does Oliver study in Kainan University?             
+  Do you study everyday?                              Not in list
+  Is he happy?                                        
+  Is he humorous?                                     
+  Is he optimistic?                                   
+  Is he unhappy?                                      Not in list
+  Is Oliver a happy person?                           
+  Is Oliver an optimistic person?                     
+  Is Oliver's Chinese name Pan YanMin?                
+  Oliver is happy?                                    Not a question
+  Oliver's Chinese name in Pan YanMin, isn't it?      
+  Oliver's Chinese name is Pan YanMin, isn't it?      
+  Oliver's Chinese name is Pan YanMin, isnt' it?      Typo
+  Pan YanMin is whose Chinese name?                   
+  Was Oliver born in Taipei                           Not in list
+  Was Oliver born in Taipei?                          Not in list
+  Who has an older sister?                            
+  Who is the person who has an older sister?          
+  Who is the student whose has an older sister?       Ungrammatical, Not in list
+  Who loves listening to music?                       
+  Whose Chinese name is Pan YanMin?                   
+  Who studies in Kainan University?                   
+  Are he listening to music?                          Ungrammatical
+  Can he play baseball?                               Not in list
+  Can he play baseball/                               Not in list
+  Did Oliver born in Taipei?                          Not in list
+  Does his older sister have a mother?                
+  Does Oliver a happy person?                         Ungrammatical
+  Does Oliver a happy person fdsdf fdsdsf fdsds?      Typo
+  Does Oliver born in Taipei?                         Ungrammatical
+  Does Oliver happy?                                  Ungrammatical
+  Does Oliver have a Chinese name?                    
+  Does Oliver have a girlfriend?                      Not in list  
+  Does Oliver have a older sister?                    
+  Does Oliver have a sister?                          
+  Does Oliver is happy?                               Ungrammatical
+  Does Oliver like music?                             Not in list
+  Does Oliver like to listen to music?                Not in list
+  Does Oliver love his older sister?                  
+  Does Oliver love listening to music?                
+  Does Oliver's mother have a Chinese name?           
+  Does Oliver's older sister have a Chinese name?     
+  Does Oliver's older sister have a mother?           
+  Does Oliver studay?                                 Typo
+--------------------------------------------------  ---------------------------
+
+
+## The end of Bett CompComp instructions
