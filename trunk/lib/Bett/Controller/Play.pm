@@ -188,7 +188,6 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 			$c->stash->{wrongcourse} = $course;
 	}
     elsif ( $parsed eq '[]' ) {
-		$grammatical_test = 'Unparseable';
 		if ( $unknown ) {
 			$unknown =~ tr/"/'/;
 			$c->stash->{error_msg} = "The question '$question' perhaps contained unknown words. Are \"$unknown\" in the list? Use only the words from the list.";
@@ -197,6 +196,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 		else {
             $c->stash->{error_msg} = "'$question' is not grammatical. You lose one grammar chance";
             $c->stash->{err} = "question";
+            $grammatical_test = 'Unparseable';
 		}
 	}
     elsif ( @thewhanswers and any { $_ eq $myanswer } @thewhanswers ) {
@@ -235,7 +235,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 	else {
 		$c->stash->{error_msg} = "Bett is having problems. Please report the problem to Dr Bean. Expected course: $expectedcourse, answer: $theanswer,";
 	}
-	$c->stash->{grammatical} = $grammatical_test;
+	$c->stash->{grammatical} = $grammatical_test unless $unknown;
 }
 
 =head2 question
