@@ -73,6 +73,12 @@ for my $player ( keys %members ) {
 		{ columns => qw/quoted/,
 		distinct => 1 });
 	$report->{points}->{$player}->{tries} = $try;
+	if ( $try == 0 ) {
+		$report->{grade}->{$player} = 0;
+		$report->{points}->{$player}->{questions} = 0;
+		$report->{points}->{$player}->{answers} = 0;
+		next;
+	}
 	my $question = $schema->resultset('Question')->count({
 		league => $id,
 		exercise => $exercise,
@@ -80,7 +86,6 @@ for my $player ( keys %members ) {
 		grammatical => 1 });
 	$report->{points}->{$player}->{questions} = $question;
 	$card->{$player} = $try + $question;
-	my $answer;
 	for my $course ( @courses ) {
 		my $score;
 		my $work = $schema->resultset($course)->find({
@@ -99,12 +104,12 @@ for my $player ( keys %members ) {
 my $max_points = max values %$card;
 
 for my $member (keys %members) {
-	my $my_card = $card->{$member};
-	if ( $my_card eq 'no-show' ) {
-		$report->{grade}->{$member} = 0;
+	my $my_card = $report->{grade}->{$member};
+	if ( defined $my_card and $my_card == 0 ) {
+		next;
 	}
 	else {
-		$report->{grade}->{$member} = 60 + 40 * $my_card / $max_points;
+		$report->{grade}->{$member} = 60 + 40 * $card->{$member} / $max_points;
 	}
 }
 
