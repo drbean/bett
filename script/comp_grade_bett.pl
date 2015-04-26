@@ -110,7 +110,7 @@ for my $member (keys %members) {
 		next;
 	}
 	else {
-		$report->{grade}->{$member} = 60 + 40 * $card->{$member} / $max_points;
+		$report->{grade}->{$member} = 60 + 40 * log( $card->{$member} ) / log( $max_points );
 	}
 }
 
