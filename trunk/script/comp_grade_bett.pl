@@ -64,6 +64,9 @@ my $league = League->new( id => $leagueid );
 my $members = $league->members;
 my %members = map { $_->{id} => $_ } @$members;
 my ($report, $card);
+my $total = { question => 0, grammatical => 0, answer => 0
+			, total => 0, grade => 0 };
+my $n = scalar keys %members;
 $report->{exercise} = $exercise;
 for my $player ( keys %members ) {
 	my $try = $schema->resultset('Try')->count({
@@ -73,6 +76,7 @@ for my $player ( keys %members ) {
 		{ columns => qw/quoted/,
 		distinct => 1 });
 	$report->{points}->{$player}->{try} = $try;
+	$total->{question} += $try;
 	if ( $try == 0 ) {
 		$report->{points}->{$player}->{question} = 0;
 		$report->{points}->{$player}->{answer} = 0;
@@ -86,6 +90,7 @@ for my $player ( keys %members ) {
 		player => $player,
 		grammatical => 1 });
 	$report->{points}->{$player}->{question} = $question;
+	$total->{grammatical} += $question;
 	$card->{$player} = $try + $question;
 	for my $course ( @courses ) {
 		my $score;
@@ -95,11 +100,13 @@ for my $player ( keys %members ) {
 			, player => $player });
 		if ( $work != 0 ) {
 			$score = $work->get_column('score');
+			$total->{answer} += $score;
 		}
 		else { $score = 0; }
 		$report->{points}->{$player}->{answer} += $score;
 	}
 	$card->{$player} += $report->{points}->{$player}->{answer};
+	$total->{total} += $card->{$player};
 }
 
 my $max_points = max values %$card;
@@ -114,8 +121,14 @@ for my $member (keys %members) {
 	}
 }
 
+$total->{grade} = 60 + 40 * log ( $total->{total} ) / log ( $n * $max_points );
+
 print Dump $report;
 print "report: |+\n";
+
+STDOUT->autoflush;
+$^L='';
+
 format STDOUT_TOP =
   Player     Question Grammatical Answers   Total     Grade
 .
@@ -134,6 +147,26 @@ format STDOUT =
 
 	write;
 }
+
+$^='TOTAL_TOP';
+$~='TOTAL';
+$^L="\f";
+
+format TOTAL_TOP =
+  Class Totals
+             Question Grammatical Answers   Total     Grade
+.
+
+format TOTAL = 
+@<@<<<<<<<<<< @###      @####     @####     @####     @##
+{ "  ", "Total", $total->{question}
+	, $total->{grammatical}
+	, $total->{answer}
+	, $total->{total}
+	, $total->{grade}
+	}
+.
+write;
 
 =head1 NAME
 
