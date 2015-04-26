@@ -116,11 +116,9 @@ for my $member (keys %members) {
 
 print Dump $report;
 
-format STDOUT =
-@<<<<<<<<<< @|||||||| @|||||||| @|||||||| @|||||||| @||||||
-"# Player", "Question", "Grammatical", "Answers", "Total", "Grade"
+format STDOUT_TOP =
+ #Player   Question Grammatical Answers Total Grade
 .
-write;
 
 for my $member (sort keys %members) {
 
