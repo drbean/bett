@@ -114,17 +114,17 @@ for my $member (keys %members) {
 	}
 }
 
-my $yaml;
-open YAML, '>', \$yaml or die "No \$yaml?";
-format YAML_TOP =
+print Dump $report;
+print "report: |+\n";
+format STDOUT_TOP =
   Player   Question Grammatical Answers Total Grade
 .
 
 for my $member (sort keys %members) {
 
-format YAML = 
-@<<<<, @<<<<<<<<<< @###      @##       @##       @##       @##
-{ "    ", $member, $report->{points}->{$member}->{try}
+format STDOUT = 
+@< @<<<<<<<<<< @###      @##       @##       @##       @##
+{ "  ", $member, $report->{points}->{$member}->{try}
 	, $report->{points}->{$member}->{question}
 	, $report->{points}->{$member}->{answer}
 	, $card->{$member}
@@ -132,13 +132,8 @@ format YAML =
 	}
 .
 
-	write YAML;
+	write;
 }
-
-local $YAML::UseBlock = 1;
-local $YAML::UseFold = 1;
-$report->{report} = $yaml;
-print Dump $report;
 
 =head1 NAME
 
