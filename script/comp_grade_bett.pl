@@ -158,10 +158,8 @@ format TOTAL_TOP =
 .
 
 format TOTAL = 
-@<<<<<<<<<<<<<<
-"  Class Totals"
-             @<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
-             "Question Grammatical Answers   Total     Grade"
+  Class Totals
+             Question Grammatical Answers   Total     Grade
 @<@<<<<<<<<<< @###      @####     @####     @####     @##
 { "", "", $total->{question}
 	, $total->{grammatical}
