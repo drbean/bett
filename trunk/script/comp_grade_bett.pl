@@ -72,11 +72,12 @@ for my $player ( keys %members ) {
 		},
 		{ columns => qw/quoted/,
 		distinct => 1 });
-	$report->{points}->{$player}->{tries} = $try;
+	$report->{points}->{$player}->{try} = $try;
 	if ( $try == 0 ) {
+		$report->{points}->{$player}->{question} = 0;
+		$report->{points}->{$player}->{answer} = 0;
+		$card->{$player} = 0;
 		$report->{grade}->{$player} = 0;
-		$report->{points}->{$player}->{questions} = 0;
-		$report->{points}->{$player}->{answers} = 0;
 		next;
 	}
 	my $question = $schema->resultset('Question')->count({
@@ -84,7 +85,7 @@ for my $player ( keys %members ) {
 		exercise => $exercise,
 		player => $player,
 		grammatical => 1 });
-	$report->{points}->{$player}->{questions} = $question;
+	$report->{points}->{$player}->{question} = $question;
 	$card->{$player} = $try + $question;
 	for my $course ( @courses ) {
 		my $score;
@@ -96,9 +97,9 @@ for my $player ( keys %members ) {
 			$score = $work->get_column('score');
 		}
 		else { $score = 0; }
-		$report->{points}->{$player}->{answers} += $score;
+		$report->{points}->{$player}->{answer} += $score;
 	}
-	$card->{$player} += $report->{points}->{$player}->{answers};
+	$card->{$player} += $report->{points}->{$player}->{answer};
 }
 
 my $max_points = max values %$card;
@@ -114,6 +115,25 @@ for my $member (keys %members) {
 }
 
 print Dump $report;
+
+format STDOUT_TOP =
+# Player   Question Grammatical Answers Total Grade
+.
+
+for my $member (sort keys %members) {
+
+format STDOUT = 
+@<<<<<<<<<< @###      @##       @##       @##       @##
+{ "# $member", $report->{points}->{$member}->{try}
+	, $report->{points}->{$member}->{question}
+	, $report->{points}->{$member}->{answer}
+	, $card->{$member}
+	, $report->{grade}->{$member}
+	}
+.
+
+	write;
+}
 
 =head1 NAME
 
