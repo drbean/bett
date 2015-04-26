@@ -117,13 +117,13 @@ for my $member (keys %members) {
 print Dump $report;
 print "report: |+\n";
 format STDOUT_TOP =
-  Player   Question Grammatical Answers Total Grade
+  Player     Question Grammatical Answers   Total     Grade
 .
 
 for my $member (sort keys %members) {
 
 format STDOUT = 
-@< @<<<<<<<<<< @###      @##       @##       @##       @##
+@<@<<<<<<<<<< @###      @##       @##       @##       @##
 { "  ", $member, $report->{points}->{$member}->{try}
 	, $report->{points}->{$member}->{question}
 	, $report->{points}->{$member}->{answer}
@@ -152,6 +152,8 @@ t points for trying a (non-blank) question. g points for a grammatical question.
 The person with most points get a perfect midterm grade. Everyone who attends gets at least 60 percent. Non-attenders get zero.
 
 Output numbers of grammatically-correct questions, correct answers, questions attempted in the wh, yn and s courses.
+
+Append a report of players, question, grammatical, answer with format. This will include a linefeed (^L) which will need to be deleted.
 
 =head1 AUTHOR
 
