@@ -170,6 +170,8 @@ format TOTAL =
 .
 write;
 
+print Dump $report->{grade};
+
 =head1 NAME
 
 comp_grade_bett.pl - record results from bett DB competition
