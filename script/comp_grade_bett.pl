@@ -109,6 +109,7 @@ for my $player ( keys %members ) {
 	$total->{total} += $card->{$player};
 }
 
+my $avg_points = (sum values %$card) / $n;
 my $max_points = max values %$card;
 
 for my $member (keys %members) {
@@ -116,8 +117,14 @@ for my $member (keys %members) {
 	if ( defined $my_card and $my_card == 0 ) {
 		next;
 	}
+	elsif ( $card->{$member} > $avg_points ) {
+		$report->{grade}->{$member} = 80 + 20 * $card->{$member} / $max_points;
+	}
+	elsif ( $card->{$member} <= $avg_points ) {
+		$report->{grade}->{$member} = 60 + 20 * $card->{$member} / $avg_points;
+	}
 	else {
-		$report->{grade}->{$member} = 60 + 40 * log( $card->{$member} ) / log( $max_points );
+		die "No card.member, no report.grade.member?\n"; 
 	}
 }
 
