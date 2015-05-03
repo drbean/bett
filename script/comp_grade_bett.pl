@@ -109,26 +109,30 @@ for my $player ( keys %members ) {
 	$total->{total} += $card->{$player};
 }
 
-my $avg_points = (sum values %$card) / $n;
+my $median = (sort values %$card)[ $n/2 ];
 my $max_points = max values %$card;
+my $grade_sum = 0;
+my $participants = 0;
 
 for my $member (keys %members) {
 	my $my_card = $report->{grade}->{$member};
 	if ( defined $my_card and $my_card == 0 ) {
 		next;
 	}
-	elsif ( $card->{$member} > $avg_points ) {
-		$report->{grade}->{$member} = 80 + 20 * $card->{$member} / $max_points;
+	elsif ( $card->{$member} > $median ) {
+		$report->{grade}->{$member} = 80 + 20 * ($card->{$member} - $median) / ($max_points - $median);
 	}
-	elsif ( $card->{$member} <= $avg_points ) {
-		$report->{grade}->{$member} = 60 + 20 * $card->{$member} / $avg_points;
+	elsif ( $card->{$member} <= $median ) {
+		$report->{grade}->{$member} = 60 + 20 * $card->{$member} / $median;
 	}
 	else {
 		die "No card.member, no report.grade.member?\n"; 
 	}
+	$grade_sum += $report->{grade}->{$member};
+	$participants++;
 }
 
-$total->{grade} = 60 + 40 * log ( $total->{total} ) / log ( $n * $max_points );
+$total->{grade} = $grade_sum / $participants;
 
 print Dump $report;
 print "report: |+\n";
