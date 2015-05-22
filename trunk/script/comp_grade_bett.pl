@@ -197,7 +197,9 @@ SELECT * FROM {try,wh,yn,tag} WHERE league='FIA0034';
 
 t points for trying a (non-blank) question. g points for a grammatical question. r points for a grammatical question with a correct answer.
 
-The person with most points get a perfect midterm grade. Everyone who attends gets at least 60 percent. Non-attenders get zero.
+The person with most points get a perfect grade. Everyone who attends gets at least 60 percent. Non-attenders get zero.
+
+The median scorer gets 80 percent, which will prevent the high fliers depressing the low scorers' grades.
 
 Output numbers of grammatically-correct questions, correct answers, questions attempted in the wh, yn and s courses.
 
