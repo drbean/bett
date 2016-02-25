@@ -4,7 +4,6 @@ use strict;
 use warnings;
 use lib 'lib';
 
-use Config::General;
 use Cwd;
 use File::Spec;
 use List::MoreUtils qw/all/;
@@ -14,7 +13,7 @@ use Bett;
 use Bett::Model::DB;
 use Bett::Schema;
 
-my %config = Config::General->new( "bett.conf" )->getall;
+my $config = LoadFile "bett.yaml";
 my $connect_info = Bett::Model::DB->config->{connect_info};
 my $schema = Bett::Schema->connect( $connect_info );
 
@@ -34,7 +33,7 @@ my @leagueids = map $_->[0], @$leaguegenres[1..$#$leaguegenres];
 my ($leaguefile, $players);
 my $leagues = [ [ qw/id name field/ ] ];
 for my $league ( @leagueids ) {
-	$leaguefile = LoadFile "$config{leagues}/$league/league.yaml";
+	$leaguefile = LoadFile "$config->{leagues}/$league/league.yaml";
 	push @$leagues, [ $league, $leaguefile->{league}, $leaguefile->{field} ];
 	push @{$players->{$league}},
 		map {[ $_->{id}, $_->{Chinese}, $_->{password} ]}
