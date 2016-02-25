@@ -3,8 +3,8 @@
 name: Bett
 
 leagues: /home/drbean/042
-database: bett032
-dic_database: dic032
+database: bett042
+dic_database: dic042
 
 WH:
   win: 2
