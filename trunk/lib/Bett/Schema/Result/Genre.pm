@@ -29,7 +29,7 @@ __PACKAGE__->table("genre");
   is_auto_increment: 1
   is_nullable: 0
 
-=head2 genre
+=head2 value
 
   data_type: 'text'
   is_nullable: 1
