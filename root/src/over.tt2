@@ -8,6 +8,8 @@
 [% ELSE %]
 [% END %]
 
+<P><A HREF="[% c.uri_for('/report', report_params) %]">Report a problem</A>
+
 <h2>Record</h2>
 [% n = 0 %]
 [% FOREACH course IN [ WH, YN, Tag, S ] %]
