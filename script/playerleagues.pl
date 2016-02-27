@@ -20,6 +20,7 @@ my $schema = Bett::Schema->connect( $connect_info );
 my $leaguegenres = [
 			[ qw/league genre/ ],
 			[ "BMA0009",	4 ],
+			[ "FLA0003",	1 ],
 			[ "FLA0013",	1 ],
 			[ "FLA0019",	2 ],
 			[ "FLA0021",	9 ],
