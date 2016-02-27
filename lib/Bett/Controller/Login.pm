@@ -58,7 +58,7 @@ sub index :Path :Args(0) {
 			$c->session->{genre} = $genre;
 			for my $membership (@memberships) {
 				push @leagues, $membership->league if
-					$membership->league->genre->genre eq $genre;
+					$membership->league->leaguegenres->genre->value eq $genre;
 			}
 			if ( @leagues > 1 ) {
 				$c->stash->{id} = $id;
@@ -68,6 +68,10 @@ sub index :Path :Args(0) {
 				$c->stash(exercise => $exercise);
 				$c->stash->{template} = 'membership.tt2';
 				return;
+			}
+			elsif ( @leagues == 0 ) {
+				my $league = $memberships[0]->league->id;
+				$c->stash(error_msg => "$name, $id! No exercise can be found for $league in $genre. Start again, or contact Dr Bean.");
 			}
 			else {
 				my $league = $leagues[0]->id;
