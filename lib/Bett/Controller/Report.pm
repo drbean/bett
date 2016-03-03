@@ -99,7 +99,11 @@ Your email    : $email
 			#[{ quoted => "fdsfds", player => 'N9741065'}]);
 	my $win = $c->config->{$course}->{win};
 	$c->stash->{win} = $win;
-	if ( $standing->questionchance < 0 or 
+	unless ( $standing ) {
+		$c->stash->{ config } = $c->config;
+		$c->stash->{ template } = 'play.tt2';
+	}
+	elsif ( $standing->questionchance < 0 or 
 		$standing->answerchance < 0 ) {
 		$c->stash->{ template } = 'over.tt2';
 	}
