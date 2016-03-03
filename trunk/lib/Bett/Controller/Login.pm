@@ -53,6 +53,12 @@ sub index :Path :Args(0) {
 			my @leagues;
 			my $exercise = $c->session->{exercise} || $c->request->query_params
 					->{exercise};
+			unless ( $exercise ) {
+				my $league = $memberships[0]->league->id;
+				$c->stash(error_msg => "$name, $id! There is no exercise for the $league League. Start again from <a href=\"http://web.nuu.edu.tw/~greg/exercises.html\">http://web.nuu.edu.tw/~greg/exercises.html</a>, or contact Dr Bean. He probably made a mistake.");
+				$c->stash(template => 'login.tt2');
+				return;
+			}
 			my $genre = $c->model("DB::Exercise")->search( {id => $exercise })
 				->first->genre;
 			$c->session->{genre} = $genre;
@@ -71,7 +77,7 @@ sub index :Path :Args(0) {
 			}
 			elsif ( @leagues == 0 ) {
 				my $league = $memberships[0]->league->id;
-				$c->stash(error_msg => "$name, $id! No exercise can be found for $league in $genre. Start again, or contact Dr Bean.");
+				$c->stash(error_msg => "$name, $id! No $exercise exercise can be found for $league in $genre. Start again from <a href=\"http://web.nuu.edu.tw/~greg/exercises.html\">http://web.nuu.edu.tw/~greg/exercises.html</a>, or contact Dr Bean. He probably made a mistake.");
 			}
 			else {
 				my $league = $leagues[0]->id;
