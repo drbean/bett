@@ -178,10 +178,6 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
     #    $c->stash->{error_msg} = "The question, '$question' was a correct question, but Bett doesn't know the answer. Report the problem to Dr Bean.";
     #    $c->stash->{unhandled} = $theanswer;
     #}
-	elsif ( $theanswer =~ m/Transfer_\w+: .*$/ ) {
-        $c->stash->{error_msg} = "The question, '$question' was a correct question, and Bett understands there is an answer, but it is broken and it can't work out the answer. Report the problem to Dr Bean.";
-        $c->stash->{unhandled} = $theanswer;
-    }
 	elsif ( $course and $expectedcourse and ($expectedcourse ne 'Unparseable') and ($course ne $expectedcourse ) ) {
 			$c->stash->{error_msg} =
 "'$question' is not a $translate{$course}. It's a $translate{$expectedcourse}.";
@@ -202,6 +198,10 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 	elsif ( $myanswer ) {
 		  $c->stash->{status_msg} = "The question, '$question' was a grammatical question."
 	}
+	elsif ( $theanswer =~ m/Transfer_\w+: .*$/ ) {
+        $c->stash->{error_msg} = "The question, '$question' was a correct question."; #, and Bett understands there is an answer, but it is broken and it can't work out the answer. Report the problem to Dr Bean.";
+        $c->stash->{unhandled} = $theanswer;
+    }
 	#elsif ( @thewhanswers and any { $_ eq $myanswer } @thewhanswers ) {
     #        $c->stash->{status_msg} = "'$myanswer' is a correct answer to '$question'. " .
     #"The full list of correct answers is: '$thewhanswers'.";
