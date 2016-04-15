@@ -1,4 +1,4 @@
-[% META title = "Game over" %]
+[% META title = "Homework complete" %]
 
 [% coursename = [ "WH", "YN", "Tag", "TF"] %]
 [% IF result == "win" %]
