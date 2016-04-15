@@ -392,7 +392,7 @@ sub exchange :Chained('update') :PathPart('') :Args(0) {
 			);
 	$c->stash( report_params => \%report_params);
 	$c->stash->{ player => $c->session->{player_id} };
-	$c->stash->{error_msg} .= " Try another one.";
+	$c->stash->{error_msg} .= " Try another one." unless $c->stash->{gameover};
 }
 
 =head1 AUTHOR
