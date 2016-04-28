@@ -7,17 +7,17 @@ database: bett042
 dic_database: dic042
 
 WH:
-  win: 2
+  win: 3
   chances:
     question: 12
     answer: 8
 YN:
-  win: 3
+  win: 4
   chances:
     question: 9
     answer: 6
 Tag:
-  win: 1
+  win: 3
   chances:
     question: 9
     answer: 6
