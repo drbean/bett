@@ -25,7 +25,7 @@ main = do
 	let characters = unwords ( map ((++) "<TR><TD>") pnwords)
 
 	ids <- mapM snd gfWords
-	let words = map showCId (nub . concat ids)
+	let words = map showCId (concat ids)
 
 	let pos = map fst gfWords
 	let tuples = zip pos ids
@@ -36,7 +36,7 @@ main = do
 
 	let sortedwords = unlines $ map (
 		\i -> unwords $ ["<TR><TD>" ++ (toUpper i) : ":" ++ "<TD>" ] ++
-		[ quoteWords (l:ls) | (l:ls) <- words, i==l ]
+		[ quoteWords (l:ls) | (l:ls) <- nub words, i==l ]
 		) ('\'' : ['a'..'z'])
 
 	putStrLn "<UL>"
