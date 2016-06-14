@@ -1,6 +1,7 @@
 import WordsCharacters
 import PGF
 import Data.Char
+import Data.List
 import Control.Monad
 import Data.Maybe
 
@@ -24,7 +25,7 @@ main = do
 	let characters = unwords ( map ((++) "<TR><TD>") pnwords)
 
 	ids <- mapM snd gfWords
-	let words = map showCId (concat ids)
+	let words = map showCId (nub . concat ids)
 
 	let pos = map fst gfWords
 	let tuples = zip pos ids
