@@ -2,9 +2,9 @@
 # you want to use YAML like in old versions of Catalyst
 name: Bett
 
-leagues: /home/drbean/042
-database: bett042
-dic_database: dic042
+leagues: /home/drbean/051
+database: bett051
+dic_database: dic051
 
 WH:
   win: 3
