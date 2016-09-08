@@ -1,4 +1,4 @@
-package Dic::Schema::Jigsawrole;
+package Bett::Schema::Result::Jigsawrole;
 
 use strict;
 use warnings;
@@ -6,7 +6,7 @@ use warnings;
 use base 'DBIx::Class';
 
 __PACKAGE__->load_components("Core");
-__PACKAGE__->table("jigsawroles");
+__PACKAGE__->table("jigsawrole");
 __PACKAGE__->add_columns(
   "league",
   { data_type => "VARCHAR", is_nullable => 0, size => 15 },
@@ -30,9 +30,9 @@ __PACKAGE__->set_primary_key("league", "player");
 #     1) Name of relationship, DBIC will create accessor with this name
 #     2) Name of the model class referenced by this relationship
 #     3) Column name in *this* table
-__PACKAGE__->belongs_to(league => 'Dic::Schema::League', 'league');
-__PACKAGE__->belongs_to(player => 'Dic::Schema::Player', 'player');
-# __PACKAGE__->belongs_to(role => 'Dic::Schema::Role', 'role');
+__PACKAGE__->belongs_to(league => 'Bett::Schema::Result::League', 'league');
+__PACKAGE__->belongs_to(player => 'Bett::Schema::Result::Player', 'player');
+# __PACKAGE__->belongs_to(role => 'Bett::Schema::Result::Role', 'role');
 
 # has_many():
 #   args:
