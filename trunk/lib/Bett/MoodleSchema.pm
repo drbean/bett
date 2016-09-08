@@ -8,7 +8,7 @@ use lib "/home/drbean/moodle/db/trunk/lib";
 use base 'DBIx::Class::Schema';
 
 __PACKAGE__->load_namespaces(
-	result_namespace => '+Moodle::Schema'
+	result_namespace => '+DB::Schema'
 	);
 
 
