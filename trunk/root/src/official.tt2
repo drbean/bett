@@ -1,6 +1,6 @@
 [% META title = 'Official' %]
 
-[% name %], [% id %]! You are an official. Which league are you organizing here?
+[% username %], [% id %]! You are an official. Which league are you organizing here?
 
 <!-- Official's form -->
 <form method="post" action=" [% c.uri_for('/login/official') %] ">

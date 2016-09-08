@@ -23,7 +23,7 @@ Catalyst Controller.
 
 sub index :Path :Args(0) {
 	my ( $self, $c ) = @_;
-	my $name = $c->request->params->{name};
+	my $username = $c->request->params->{username};
 	my $id = $c->request->params->{id};
 	my $password = lc $c->request->params->{password};
 	my $exercise = $c->request->params->{exercise};
@@ -34,7 +34,7 @@ sub index :Path :Args(0) {
 			my $officialrole = 1;
 			if ( $c->check_user_roles($officialrole) ) {
 				$c->stash->{id}   = $id;
-				$c->stash->{name} = $name;
+				$c->stash->{username} = $username;
 				$c->stash->{leagues} =
 				  [ $c->model('DB::League')->search( {} ) ];
 				my $jigsawroles = $c->model('DB::Jigsawrole');
@@ -55,7 +55,7 @@ sub index :Path :Args(0) {
 					->{exercise};
 			unless ( $exercise ) {
 				my $league = $memberships[0]->league->id;
-				$c->stash(error_msg => "$name, $id! There is no exercise for the $league League. Start again from <a href=\"http://web.nuu.edu.tw/~greg/exercises.html\">http://web.nuu.edu.tw/~greg/exercises.html</a>, or contact Dr Bean. He probably made a mistake.");
+				$c->stash(error_msg => "$username, $id! There is no exercise for the $league League. Start again from <a href=\"http://web.nuu.edu.tw/~greg/exercises.html\">http://web.nuu.edu.tw/~greg/exercises.html</a>, or contact Dr Bean. He probably made a mistake.");
 				$c->stash(template => 'login.tt2');
 				return;
 			}
@@ -68,7 +68,7 @@ sub index :Path :Args(0) {
 			}
 			if ( @leagues > 1 ) {
 				$c->stash->{id} = $id;
-				$c->stash->{username} = $name;
+				$c->stash->{username} = $username;
 				$c->stash->{leagues} = \@leagues;
 				$c->session->{exercise} = $exercise if $exercise;
 				$c->stash(exercise => $exercise);
@@ -77,7 +77,7 @@ sub index :Path :Args(0) {
 			}
 			elsif ( @leagues == 0 ) {
 				my $league = $memberships[0]->league->id;
-				$c->stash(error_msg => "$name, $id! No $exercise exercise can be found for $league in $genre. Start again from <a href=\"http://web.nuu.edu.tw/~greg/exercises.html\">http://web.nuu.edu.tw/~greg/exercises.html</a>, or contact Dr Bean. He probably made a mistake.");
+				$c->stash(error_msg => "$username, $id! No $exercise exercise can be found for $league in $genre. Start again from <a href=\"http://web.nuu.edu.tw/~greg/exercises.html\">http://web.nuu.edu.tw/~greg/exercises.html</a>, or contact Dr Bean. He probably made a mistake.");
 			}
 			else {
 				my $league = $leagues[0]->id;
