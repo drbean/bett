@@ -76,13 +76,13 @@ __PACKAGE__->has_many(
 
 =head2 leaguegenres
 
-Type: belongs_to
+Type: has_one
 
 Related object: L<Bett::Schema::Result::Leaguegenre>
 
 =cut
 
-__PACKAGE__->belongs_to(
+__PACKAGE__->has_one(
   "leaguegenres",
   "Bett::Schema::Result::Leaguegenre",
   { "foreign.league" => "self.id" },
