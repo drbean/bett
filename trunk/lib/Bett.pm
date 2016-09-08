@@ -19,6 +19,12 @@ use Catalyst::Runtime 5.80;
 use Catalyst qw/
     ConfigLoader
 
+ -Debug
+ Static::Simple
+ StackTrace
+
+
+
 	Authentication
 	Authorization::Roles
 
@@ -26,12 +32,6 @@ use Catalyst qw/
 	Session::Store::DBIC
 	Session::State::Cookie
 /;
-
- # -Debug
- # Static::Simple
- # StackTrace
-
-
 
 extends 'Catalyst';
 
