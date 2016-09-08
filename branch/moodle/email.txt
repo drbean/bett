@@ -1,0 +1,32 @@
+The third set of grammar homework is now up. Make questions about Mindy, Kelly, Neil, Shane and Dave. Please try to look at the site, connected from http://sac.nuu.edu.tw/AFN3Y0.html before Friday.
+
+Many of your tag questions were grammatical, but Bett said they were ungrammatical. This happened if there was no auxiliary verb, like 'was.'
+
+Look at this list (I changed the old names to the new names):
+
+	"Kelly had sisters, didn't she?"
+	"Mindy liked playing_the_piano, didn't she?"
+	"Neil was a design_assistant, wasn't he?"
+	"Neil lived in Hsinchu, didn't he?"
+	"Mindy was born in Nantou, wasn't she?"
+	"Mi_mi was Dave 's cat, wasn't it?"
+	"Shane 's father was a truck_driver, wasn't he?"
+	"Neil was born in Hukou, wasn't he?"
+	"Neil liked jogging, didn't he?"
+	"Shane was born in Hukou, wasn't he?"
+	"Shane 's mother was a career_woman, wasn't she?"
+	"Shane 's grandmother was a farmer, wasn't she?"
+	"Dave liked cats, didn't she?"
+	"Mindy had sisters, didn't she?"
+	"Mindy did have sisters, didn't she?"
+	"Mindy didn't have sisters, did she?"
+
+But no one contacted me about these bugs in Bett, so I'm not going to give you credit. Please tell me if you think your question is grammatical, or your answer is correct, but Bett says they aren't.
+
+You can try to ask the same questions you asked last week about the new people.
+
+Remember that questions must be in the past tense.
+
+Remember also, that if something was not mentioned in the video, then it can be assumed that answers to questions about that thing are No. So, Mindy was born in Hsinchu, but doesn't live in Hsinchu. Kelly likes to play the piano, but doesn't like listening to music.
+
+I have not received error reports. Please take the time to mention anything which doesn't seem right to you. For example, 'Who was the student who had a cat,' has an answer. But 'Whose grandmother was a farmer?' doesn't have an answer and 'Who was the student whose grandmother was a farmer,' doesn't either. You are going to find problems with the app. Please help me by pointing out wrong answers. You can contact me by using the web form on the app.

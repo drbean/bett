@@ -1,0 +1,27 @@
+[% META title = "Questions in database" %]
+
+<H2>Questions from [% league %] League players in the [% exercise %] exercise.</H2>
+
+[% n = 1 %]
+<table>
+<caption><H3>Grammatical questions</H3></caption>
+<tr>
+<th> Number <td> Question <td> Player
+[% FOREACH question IN goodqn %]
+<tr>
+<th>[% n %] <td>[% question.quoted %] <td>[% question.player %]
+[% n = n+1 %]
+[% END %]
+</table>
+
+[% n = 1 %]
+<table>
+<caption><H3>Ungrammatical questions</H3></caption>
+<tr>
+<th> Number <td> Question <td> Player
+[% FOREACH question IN badqn %]
+<tr>
+<th>[% n %] <td>[% question.quoted %] <td>[% question.player %]
+[% n = n+1 %]
+[% END %]
+</table>
