@@ -4,7 +4,7 @@ name: Bett
 
 leagues: /home/drbean/051
 database: bett051
-dic_database: dic051
+moodle_database: mood
 
 WH:
   win: 3
