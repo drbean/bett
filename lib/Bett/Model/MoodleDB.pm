@@ -13,7 +13,7 @@ __PACKAGE__->config(
     schema_class => 'Bett::MoodleSchema',
     connect_info => {
         dsn => "dbi:Pg:dbname=$name;port=5433",
-        user => 'apache',
+        user => '',
         password => '',
     }
 );
