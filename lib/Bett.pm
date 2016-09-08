@@ -53,11 +53,22 @@ __PACKAGE__->config(
 );
 
 __PACKAGE__->config->{'Plugin::Authentication'} = {
-   default => {
-       class           => 'SimpleDB',
-       user_model      => 'MoodleDB::Result::MdlUser',
-       password_type   => 'hashed',
-   },
+	default_realm => 'dbic',
+	realms => {
+		dbic => {
+			credential => {
+				class => 'Password',
+				password_field => 'password',
+				password_type => 'clear'
+			},
+			store => {
+				class => 'DBIx::Class',
+				user_model => 'DB::Player',
+				role_relation => 'getrole',
+				role_field => 'id',
+			}
+		}
+	}
 };
 
 __PACKAGE__->config->{'Plugin::Session'} = {
