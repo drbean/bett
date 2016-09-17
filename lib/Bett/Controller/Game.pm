@@ -69,7 +69,7 @@ sub setup :Chained('/') :PathPart('game') :CaptureArgs(0) {
 
 =cut
 
-sub wordschars :Chained('setup') :PathPart('') :CaptureArgs(0) {
+sub wordscharssentences :Chained('setup') :PathPart('') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 	my $exercise = $c->stash->{exercise};
 	my @chars = $c->model('DB::Character')->
@@ -79,13 +79,16 @@ sub wordschars :Chained('setup') :PathPart('') :CaptureArgs(0) {
 	$c->stash(words => 
 		$c->model('DB::Word')->find(
 		{exercise => $exercise})->string );
+	$c->stash(sentences => 
+		$c->model('DB::Sentence')->find(
+		{exercise => $exercise})->string );
 }
 
 =head2 exchange
 
 =cut
 
-sub exchange :Chained('wordschars') :PathPart('') :Args(0) {
+sub exchange :Chained('wordscharssentences') :PathPart('') :Args(0) {
     my ( $self, $c ) = @_;
     $c->stash( config => $c->config );
     $c->stash( template => 'game.tt2' );
