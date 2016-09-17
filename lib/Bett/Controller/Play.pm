@@ -33,7 +33,7 @@ Catalyst Controller.
 
 =head2 setup
 
-Session and WH, YN, Tag standing.
+Session and WH, YN, Tag, S standing.
 
 =cut
 
@@ -43,7 +43,7 @@ sub setup :Chained('/') :PathPart('play') :CaptureArgs(1) {
 	my $league = $c->session->{league};
 	my $exercise = $c->session->{exercise};
 	my $gameover;
-	for my $allcourse ( 'WH', 'YN', 'Tag' ) {
+	for my $allcourse ( 'WH', 'YN', 'Tag', 'S' ) {
 		my $standing = $c->model("DB::$allcourse")
 			->find({ player => $player,
 			exercise => $exercise,
@@ -113,30 +113,17 @@ sub try :Chained('wordschars') :PathPart('') :CaptureArgs(0) {
 			});
 		my $check =
 qx"echo \"$question\" | /var/www/cgi-bin/bett/bin/Transfer_$ex";
-		my ($unknown, $lexed, $theanswer, $expectedcourse, $error) =
+		my ($unknown, $parsed) =
 						(split /\n/, $check); 
+		$parsed =~ s/^Parsed: (.*)$/$1/;
 		$unknown =~ s/^Unknown_words: (.*)$/$1/;
-		$lexed =~ s/^Parsed: (.*)$/$1/;
-		$theanswer =~ s/^Answer: (.*)$/$1/;
-		if ( $expectedcourse ) {
-			$expectedcourse =~ s/^Course: (.*)$/$1/;
-		}
-		else {
-			$expectedcourse = "No expected course";
-		}
-		if ( $error ) {
-			$error = s/Transfer_$ex*: \w*.hs:(\d+,\d+)-(\d+,\d+): (.*)$/$1/;
-		}
-		else {
-			$error = "No Transfer_$ex error";
-		}
-		$c->stash( lexed => $lexed || '[]');
+		my ( $expectedcourse, $theanswer) = ( "S", "Unknown" );
+		$c->stash( parsed => $parsed || '');
 		$c->stash( unknown => $unknown || '');
-		$c->stash( question => $question || "No user question");
-		$c->stash( myanswer => $myanswer || "No user answer");
-		$c->stash( theanswer => $theanswer || "No Transfer_$ex answer");
+		$c->stash( question => $question );
+		$c->stash( myanswer => $myanswer );
+		$c->stash( theanswer => $theanswer );
 		$c->stash( expectedcourse => $expectedcourse );
-		$c->stash( error => $error );
 	}
 }
 
@@ -153,96 +140,42 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 		S	=> 'Sentence (True-False question)' );
 	my $course = $c->stash->{course};
 	my $expectedcourse = $c->stash->{expectedcourse};
-	my $parsed = $c->stash->{lexed};
+	my $parsed = $c->stash->{parsed};
 	my $unknown = $c->stash->{unknown};
 	my $question = $c->stash->{question};
 	my $theanswer = $c->stash->{theanswer};
-	my $THEANSWER = uc $theanswer;
 	my $myanswer = $c->stash->{myanswer};
-	my $MYANSWER = uc $myanswer;
 	my ($thewhanswers, @thewhanswers);
-	my $grammatical_test = "Grammatical";
 	if ( $expectedcourse eq 'WH' ) {
 		$thewhanswers = $theanswer;
-		@thewhanswers = split / , | or /, $theanswer;
+		@thewhanswers = split / /, $theanswer;
 		$myanswer =~ s/_/ /g;
 		s/_/ /g for @thewhanswers;
 	}
-	if ( $question eq "No user question" )
+	if ( $question eq '' )
 	{
 		$c->stash->{error_msg} =
 			"Enter a question and answer.";
 		$c->stash->{nothing} = 1;
 	}
-	#elsif ( $theanswer eq "No answer" ) {
-    #    $c->stash->{error_msg} = "The question, '$question' was a correct question, but Bett doesn't know the answer. Report the problem to Dr Bean.";
-    #    $c->stash->{unhandled} = $theanswer;
-    #}
-	elsif ( $parsed ne '[]' ) {
-		  $c->stash->{status_msg} = "The question, '$question' was a grammatical question.";
-		$c->stash( unknown => '' );
+	elsif ( $parsed ) {
+		$c->stash->{status_msg} = "The question, '$question' was a grammatical question.";
+		# $c->stash( unknown => 'No illegal words' );
 	}
-	#elsif ( $theanswer =~ m/Transfer_\w+: .*$/ ) {
-    #    $c->stash->{error_msg} = "The question, '$question' was a correct question."; # and Bett understands there is an answer, but it is broken and it can't work out the answer. Report the problem to Dr Bean.";
-    #    $c->stash->{unhandled} = $theanswer;
-    #}
-	elsif ( $course and $expectedcourse and ($expectedcourse ne 'Unparseable') and ($course ne $expectedcourse ) ) {
-			$c->stash->{error_msg} =
-"'$question' is not a $translate{$course}. It's a $translate{$expectedcourse}.";
-			$c->stash->{wrongcourse} = $course;
+	elsif ( $unknown ) {
+		$unknown =~ tr/"/'/;
+		$c->stash->{error_msg} = "The question '$question' contained unknown words. Use only the words from the list.";
+		# $c->stash( unknown => $unknown );
 	}
-    elsif ( $parsed eq '[]' ) {
-		if ( $unknown ) {
-			$unknown =~ tr/"/'/;
-			$c->stash->{error_msg} = "The question '$question' contained unknown words. \"$unknown\" are not in the list. Use only the words from the list.";
-			$c->stash( unknown => $unknown );
-		}
-		else {
-            $c->stash->{error_msg} = "'$question' is not grammatical. You lose one grammar chance";
-            $c->stash->{err} = "question";
-            $grammatical_test = 'Unparseable';
-		}
+	elsif ( not $parsed and not $unknown ) {
+		$c->stash->{error_msg} = "'$question' is not grammatical. Try again.";
+		$c->stash( err => "question" );
+		# $c->stash( unknown => 'No illegal words' );
+		# $c->stash( parsed => 'No parse' );
 	}
-	elsif ( $myanswer ) {
-		  $c->stash->{status_msg} = "The question, '$question' was a grammatical question."
-	}
-	#elsif ( @thewhanswers and any { $_ eq $myanswer } @thewhanswers ) {
-    #        $c->stash->{status_msg} = "'$myanswer' is a correct answer to '$question'. " .
-    #"The full list of correct answers is: '$thewhanswers'.";
-    #        $c->stash->{thewhanswers} = \@thewhanswers;
-    #}
-    #elsif ( @thewhanswers and not any { $_ eq $myanswer } @thewhanswers ) {
-    #        $c->stash->{error_msg} =
-	#	"The question, '$question' was grammatical, but '$myanswer' is not the answer, nor one of the answers to '$question'. You lose one answer chance. " .
-	#		"The answer(s) is/are: '$thewhanswers'.";
-    #        $c->stash->{err} = "answer";
-    #}
-    #elsif ( $MYANSWER eq $THEANSWER ) {
-    #          $c->stash->{status_msg} = "The question, '$question' was a grammatical question, and your answer, $myanswer was the correct answer to that question."
-	#}
-    #elsif ( $THEANSWER and $MYANSWER ne $THEANSWER ) {
-	#	my $Theanswer = ucfirst lc $THEANSWER;
-	#	my $Myanswer = ucfirst lc $MYANSWER;
-    #        $c->stash->{error_msg} =
-	#	"The question, '$question' was grammatical, but the answer to '$question' is not '$Myanswer,', it's '$Theanswer'.  You lose one answer chance.";
-    #        $c->stash->{err} = "answer";
-    #}
-
-
-	#elsif ( $parsed ) {
-	#	$c->stash->{status_msg} = "The question, '$question' was a grammatical question.";
-	#	# $c->stash( unknown => 'No illegal words' );
-	#}
-	#elsif ( not $parsed and not $unknown ) {
-	#	$c->stash->{error_msg} = "'$question' is not grammatical. Try another one.";
-	#	$c->stash( err => "question" );
-	#	# $c->stash( unknown => 'No illegal words' );
-	#	# $c->stash( parsed => 'No parse' );
-	#}
 	else {
 		$c->stash->{error_msg} = "Bett is having problems. Please report the problem to Dr Bean. Expected course: $expectedcourse, answer: $theanswer,";
 	}
-	$c->stash->{grammatical} = $grammatical_test unless $unknown;
 }
 
 =head2 question
@@ -256,26 +189,19 @@ sub question :Chained('evaluate') :PathPart('') :CaptureArgs(0) {
 	my $exercise= $c->stash->{exercise };
 	my $league= $c->stash->{ league };
 	my $course = $c->stash->{course};
-	my $my_question = $c->stash->{question};
-	my $grammatical = ( $c->stash->{grammatical} eq "Grammatical" ) ? 1: 0;
+	my $oldquestion = $c->stash->{question};
+	my $grammatical = $c->stash->{parsed} ? 1: 0;
 	my $questions = $c->stash->{questions};
-	my $parsed = $c->stash->{lexed};
-	my $dupe;
-	my $db_question;
-	if ( $parsed eq '[]' ) {
-		$db_question = $questions->single({ quoted => $my_question });
+	my $question = $questions->find({
+		lexed => $c->stash->{parsed} || $oldquestion
+		});
+	if ( $question ) {
+		$c->stash->{error_msg} .= " But '$oldquestion' is already in the question database. Try again.";
+		$c->stash->{oldquestion} = $question;
 	}
 	else {
-		$db_question = $questions->find({ lexed => $parsed });
-	}
-	if ( $db_question != 0 ) {
-		$c->stash->{error_msg} .= " But '$my_question' is already in the question database.";
-		$c->stash->{oldquestion} = $my_question;
-	}
-	elsif ( ($parsed ne '[]') or (($parsed eq '[]') and not ($c->stash->{unknown} or $c->stash->{nothing}) ) ) {
-		$parsed = $my_question if $parsed eq '[]';
 		$questions->create({
-			lexed => $parsed,
+			lexed => $c->stash->{parsed} || $oldquestion,
 			quoted => $c->stash->{question},
 			course => $c->stash->{course},
 			player => $c->stash->{player},
@@ -322,11 +248,11 @@ sub update :Chained('question') :PathPart('') :CaptureArgs(0) {
 				--$answers,
 			});
 	}
-	elsif ( $unknown or $c->stash->{oldquestion} or $c->stash->{wrongcourse} )
+	elsif ( $c->stash->{oldquestion} or $c->stash->{wrongcourse} )
 	{
 		$standing->update({ try => ++$tries });
 	}
-	elsif ( $c->stash->{lexed} ne '[]' ) {
+	elsif ( $c->stash->{parsed} ) {
 		$standing->update({
 			try => ++$tries,
 			score => ++$score,
@@ -371,28 +297,12 @@ sub exchange :Chained('update') :PathPart('') :Args(0) {
 	else {
 		$c->stash->{ config } = $c->config;
 		$c->stash->{ course } = $course;
-		my $rewrite_offer = "";
-		unless ( $c->stash->{question} eq "No user question"
-				or $c->stash->{grammatical} eq "Grammatical" ) {
-			$rewrite_offer = $c->stash->{question};
-		}
-		$c->stash->{ rewrite_offer } = $rewrite_offer;
 		$c->stash->{ template } = 'play.tt2';
 	}
-	my %report_params = (
-		course	=> $course || "No course",
-		question	=> $c->stash->{ question } || "No question",
-		theanswer	=> $c->stash->{ theanswer } || "No theanswer",
-		myanswer	=> $c->stash->{ myanswer } || "No myanswer",
-		expectedcourse		=> $c->stash->{ expectedcourse },
-		unknown	=> $c->stash->{ unknown } || 'No illegal words',
-		grammatical	=> $c->stash->{ grammatical } || 'No parse',
-		error	=> $c->stash->{ error_msg } || "No error message",
-		status	=> $c->stash->{ status_msg } || "No status",
-			);
-	$c->stash( report_params => \%report_params);
-	$c->stash->{ player => $c->session->{player_id} };
-	$c->stash->{error_msg} .= " Try another one." unless $c->stash->{gameover};
+	$c->stash( status => $c->stash->{ status_msg } || "No status message" );
+	$c->stash( error => $c->stash->{ error_msg } || "No error message" );
+	$c->stash( unknown => $c->stash->{ unknown } || 'No illegal words' );
+	$c->stash( parsed => $c->stash->{ parsed } || 'No parse' );
 }
 
 =head1 AUTHOR

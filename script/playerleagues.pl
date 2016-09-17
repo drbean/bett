@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use lib 'lib';
 
+use Config::General;
 use Cwd;
 use File::Spec;
 use List::MoreUtils qw/all/;
@@ -13,21 +14,19 @@ use Bett;
 use Bett::Model::DB;
 use Bett::Schema;
 
-my $config = LoadFile "bett.yaml";
+my %config = Config::General->new( "bett.conf" )->getall;
 my $connect_info = Bett::Model::DB->config->{connect_info};
 my $schema = Bett::Schema->connect( $connect_info );
 
 my $leaguegenres = [
 			[ qw/league genre/ ],
-			[ "MIA0009",	4 ],
-			[ "BMA0045",	4 ],
-			# [ "FLA0003",	1 ],
-			[ "FLA0015",	7 ],
-			# [ "FLA0019",	2 ],
-			# [ "FLA0021",	9 ],
-			# [ "241",	3 ],
-			# [ "MB1",	5 ],
-			# [ "KB1",	3 ],
+			[ "GL00006",	1 ],
+			[ "GL00030",	1 ],
+			[ "FLA0006",	7 ],
+			[ "FLA0007",	5 ],
+			[ "AFN2N0",	2 ],
+			[ "AFN3Y0",	8 ],
+			[ "AFN300",	1 ],
 		];
 
 my @leagueids = map $_->[0], @$leaguegenres[1..$#$leaguegenres];
@@ -35,7 +34,7 @@ my @leagueids = map $_->[0], @$leaguegenres[1..$#$leaguegenres];
 my ($leaguefile, $players);
 my $leagues = [ [ qw/id name field/ ] ];
 for my $league ( @leagueids ) {
-	$leaguefile = LoadFile "$config->{leagues}/$league/league.yaml";
+	$leaguefile = LoadFile "$config{leagues}/$league/league.yaml";
 	push @$leagues, [ $league, $leaguefile->{league}, $leaguefile->{field} ];
 	push @{$players->{$league}},
 		map {[ $_->{id}, $_->{Chinese}, $_->{password} ]}
@@ -48,13 +47,12 @@ uptodatepopulate( 'Genre', [
 			[ qw/id value/ ],
 			[ 1, "conversation" ],
 			[ 2, "business" ],
-			[ 3, "writing" ],
-			[ 4, "correspondence" ],
+			[ 3, "friends" ],
+			[ 4, "intercultural" ],
 			[ 5, "speaking" ],
 			[ 6, "pop" ],
-			[ 7, "news" ],
-			[ 8, "call" ],
-			[ 9, "tech" ],
+			[ 7, "media" ],
+			[ 8, "multimedia" ],
 			] );
 
 uptodatepopulate( 'Leaguegenre', $leaguegenres );
@@ -87,9 +85,9 @@ foreach my $league ( @leagueids )
 		$members{$player->[0]} =  [ $league, $player->[0] ];
 		$rolebearers{$player->[0]} =  [ $player->[0], 2 ];
 	}
-	$members{193001} = [ $league, 193001 ];
 	push @allLeaguePlayers, values %members;
 	push @allLeaguerolebearers, values %rolebearers;
+	$members{193001} = [ $league, 193001 ];
 }
 uptodatepopulate( 'Member', [ [ qw/league player/ ], 
 				@allLeaguePlayers ] );

@@ -23,7 +23,7 @@ Catalyst Controller.
 
 sub index :Path :Args(0) {
 	my ( $self, $c ) = @_;
-	my $username = $c->request->params->{username};
+	my $name = $c->request->params->{name};
 	my $id = $c->request->params->{id};
 	my $password = lc $c->request->params->{password};
 	my $exercise = $c->request->params->{exercise};
@@ -34,10 +34,10 @@ sub index :Path :Args(0) {
 			my $officialrole = 1;
 			if ( $c->check_user_roles($officialrole) ) {
 				$c->stash->{id}   = $id;
-				$c->stash->{username} = $username;
+				$c->stash->{name} = $name;
 				$c->stash->{leagues} =
-				  [ $c->model('DB::League')->search( {} ) ];
-				my $jigsawroles = $c->model('DB::Jigsawrole');
+				  [ $c->model('dicDB::League')->search( {} ) ];
+				my $jigsawroles = $c->model('dicDB::Jigsawrole');
 				my $oldrole = $jigsawroles->search( { player => $id } )->next;
 				if ($oldrole) {
 					$c->stash->{oldrole} = $oldrole->role;
@@ -48,36 +48,18 @@ sub index :Path :Args(0) {
 				$c->stash->{template} = 'official.tt2';
 				return;
 			}
-			my @memberships = $c->model("DB::Member")->search
+			my @memberships = $c->model("dicDB::Member")->search
 				({player => $id});
 			my @leagues;
-			my $exercise = $c->session->{exercise} || $c->request->query_params
-					->{exercise};
-			unless ( $exercise ) {
-				my $league = $memberships[0]->league->id;
-				$c->stash(error_msg => "$username, $id! There is no exercise for the $league League. Start again from <a href=\"http://web.nuu.edu.tw/~greg/exercises.html\">http://web.nuu.edu.tw/~greg/exercises.html</a>, or contact Dr Bean. He probably made a mistake.");
-				$c->stash(template => 'login.tt2');
-				return;
-			}
-			my $genre = $c->model("DB::Exercise")->search( {id => $exercise })
-				->first->genre;
-			$c->session->{genre} = $genre;
-			for my $membership (@memberships) {
-				push @leagues, $membership->league if
-					$membership->league->leaguegenres->genre->value eq $genre;
-			}
+			push @leagues, $_->league for @memberships;
 			if ( @leagues > 1 ) {
 				$c->stash->{id} = $id;
-				$c->stash->{username} = $username;
+				$c->stash->{username} = $name;
 				$c->stash->{leagues} = \@leagues;
 				$c->session->{exercise} = $exercise if $exercise;
 				$c->stash(exercise => $exercise);
 				$c->stash->{template} = 'membership.tt2';
 				return;
-			}
-			elsif ( @leagues == 0 ) {
-				my $league = $memberships[0]->league->id;
-				$c->stash(error_msg => "$username, $id! No $exercise exercise can be found for $league in $genre. Start again from <a href=\"http://web.nuu.edu.tw/~greg/exercises.html\">http://web.nuu.edu.tw/~greg/exercises.html</a>, or contact Dr Bean. He probably made a mistake.");
 			}
 			else {
 				my $league = $leagues[0]->id;
@@ -119,7 +101,7 @@ sub official : Local {
 			$c->session->{league} = $league;
 			$exercise = $c->forward( 'get_exercise', [ $league ] ) unless $exercise;
 			$c->session->{exercise} = $exercise if $exercise;
-			$c->model('DB::Jigsawrole')->update_or_create(
+			$c->model('dicDB::Jigsawrole')->update_or_create(
 				{	league => $league, player => $username,
 					role => $jigsawrole } ) if $jigsawrole;
 			$c->response->redirect($c->uri_for("/game"), 303);

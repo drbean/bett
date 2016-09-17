@@ -1,4 +1,4 @@
-[% META title = "Homework complete" %]
+[% META title = "Game over" %]
 
 [% coursename = [ "WH", "YN", "Tag", "TF"] %]
 [% IF result == "win" %]
@@ -7,8 +7,6 @@
 <h1>GAME OVER</h1>
 [% ELSE %]
 [% END %]
-
-<P><A HREF="[% c.uri_for('/report', report_params) %]">Report a problem</A>
 
 <h2>Record</h2>
 [% n = 0 %]

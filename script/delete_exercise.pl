@@ -27,7 +27,7 @@ has 'genre' => (
 
 package main;
 
-my $config = LoadFile "bett.yaml";
+my %config = Config::General->new( "bett.conf" )->getall;
 my $connect_info = Bett::Model::DB->config->{connect_info};
 my $schema = Bett::Schema->connect( $connect_info );
 
@@ -70,7 +70,7 @@ It is used to remove exercises. So be careful. But we support
 
 perl script/delete_exercise.pl careers 
 
-for sake of compatibility with counterpart in Dic.
+for sake of compatibility with counterpart in dic.
 
 =head1 AUTHOR
 
