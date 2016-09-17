@@ -5,8 +5,8 @@
 	tfoptions = ['True', 'False']
 	%]
 [% options = {
-	WH => characters.sort, YN => ynoptions, Tag => ynoptions, S => tfoptions } %]
-<P><A HREF="[% c.uri_for('/report', report_params) %]">Report a problem</A>
+	WH => characters, YN => ynoptions, Tag => ynoptions } %]
+<P><A HREF="[% c.uri_for('/report', course, question, myanswer, theanswer, expectedcourse, status_msg, error_msg) %]">Report a problem</A>
 <H1>Course [% courseno.$course %]: [% course %]-question</H1>
 <FORM method="post" action="[% c.uri_for('/play', course) %]">
 <INPUT type="hidden" name="course" value="[% course %]">
@@ -25,7 +25,7 @@
 <TD> [% $course.answerchance %] <TD> more answer chances left.
 </TABLE>
 <TABLE>
-<TR><TD>Question:<INPUT type="text" size=85 name="question" value="[% rewrite_offer %]">
+<TR><TD>Question:<INPUT type="text" size=85 name="question">
 <TR><TD>Answer:
     <SELECT name="answer">
        <OPTION selected value="--">--</OPTION>

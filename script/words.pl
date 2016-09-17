@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use lib ( "lib", "/var/www/cgi-bin/bett/lib" );
+use lib 'lib';
 use FindBin '$Bin';
 
 use Config::General;
@@ -24,7 +24,7 @@ has 'story' => (
 
 package main;
 
-my $config = LoadFile "/var/www/cgi-bin/bett/bett.yaml";
+my %config = Config::General->new( "bett.conf" )->getall;
 my $connect_info = Bett::Model::DB->config->{connect_info};
 my $schema = Bett::Schema->connect( $connect_info );
 

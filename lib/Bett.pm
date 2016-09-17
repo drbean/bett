@@ -24,7 +24,6 @@ use Catalyst qw/
  StackTrace
 
 
-
 	Authentication
 	Authorization::Roles
 
@@ -53,22 +52,11 @@ __PACKAGE__->config(
 );
 
 __PACKAGE__->config->{'Plugin::Authentication'} = {
-	default_realm => 'dbic',
-	realms => {
-		dbic => {
-			credential => {
-				class => 'Password',
-				password_field => 'password',
-				password_type => 'clear'
-			},
-			store => {
-				class => 'DBIx::Class',
-				user_model => 'DB::Player',
-				role_relation => 'getrole',
-				role_field => 'id',
-			}
-		}
-	}
+   default => {
+       class           => 'SimpleDB',
+       user_model      => 'dicDB::Player',
+       password_type   => 'clear',
+   },
 };
 
 __PACKAGE__->config->{'Plugin::Session'} = {
@@ -91,11 +79,11 @@ __PACKAGE__->config(
            charset => 'utf-8'
        },
        sender => {
-           mailer => 'Sendmail',
+           mailer => 'SMTP',
            mailer_args => {
-    	   Host     => 'localhost',
-		   # username => 'greg',
-    	   # password => '',
+    	   Host     => 'smtp.example.com',
+    	   username => 'username',
+    	   password => 'password',
        }
      }
 }

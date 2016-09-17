@@ -54,8 +54,6 @@ Check if there is a user and, if not, forward to login pa
 sub auto :Private {
     my ($self, $c) = @_;
     if ($c->controller eq $c->controller('Login')) {
-		my $exercise = $c->request->query_params->{exercise};
-		$c->session->{exercise} = $exercise if $exercise;
         return 1;
     }
     if (!$c->user_exists) {

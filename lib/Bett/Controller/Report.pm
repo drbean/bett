@@ -26,15 +26,20 @@ Session and course
 =cut
 
 sub course :Path('/report') {
-	my ($self, $c) = @_;
-	my $report = $c->request->params;
-	# $mycourse, $question, $myanswer, $theanswer, $expectedcourse, $unknown, $grammatical, $error, $status)
-	$c->stash( player => $c->session->{player_id} );
-	$c->stash( league => $c->session->{league} );
-	$c->stash( exercise => $c->session->{exercise} );
-	for my $param ( keys %$report ) {
-		$c->stash( $param => $report->{$param} );
-	}
+	my ($self, $c, $mycourse, $question, $myanswer, $theanswer, $expectedcourse, $status_msg, $error_msg) = @_;
+        my $player = $c->session->{player_id};
+	my $league = $c->session->{league};
+	my $exercise = $c->session->{exercise};
+	$c->stash(player => $player);
+	$c->stash(exercise => $exercise);
+	$c->stash(league => $league);
+	$c->stash(course => $mycourse);
+	$c->stash(question => $question);
+	$c->stash(myanswer => $myanswer);
+	$c->stash(theanswer => $theanswer);
+	$c->stash(expectedcourse => $expectedcourse);
+	$c->stash(status => $status_msg);
+	$c->stash(error => $error_msg);
 	$c->stash->{ template } = 'report.tt2';
 }
 
@@ -48,18 +53,18 @@ sub email :Local {
 	my ( $self, $c ) = @_;
 	my $params = $c->request->params;
 	my ($player, $course, $question, $expectedcourse,
-		$myanswer, $theanswer, $unknown, $grammatical, $status, $error, $info, $email) =
+		$myanswer, $theanswer, $status, $error, $info, $email) =
 		@$params{qw/player course question expectedcourse
-		myanswer theanswer unknown grammatical status error info email/};
+		myanswer theanswer status error info email/};
 	my $league = $c->session->{league};
 	my $exercise = $c->session->{exercise};
 	$c->stash(exercise => $exercise);
 	$c->stash->{email} = {
-	header => [ 'Reply-To' => $email,
-			To       => "drbean\@sac.nuu.edu.tw",
-			From     => "greg\@nuu.edu.tw",
-			Subject  => "$exercise, $player: $question", ]
-	, body     => "
+	header => [ 'Reply-To' => $email ],
+			to       => "drbean\@freeshell.org",
+			from     => "greg\@nuu.edu.tw",
+			subject  => "Bett $exercise Problem, $player: $question",
+			body     => "
 Exercise      : $exercise
 Player        : $player
 Course        : $course
@@ -67,8 +72,6 @@ Question      : $question
 Question type : $expectedcourse
 Your answer   : $myanswer
 Bett's answer : $theanswer
-Unknown_words : $unknown
-Grammaticality: $grammatical
 Status message: $status
 Error message : $error
 Your comment  : $info
@@ -99,11 +102,7 @@ Your email    : $email
 			#[{ quoted => "fdsfds", player => 'N9741065'}]);
 	my $win = $c->config->{$course}->{win};
 	$c->stash->{win} = $win;
-	unless ( $standing ) {
-		$c->stash->{ config } = $c->config;
-		$c->stash->{ template } = 'play.tt2';
-	}
-	elsif ( $standing->questionchance < 0 or 
+	if ( $standing->questionchance < 0 or 
 		$standing->answerchance < 0 ) {
 		$c->stash->{ template } = 'over.tt2';
 	}
@@ -115,6 +114,7 @@ Your email    : $email
 	}
 	else {
 		$c->stash->{ config } = $c->config;
+$DB::single=1;
 		$c->stash->{ template } = 'play.tt2';
 	}
 }

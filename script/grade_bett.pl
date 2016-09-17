@@ -7,7 +7,7 @@ use FindBin '$Bin';
 use Pod::Usage;
 
 use Config::General;
-use YAML qw/Bless Dump LoadFile/;
+use YAML qw/Bless Dump/;
 use List::Util qw/reduce/;
 use Moose::Autobox;
 use Bett::Model::DB;
@@ -40,7 +40,7 @@ has 'winner' => (
 
 package main;
 
-my $config = LoadFile "bett.yaml";
+my %config = Config::General->new( "bett.conf" )->getall;
 my $connect_info = Bett::Model::DB->config->{connect_info};
 my $schema = Bett::Schema->connect( $connect_info );
 
@@ -58,8 +58,7 @@ my $help = $script->help;
 pod2usage(1) if $help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
 
-# ( my $leagueid = $id ) =~ s/^([[:alpha:]]+[[:digit:]]+).*$/$1/;
-my $leagueid = $id;
+( my $leagueid = $id ) =~ s/^([[:alpha:]]+[[:digit:]]+).*$/$1/;
 my $league = League->new( id => $leagueid );
 my $members = $league->members;
 my %members = map { $_->{id} => $_ } @$members;
@@ -73,8 +72,8 @@ for my $course ( @courses ) {
 	my $class = $schema->resultset($course)->search({
 			league => $id, exercise => $exercise });
 	my $Course = $course eq 'Tag'? $course: uc $course;
-	my $course_config = $config->{$Course};
-	my $answerchances = $course_config->{chances}->{answer};
+	my $config = $config{$Course};
+	my $answerchances = $config->{chances}->{answer};
 	for my $player ( keys %members ) {
 		my $standing = $class->find({ player => $player });
 		my ( $score, $answerchancesleft, $questions ) = ( 0 ) x 3;
@@ -86,24 +85,22 @@ for my $course ( @courses ) {
 			$report->{points}->{$player}->{$course}->{questions} = $questions;
 			$report->{points}->{$player}->{$course}->{attempts} =
 				$standing->try;
-			my $grade = ($score >= $course_config->{win}) ?
-				'winner': (($questions >= $course_config->{win}) or
+			my $grade = ($score >= $config->{win}) ?
+				'winner': (($questions >= $config->{win}) or
 								($answerchancesleft <= 0) or
 									($standing->questionchance <= 0)) ?
-				'loser': ( $questions >= $report->{cutpoints}->{quitter} )?
-				'quitter':
-				'non-starter';
+				'loser': 'quitter';
 			push @{ $card->{$player} }, $grade;
-			$fullcourseqns{$player} += $standing->try;
-			if ( $fullcourseqns{$player} >= $config->{YN}->{win} ) {
-				push @{ $card->{$player} }, "quitter";
-			}
 		}
 		else {
 			$report->{points}->{$player}->{$course}->{questions} = undef;
 			$report->{points}->{$player}->{$course}->{answers} = undef;
 			$report->{points}->{$player}->{$course}->{attempts} = undef;
-			push @{ $card->{$player} }, "no-show";
+			push @{ $card->{$player} }, "quitter";
+		}
+		$fullcourseqns{$player} += $questions;
+		if ( $fullcourseqns{$player} >= $config{S}->{win} ) {
+			push @{ $card->{$player} }, "loser";
 		}
 		Bless( $report->{points}->{$player}->{$course} )->keys(
 			[ qw/answers questions attempts/ ] );
@@ -116,27 +113,15 @@ sub takeWin {
 	return $b if $b eq 'winner';
 	return $a if $a eq 'loser';
 	return $b if $b eq 'loser';
-	return $a if $a eq 'quitter';
-	return $b if $b eq 'quitter';
-	return $a if $a eq 'non-starter';
-	return $b if $b eq 'non-starter';
 	return $a if $a;
 	return $b if $b;
 }
 
 
 for my $member (keys %members) {
-	my $my_card = $card->{$member};
-	my $grade = reduce {takeWin} "no-show", @$my_card;
-	if ( $grade eq 'no-show' or $grade eq 'non-starter' ) {
-		$report->{grade}->{$member} = 0;
-	}
-	elsif ( $grade eq 'quitter' ) {
-		$report->{grade}->{$member} = $results->{'loser'};
-	}
-	else {
-		$report->{grade}->{$member} = $results->{$grade};
-	}
+	my $card = $card->{$member};
+	my $grade = reduce {takeWin} "quitter", @$card;
+	$report->{grade}->{$member} = $results->{$grade};
 }
 
 print Dump $report;
@@ -147,17 +132,17 @@ grade_bett.pl - record results from bett DB
 
 =head1 SYNOPSIS
 
-perl script/grade_bett.pl -l FIA0034 -x adventure -q 4 -o 1 -w 2 > /home/drbean/002/FIA0034/homework/2.yaml
+perl script/grade_bett.pl -l FIA0034 -x adventure -q 4 -l 1 -w 2 > /home/drbean/002/FIA0034/homework/2.yaml
 
 =head1 DESCRIPTION
 
 SELECT * FROM {wh,yn,s} WHERE league='FIA0034';
 
-People who quit with q good questions get a (TODO: loser's) score, perhaps. Players who get to GAME OVER, but who fail to be winners, ie are losers, get l points, and winners get w points.
+People who quit with q good questions get a score, perhaps. Players who get to GAME OVER, but who fail to be winners, ie are losers, get l points, and winners get w points.
 
 Output numbers of grammatically-correct questions, correct answers, questions attempted in the wh, yn and s courses.
 
-If attempt quota for YN course is filled (over all courses), but question and answer quota not filled, player is treated as Quitter.
+If correct question quota is filled, but answer quota not filled, player is treated as Loser, not Quitter.
 
 =head1 AUTHOR
 
