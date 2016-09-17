@@ -76,7 +76,7 @@ Choose words only from this list.
 
 [% words %]
 
-Sentences showing grammar, vocabulary you can try using in your questions:
+<h3>Sentences showing grammar, vocabulary you can try using in your questions:</h3>
 
 [% sentences %]
 <h3>Notes about grammar idiosyncracies</h3>
