@@ -24,7 +24,7 @@ Catalyst Controller.
 sub index :Path :Args(0) {
 	my ( $self, $c ) = @_;
 	my $username = $c->request->params->{username};
-	my $id = $c->request->params->{id};
+	my $id = ucfirst $c->request->params->{id};
 	my $password = lc $c->request->params->{password};
 	my $exercise = $c->request->params->{exercise};
 	if ($id && $password) {
