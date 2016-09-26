@@ -55,7 +55,7 @@ sub index :Path :Args(0) {
 					->{exercise};
 			unless ( $exercise ) {
 				my $league = $memberships[0]->league->id;
-				$c->stash(error_msg => "$username, $id! There is no exercise for the $league League. Start again from <a href=\"http://web.nuu.edu.tw/~greg/exercises.html\">http://web.nuu.edu.tw/~greg/exercises.html</a>, or contact Dr Bean. He probably made a mistake.");
+				$c->stash(error_msg => "$username, $id! The exercise for the $league League is missing. Start again from <a href=\"http://sac.nuu.edu.tw/cgi-bin/moodle\">http://sac.nuu.edu.tw/cgi-bin/moodle</a>, or contact Dr Bean. He probably made a mistake.");
 				$c->stash(template => 'login.tt2');
 				return;
 			}
