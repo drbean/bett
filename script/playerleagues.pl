@@ -21,13 +21,14 @@ my $leaguegenres = [
 			[ qw/league genre/ ],
 			[ "MIA0009",	4 ],
 			[ "BMA0045",	4 ],
-			# [ "FLA0003",	1 ],
+			[ "FLA0003",	1 ],
 			[ "FLA0015",	7 ],
 			# [ "FLA0019",	2 ],
 			# [ "FLA0021",	9 ],
 			# [ "241",	3 ],
-			# [ "MB1",	5 ],
+			[ "MA1",	1 ],
 			# [ "KB1",	3 ],
+			[ "GL00043",    1 ],
 		];
 
 my @leagueids = map $_->[0], @$leaguegenres[1..$#$leaguegenres];
