@@ -43,4 +43,8 @@ Choose words only from this list.
 
 [% words %]
 
+<h2>Sentences showing grammar, vocabulary you can try using in your questions:</h2>
+
+[% sentences %]
+
 [% INCLUDE questions.tt2 %]
