@@ -73,7 +73,7 @@ sub setup :Chained('/') :PathPart('play') :CaptureArgs(1) {
 
 =cut
 
-sub wordschars :Chained('setup') :PathPart('') :CaptureArgs(0) {
+sub wordscharssentences :Chained('setup') :PathPart('') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 	my $exercise = $c->stash->{exercise};
 	my @chars = $c->model('DB::Character')->
@@ -85,6 +85,9 @@ sub wordschars :Chained('setup') :PathPart('') :CaptureArgs(0) {
 	$c->stash->{words} = 
 		$c->model('DB::Word')->find(
 		{exercise => $exercise})->string;
+	$c->stash(sentences => 
+		$c->model('DB::Sentence')->find(
+		{exercise => $exercise})->string );
 }
 
 =head2 try
@@ -93,7 +96,7 @@ Course, question, answer and Questioner's course and answer. Errors from haskell
 
 =cut
 
-sub try :Chained('wordschars') :PathPart('') :CaptureArgs(0) {
+sub try :Chained('wordscharssentences') :PathPart('') :CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 	my $ex = $c->stash->{exercise};
 	if ( $c->request->params ) {
