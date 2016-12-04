@@ -22,4 +22,7 @@
   <input type=hidden name=exercise value="[% exercise %]">
 </form>
 
+<li>Your password is the first half of your first name. It is in English, not the Chinese character. Thus JiaQi's pasword is Jia. See <a href=http://humanum.arts.cuhk.edu.hk/Lexis/Lindict/syllabary>Lin YuTang's Chinese-English dictionary</a> for the spelling, which is Hanyu Pinyin (漢語拼音).
+<li>If I was not able to find the first character in your name, your password may be a question mark. Eg, 賴?岑. Other people whose names my computer does not have Chinese characters for are 黃慧? and ?琮婷, but their passwords should be okay.
+<li>If you have any problem, message me on the moodle site, email me at drbean at (@) freeshell dot (.) org, or come and see me in the Part-time Teachers Room.
  
