@@ -19,16 +19,16 @@ my $schema = Bett::Schema->connect( $connect_info );
 
 my $leaguegenres = [
 			[ qw/league genre/ ],
-			[ "MIA0009",	4 ],
-			[ "BMA0045",	4 ],
-			[ "FLA0003",	1 ],
-			[ "FLA0015",	7 ],
+			[ "MIA0015",	4 ],
+			[ "BMA0041",	4 ],
+			# [ "FLA0003",	1 ],
+			[ "FLA0010",	9 ],
 			# [ "FLA0019",	2 ],
 			# [ "FLA0021",	9 ],
 			# [ "241",	3 ],
-			[ "MA1",	1 ],
+			[ "MB2",	1 ],
 			# [ "KB1",	3 ],
-			[ "GL00043",    1 ],
+			[ "GL00036",    1 ],
 		];
 
 my @leagueids = map $_->[0], @$leaguegenres[1..$#$leaguegenres];
