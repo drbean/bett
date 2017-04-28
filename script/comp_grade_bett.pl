@@ -51,7 +51,7 @@ my $try = $script->try;
 my $grammatical = $script->grammatical;
 my $correct = $script->response;
 my @courses = qw/Wh Yn/;
-my $results = { try => $try, grammatical => $grammatical, correct => $correct };
+my %results = (try => $try, grammatical => $grammatical, correct => $correct);
 my $man = $script->man;
 my $help = $script->help;
 
@@ -91,7 +91,7 @@ for my $player ( keys %members ) {
 		grammatical => 1 });
 	$report->{points}->{$player}->{question} = $question;
 	$total->{grammatical} += $question;
-	$card->{$player} = $try + $question;
+	$card->{$player} = $results{try} * $try + $results{grammatical} * $question;
 	for my $course ( @courses ) {
 		my $score;
 		my $work = $schema->resultset($course)->find({
@@ -105,7 +105,7 @@ for my $player ( keys %members ) {
 		else { $score = 0; }
 		$report->{points}->{$player}->{answer} += $score;
 	}
-	$card->{$player} += $report->{points}->{$player}->{answer};
+	$card->{$player} += $results{correct} * $report->{points}->{$player}->{answer};
 	$total->{total} += $card->{$player};
 }
 
@@ -136,6 +136,7 @@ $total->{grade} = $grade_sum / $participants;
 
 print Dump $report;
 print "report: |+\n";
+print "  $_: $results{$_}\n" for keys %results;
 
 STDOUT->autoflush;
 $^L='';
@@ -147,7 +148,7 @@ format STDOUT_TOP =
 for my $member (sort keys %members) {
 
 format STDOUT = 
-@<@<<<<<<<<<< @###      @##       @##       @##       @##
+@<@<<<<<<<<<< @###      @##       @##       @##       @#.#
 { "  ", $member, $report->{points}->{$member}->{try}
 	, $report->{points}->{$member}->{question}
 	, $report->{points}->{$member}->{answer}
@@ -171,7 +172,7 @@ format TOTAL_TOP =
 format TOTAL = 
   Class Totals
              Question Grammatical Answers   Total     Grade
-@<@<<<<<<<<<< @###      @####     @####     @####     @##
+@<@<<<<<<<<<< @###      @####     @####     @####     @#.#
 { "", "", $total->{question}
 	, $total->{grammatical}
 	, $total->{answer}
