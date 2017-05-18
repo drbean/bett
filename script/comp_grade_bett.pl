@@ -123,7 +123,7 @@ for my $member (keys %members) {
 		$report->{grade}->{$member} = 4 + 1 * ($card->{$member} - $median) / ($max_points - $median);
 	}
 	elsif ( $card->{$member} <= $median ) {
-		$report->{grade}->{$member} = 1 + 1 * $card->{$member} / $median;
+		$report->{grade}->{$member} = 1 + 3 * $card->{$member} / $median;
 	}
 	else {
 		die "No card.member, no report.grade.member?\n"; 
