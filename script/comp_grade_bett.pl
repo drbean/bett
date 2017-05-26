@@ -109,7 +109,9 @@ for my $player ( keys %members ) {
 	$total->{total} += $card->{$player};
 }
 
-my $median = (sort values %$card)[ $n/2 ];
+my @triers = grep { $card->{$_} != 0 } keys %$card;
+my @nonzeros = @$card{@triers};
+my $median = (sort @nonzeros)[ $n/2 ];
 my $max_points = max values %$card;
 my $grade_sum = 0;
 my $participants = 0;
