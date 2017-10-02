@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use lib 'lib';
 
-use Config::General;
+use YAML;
 use Cwd;
 use File::Spec;
 
