@@ -2,8 +2,8 @@
 # you want to use YAML like in old versions of Catalyst
 name: Bett
 
-leagues: /home/drbean/061
-database: bett061
+leagues: /home/drbean/062
+database: bett062
 moodle_database: mood051
 
 WH:
