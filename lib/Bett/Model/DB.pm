@@ -12,7 +12,7 @@ __PACKAGE__->config(
     schema_class => 'Bett::Schema',
     
     connect_info => {
-        dsn => "dbi:Pg:dbname=$name",
+        dsn => "dbi:Pg:dbname=$name;port=5434",
         user => '',
         password => '',
     }
