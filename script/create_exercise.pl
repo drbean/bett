@@ -6,7 +6,7 @@ use lib 'lib';
 use FindBin '$Bin';
 use Pod::Usage;
 
-use Config::General;
+# use Config::General;
 use YAML qw/LoadFile/;
 use Bett::Model::DB;
 use Bett::Schema;
