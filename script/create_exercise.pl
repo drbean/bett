@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use lib 'lib';
+use lib '/home/drbean/bett/lib';
 use FindBin '$Bin';
 use Pod::Usage;
 

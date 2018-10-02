@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use lib 'lib';
+use lib '/home/drbean/bett/lib';
 use FindBin '$Bin';
 use Pod::Usage;
 
@@ -40,7 +40,7 @@ has 'response' => (
 
 package main;
 
-my $config = LoadFile "bett.yaml";
+my $config = LoadFile "/home/drbean/bett/bett.yaml";
 my $connect_info = Bett::Model::DB->config->{connect_info};
 my $schema = Bett::Schema->connect( $connect_info );
 
@@ -134,7 +134,7 @@ for my $member (keys %members) {
 	$participants++;
 }
 
-$total->{grade} = $grade_sum / $participants;
+$total->{grade} = $participants ? $grade_sum / $participants : 0;
 
 print Dump $report;
 print "report: |+\n";
