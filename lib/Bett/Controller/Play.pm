@@ -133,7 +133,7 @@ qx"echo \"$question\" | /var/www/cgi-bin/bett/bin/Transfer_$ex";
 		else {
 			$error = "No Transfer_$ex error";
 		}
-		$c->stash( parsed => $parsed || '[]');
+		$c->stash( parsed => $parsed || 'ParseFailed');
 		$c->stash( unknown => $unknown || '');
 		$c->stash( question => $question || "No user question");
 		$c->stash( myanswer => $myanswer || "No user answer");
@@ -194,7 +194,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 "'$question' is not a $translate{$course}. It's a $translate{$expectedcourse}.";
 			$c->stash->{wrongcourse} = $course;
 	}
-	elsif ( $parsed eq '[]' ) {
+	elsif ( $parsed eq 'ParseFailed' ) {
 		if ( $unknown ) {
 			$unknown =~ tr/"/'/;
 			$c->stash->{error_msg} = "The question '$question' contained unknown words. \"$unknown\" are not in the list. Use only the words from the list.";
@@ -265,7 +265,7 @@ sub question :Chained('evaluate') :PathPart('') :CaptureArgs(0) {
 	my $parsed = $c->stash->{parsed};
 	my $dupe;
 	my $db_question;
-	if ( $parsed eq '[]' ) {
+	if ( $parsed eq 'ParseFailed' ) {
 		$db_question = $questions->single({ quoted => $my_question });
 	}
 	else {
@@ -275,8 +275,8 @@ sub question :Chained('evaluate') :PathPart('') :CaptureArgs(0) {
 		$c->stash->{error_msg} .= " But '$my_question' is already in the question database.";
 		$c->stash->{oldquestion} = $my_question;
 	}
-	elsif ( ($parsed ne '[]') or (($parsed eq '[]') and not ($c->stash->{unknown} or $c->stash->{nothing}) ) ) {
-		$parsed = $my_question if $parsed eq '[]';
+	elsif ( ($parsed ne 'ParseFailed') or (($parsed eq 'ParseFailed') and not ($c->stash->{unknown} or $c->stash->{nothing}) ) ) {
+		$parsed = $my_question if $parsed eq 'ParseFailed';
 		$questions->create({
 			parsed => $parsed,
 			quoted => $c->stash->{question},
