@@ -28,7 +28,7 @@ __PACKAGE__->table("question");
   data_type: 'text'
   is_nullable: 1
 
-=head2 lexed
+=head2 parsed
 
   data_type: 'text'
   is_nullable: 0
@@ -63,7 +63,7 @@ __PACKAGE__->table("question");
 __PACKAGE__->add_columns(
   "player",
   { data_type => "text", is_nullable => 0 },
-  "lexed",
+  "parsed",
   { data_type => "text", is_nullable => 0 },
   "league",
   { data_type => "text", is_nullable => 0 },
@@ -76,7 +76,7 @@ __PACKAGE__->add_columns(
   "grammatical",
   { data_type => "bool", is_nullable => 0 },
 );
-__PACKAGE__->set_primary_key("lexed", "exercise", "league");
+__PACKAGE__->set_primary_key("parsed", "exercise", "league");
 
 =head1 RELATIONS
 
