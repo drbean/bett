@@ -269,7 +269,7 @@ sub question :Chained('evaluate') :PathPart('') :CaptureArgs(0) {
 		$db_question = $questions->single({ quoted => $my_question });
 	}
 	else {
-		$db_question = $questions->find({ lexed => $parsed });
+		$db_question = $questions->find({ parsed => $parsed });
 	}
 	if ( $db_question != 0 ) {
 		$c->stash->{error_msg} .= " But '$my_question' is already in the question database.";
@@ -278,7 +278,7 @@ sub question :Chained('evaluate') :PathPart('') :CaptureArgs(0) {
 	elsif ( ($parsed ne '[]') or (($parsed eq '[]') and not ($c->stash->{unknown} or $c->stash->{nothing}) ) ) {
 		$parsed = $my_question if $parsed eq '[]';
 		$questions->create({
-			lexed => $parsed,
+			parsed => $parsed,
 			quoted => $c->stash->{question},
 			course => $c->stash->{course},
 			player => $c->stash->{player},
