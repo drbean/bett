@@ -116,10 +116,10 @@ sub try :Chained('wordscharssentences') :PathPart('') :CaptureArgs(0) {
 			});
 		my $check =
 qx"echo \"$question\" | /var/www/cgi-bin/bett/bin/Transfer_$ex";
-		my ($unknown, $lexed, $theanswer, $expectedcourse, $error) =
+		my ($unknown, $parsed, $theanswer, $expectedcourse, $error) =
 						(split /\n/, $check); 
 		$unknown =~ s/^Unknown_words: (.*)$/$1/;
-		$lexed =~ s/^Parsed: (.*)$/$1/;
+		$parsed =~ s/^Parsed: (.*)$/$1/;
 		$theanswer =~ s/^Answer: (.*)$/$1/;
 		if ( $expectedcourse ) {
 			$expectedcourse =~ s/^Course: (.*)$/$1/;
@@ -133,7 +133,7 @@ qx"echo \"$question\" | /var/www/cgi-bin/bett/bin/Transfer_$ex";
 		else {
 			$error = "No Transfer_$ex error";
 		}
-		$c->stash( lexed => $lexed || '[]');
+		$c->stash( parsed => $parsed || '[]');
 		$c->stash( unknown => $unknown || '');
 		$c->stash( question => $question || "No user question");
 		$c->stash( myanswer => $myanswer || "No user answer");
@@ -156,7 +156,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 		S	=> 'Sentence (True-False question)' );
 	my $course = $c->stash->{course};
 	my $expectedcourse = $c->stash->{expectedcourse};
-	my $parsed = $c->stash->{lexed};
+	my $parsed = $c->stash->{parsed};
 	my $unknown = $c->stash->{unknown};
 	my $question = $c->stash->{question};
 	my $theanswer = $c->stash->{theanswer};
@@ -262,7 +262,7 @@ sub question :Chained('evaluate') :PathPart('') :CaptureArgs(0) {
 	my $my_question = $c->stash->{question};
 	my $grammatical = ( $c->stash->{grammatical} eq "Grammatical" ) ? 1: 0;
 	my $questions = $c->stash->{questions};
-	my $parsed = $c->stash->{lexed};
+	my $parsed = $c->stash->{parsed};
 	my $dupe;
 	my $db_question;
 	if ( $parsed eq '[]' ) {
@@ -329,7 +329,7 @@ sub update :Chained('question') :PathPart('') :CaptureArgs(0) {
 	{
 		$standing->update({ try => ++$tries });
 	}
-	elsif ( $c->stash->{lexed} ne '[]' ) {
+	elsif ( $c->stash->{parsed} ne '[]' ) {
 		$standing->update({
 			try => ++$tries,
 			score => ++$score,
