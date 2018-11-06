@@ -124,7 +124,7 @@ qx"echo \"$question\" | /var/www/cgi-bin/bett/bin/Transfer_$ex";
 		if ( $expectedcourse ) {
 			$expectedcourse =~ s/^Course: (.*)$/$1/;
 		}
-		else {
+		unless ( $expectedcourse ) {
 			$expectedcourse = "No expected course";
 		}
 		if ( $error ) {
@@ -181,8 +181,8 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
     #    $c->stash->{error_msg} = "The question, '$question' was a correct question, but Bett doesn't know the answer. Report the problem to Dr Bean.";
     #    $c->stash->{unhandled} = $theanswer;
     #}
-	elsif ( $parsed ne '[]' ) {
-		  $c->stash->{status_msg} = "The question, '$question' was a grammatical question.";
+	elsif ( ($parsed !~ m/ParseFailed/) && ($parsed !~ m/ParseIncomplete/) ) {
+		$c->stash->{status_msg} = "The question, '$question' was a grammatical question.";
 		$c->stash( unknown => '' );
 	}
 	#elsif ( $theanswer =~ m/Transfer_\w+: .*$/ ) {
@@ -194,7 +194,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 "'$question' is not a $translate{$course}. It's a $translate{$expectedcourse}.";
 			$c->stash->{wrongcourse} = $course;
 	}
-    elsif ( $parsed eq '[]' ) {
+	elsif ( $parsed eq '[]' ) {
 		if ( $unknown ) {
 			$unknown =~ tr/"/'/;
 			$c->stash->{error_msg} = "The question '$question' contained unknown words. \"$unknown\" are not in the list. Use only the words from the list.";
@@ -329,7 +329,7 @@ sub update :Chained('question') :PathPart('') :CaptureArgs(0) {
 	{
 		$standing->update({ try => ++$tries });
 	}
-	elsif ( $c->stash->{parsed} ne '[]' ) {
+	elsif ( $c->stash->{parsed} !~ m/(ParseFailed|ParseIncomplete)/) {
 		$standing->update({
 			try => ++$tries,
 			score => ++$score,
@@ -394,7 +394,7 @@ sub exchange :Chained('update') :PathPart('') :Args(0) {
 		status	=> $c->stash->{ status_msg } || "No status",
 			);
 	$c->stash( report_params => \%report_params);
-	$c->stash->{ player => $c->session->{player_id} };
+	$c->stash->{player} = $c->session->{player_id} ;
 	$c->stash->{error_msg} .= " Try another one." unless $c->stash->{gameover};
 }
 
