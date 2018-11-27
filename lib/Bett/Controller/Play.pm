@@ -215,9 +215,7 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 	#	# $c->stash( unknown => 'No illegal words' );
 	#	# $c->stash( parsed => 'No parse' );
 	#}
-	else {
-		$c->stash->{error_msg} = "Bett is having problems. Please report the problem to Dr Bean. Expected course: $expectedcourse, answer: $theanswer,";
-	}
+
 	$c->stash->{grammatical} = $grammatical_test unless $unknown;
 }
 
