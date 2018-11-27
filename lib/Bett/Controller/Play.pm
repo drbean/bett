@@ -236,7 +236,7 @@ sub question :Chained('evaluate') :PathPart('') :CaptureArgs(0) {
 	my $league= $c->stash->{ league };
 	my $course = $c->stash->{course};
 	my $my_question = $c->stash->{question};
-	my $grammatical = ( $c->stash->{grammatical} eq "Grammatical" ) ? 1: 0;
+	my $grammatical = ( $c->stash->{grammatical} and $c->stash->{grammatical} eq "Grammatical" ) ? 1: 0;
 	my $questions = $c->stash->{questions};
 	my $parsed = $c->stash->{parsed};
 	my $dupe;
@@ -247,7 +247,7 @@ sub question :Chained('evaluate') :PathPart('') :CaptureArgs(0) {
 	else {
 		$db_question = $questions->find({ parsed => $parsed });
 	}
-	if ( $db_question != 0 ) {
+	if ( $db_question  and $db_question != 0 ) {
 		$c->stash->{error_msg} .= " But '$my_question' is already in the question database.";
 		$c->stash->{oldquestion} = $my_question;
 	}
