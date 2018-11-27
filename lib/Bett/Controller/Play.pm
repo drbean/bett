@@ -121,6 +121,9 @@ qx"echo \"$question\" | /var/www/cgi-bin/bett/bin/Transfer_$ex";
 		$unknown =~ s/^Unknown_words: (.*)$/$1/;
 		$parsed =~ s/^Parsed: (.*)$/$1/;
 		$theanswer =~ s/^Answer: (.*)$/$1/;
+		unless ( $parsed =~ m/^QUt/ ) {
+			$parsed = "ParseFailed";
+		}
 		if ( $expectedcourse ) {
 			$expectedcourse =~ s/^Course: (.*)$/$1/;
 		}
