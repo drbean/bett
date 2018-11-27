@@ -204,18 +204,6 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 			$c->stash->{wrongcourse} = $course;
 	}
 
-
-	#elsif ( $parsed ) {
-	#	$c->stash->{status_msg} = "The question, '$question' was a grammatical question.";
-	#	# $c->stash( unknown => 'No illegal words' );
-	#}
-	#elsif ( not $parsed and not $unknown ) {
-	#	$c->stash->{error_msg} = "'$question' is not grammatical. Try another one.";
-	#	$c->stash( err => "question" );
-	#	# $c->stash( unknown => 'No illegal words' );
-	#	# $c->stash( parsed => 'No parse' );
-	#}
-
 	$c->stash->{grammatical} = $grammatical_test unless $unknown;
 }
 
