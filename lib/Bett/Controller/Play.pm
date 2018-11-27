@@ -203,9 +203,6 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 "'$question' is not a $translate{$course}. It's a $translate{$expectedcourse}.";
 			$c->stash->{wrongcourse} = $course;
 	}
-	elsif ( $myanswer ) {
-		  $c->stash->{status_msg} = "The question, '$question' was a grammatical question."
-	}
 
 
 	#elsif ( $parsed ) {
