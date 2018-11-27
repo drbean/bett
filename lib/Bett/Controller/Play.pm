@@ -177,18 +177,10 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 			"Enter a question and answer.";
 		$c->stash->{nothing} = 1;
 	}
-	#elsif ( $theanswer eq "No answer" ) {
-    #    $c->stash->{error_msg} = "The question, '$question' was a correct question, but Bett doesn't know the answer. Report the problem to Dr Bean.";
-    #    $c->stash->{unhandled} = $theanswer;
-    #}
 	elsif ( ($parsed !~ m/ParseFailed/) && ($parsed !~ m/ParseIncomplete/) ) {
 		$c->stash->{status_msg} = "The question, '$question' was a grammatical question.";
 		$c->stash( unknown => '' );
 	}
-	#elsif ( $theanswer =~ m/Transfer_\w+: .*$/ ) {
-    #    $c->stash->{error_msg} = "The question, '$question' was a correct question."; # and Bett understands there is an answer, but it is broken and it can't work out the answer. Report the problem to Dr Bean.";
-    #    $c->stash->{unhandled} = $theanswer;
-    #}
 	elsif ( $parsed eq 'ParseFailed' ) {
 		if ( $unknown ) {
 			$unknown =~ tr/"/'/;
@@ -209,27 +201,6 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 	elsif ( $myanswer ) {
 		  $c->stash->{status_msg} = "The question, '$question' was a grammatical question."
 	}
-	#elsif ( @thewhanswers and any { $_ eq $myanswer } @thewhanswers ) {
-    #        $c->stash->{status_msg} = "'$myanswer' is a correct answer to '$question'. " .
-    #"The full list of correct answers is: '$thewhanswers'.";
-    #        $c->stash->{thewhanswers} = \@thewhanswers;
-    #}
-    #elsif ( @thewhanswers and not any { $_ eq $myanswer } @thewhanswers ) {
-    #        $c->stash->{error_msg} =
-	#	"The question, '$question' was grammatical, but '$myanswer' is not the answer, nor one of the answers to '$question'. You lose one answer chance. " .
-	#		"The answer(s) is/are: '$thewhanswers'.";
-    #        $c->stash->{err} = "answer";
-    #}
-    #elsif ( $MYANSWER eq $THEANSWER ) {
-    #          $c->stash->{status_msg} = "The question, '$question' was a grammatical question, and your answer, $myanswer was the correct answer to that question."
-	#}
-    #elsif ( $THEANSWER and $MYANSWER ne $THEANSWER ) {
-	#	my $Theanswer = ucfirst lc $THEANSWER;
-	#	my $Myanswer = ucfirst lc $MYANSWER;
-    #        $c->stash->{error_msg} =
-	#	"The question, '$question' was grammatical, but the answer to '$question' is not '$Myanswer,', it's '$Theanswer'.  You lose one answer chance.";
-    #        $c->stash->{err} = "answer";
-    #}
 
 
 	#elsif ( $parsed ) {
