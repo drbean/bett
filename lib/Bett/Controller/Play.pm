@@ -124,10 +124,10 @@ qx"echo \"$question\" | /var/www/cgi-bin/bett/bin/Transfer_$ex";
 		unless ( $parsed =~ m/^QUt/ ) {
 			$parsed = "ParseFailed";
 		}
-		if ( $expectedcourse ) {
+		if ( $expectedcourse =~ (WH|YN|Tag)) {
 			$expectedcourse =~ s/^Course: (.*)$/$1/;
 		}
-		unless ( $expectedcourse ) {
+		else {
 			$expectedcourse = "No expected course";
 		}
 		if ( $error ) {
@@ -180,23 +180,23 @@ sub evaluate :Chained('try') :PathPart('') :CaptureArgs(0) {
 			"Enter a question and answer.";
 		$c->stash->{nothing} = 1;
 	}
-	elsif ( ($parsed !~ m/ParseFailed/) && ($parsed !~ m/ParseIncomplete/) ) {
+	elsif ( $parsed ne "ParseFailed" ) {
 		$c->stash->{status_msg} = "The question, '$question' was a grammatical question.";
 		$c->stash( unknown => '' );
 	}
-	elsif ( $parsed eq 'ParseFailed' ) {
+	else {
 		if ( $unknown ) {
 			$unknown =~ tr/"/'/;
 			$c->stash->{error_msg} = "The question '$question' contained unknown words. \"$unknown\" are not in the list. Use only the words from the list.";
 			$c->stash( unknown => $unknown );
 		}
 		else {
-            $c->stash->{error_msg} = "'$question' is not grammatical. You lose one grammar chance";
-            $c->stash->{err} = "question";
-            $grammatical_test = 'Unparseable';
+			$c->stash->{error_msg} = "'$question' is not grammatical. You lose one grammar chance";
+			$c->stash->{err} = "question";
+			$grammatical_test = 'Unparseable';
 		}
 	}
-	elsif ( $course and $expectedcourse and ($expectedcourse ne 'Unparseable') and ($course ne $expectedcourse ) ) {
+	if ( $course and $expectedcourse and ($expectedcourse ne 'No expected course') and ($course ne $expectedcourse ) ) {
 			$c->stash->{error_msg} =
 "'$question' is not a $translate{$course}. It's a $translate{$expectedcourse}.";
 			$c->stash->{wrongcourse} = $course;
