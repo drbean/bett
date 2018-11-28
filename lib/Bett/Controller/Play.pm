@@ -118,12 +118,21 @@ sub try :Chained('wordscharssentences') :PathPart('') :CaptureArgs(0) {
 qx"echo \"$question\" | /var/www/cgi-bin/bett/bin/Transfer_$ex";
 		my ($unknown, $parsed, $theanswer, $expectedcourse, $error) =
 						(split /\n/, $check); 
-		$unknown =~ s/^Unknown_words: (.*)$/$1/;
-		$parsed =~ s/^Parsed: (.*)$/$1/;
-		$theanswer =~ s/^Answer: (.*)$/$1/;
+		if ( $unknown ) {
+			$unknown =~ s/^Unknown_words: (.*)$/$1/;
+		}
+		else { $unknown = ''; }
+		if ( $parsed ) {
+			$parsed =~ s/^Parsed: (.*)$/$1/;
+		}
+		else { $parsed = "ParseFailed"; }
 		unless ( $parsed =~ m/^QUt/ ) {
 			$parsed = "ParseFailed";
 		}
+		if ( $theanswer ) {
+			$theanswer =~ s/^Answer: (.*)$/$1/;
+		}
+		else { $theanswer =  "No Transfer_$ex answer"; }
 		if ( $expectedcourse and $expectedcourse =~ m/WH|YN|Tag/) {
 			$expectedcourse =~ s/^Course: (.*)$/$1/;
 		}
