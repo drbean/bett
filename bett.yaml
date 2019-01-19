@@ -7,22 +7,22 @@ database: bett071
 moodle_database: mood071
 
 WH:
-  win: 3
+  win: 1003
   chances:
-    question: 12
-    answer: 8
+    question: 1012
+    answer: 1008
 YN:
-  win: 4
+  win: 1004
   chances:
-    question: 9
-    answer: 6
+    question: 1009
+    answer: 1006
 Tag:
-  win: 3
+  win: 1003
   chances:
-    question: 9
-    answer: 6
+    question: 1009
+    answer: 1006
 S:
-  win: 6
+  win: 1006
   chances:
-    question: 10
-    answer: 4
+    question: 1010
+    answer: 1004
